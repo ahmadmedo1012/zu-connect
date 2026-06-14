@@ -27,7 +27,7 @@ export default function Colleges() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">الكليات المعتمدة</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الكليات المعتمدة</h1>
         <p className="text-muted-foreground">تضم جامعة الزاوية 14 كلية مختلفة، تصفح خدمات كل كلية ونشاطاتها.</p>
       </div>
 
@@ -68,7 +68,7 @@ export default function Colleges() {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold text-white">{college.name}</h3>
+                <h3 className="text-xl font-bold text-foreground">{college.name}</h3>
                 
                 <div className="flex flex-wrap gap-2 mt-auto">
                   {college.hasNews && (

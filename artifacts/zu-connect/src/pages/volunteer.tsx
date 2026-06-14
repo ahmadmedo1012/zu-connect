@@ -93,7 +93,7 @@ export default function Volunteer() {
   return (
     <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto">
       <div className="flex flex-col gap-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-black text-white">تطوع معنا</h1>
+        <h1 className="text-4xl md:text-5xl font-black text-foreground">تطوع معنا</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           التطوع هو جوهر العمل الطلابي. كن جزءاً من صناعة التغيير، اكتسب مهارات جديدة، ووسع دائرة معارفك بالانضمام للجان التطوعية في الاتحاد.
         </p>
@@ -119,7 +119,7 @@ export default function Volunteer() {
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${formData.area === cat.id ? 'bg-primary text-white' : 'bg-background text-primary'}`}>
                 <Icon className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-white">{cat.title}</h3>
+              <h3 className="text-xl font-bold text-foreground">{cat.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{cat.desc}</p>
             </motion.div>
           );
@@ -134,18 +134,18 @@ export default function Volunteer() {
         className="bg-card border border-border rounded-3xl p-8 max-w-2xl mx-auto w-full"
       >
         <div className="flex flex-col gap-2 mb-8 text-center">
-          <h2 className="text-2xl font-bold text-white">استمارة التطوع</h2>
+          <h2 className="text-2xl font-bold text-foreground">استمارة التطوع</h2>
           <p className="text-sm text-muted-foreground">أكمل البيانات التالية وسنقوم بالتواصل معك</p>
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-white">الاسم الرباعي *</label>
+            <label className="text-sm font-semibold text-foreground">الاسم الرباعي *</label>
             <input 
               type="text" 
               value={formData.name}
               onChange={e => { setFormData({...formData, name: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.name; return n; }); }}
-              className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+              className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
               required
             />
             {errors.name && <span className="text-red-400 text-xs">{errors.name}</span>}
@@ -153,24 +153,24 @@ export default function Volunteer() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-white">الكلية والسنة الدراسية *</label>
+              <label className="text-sm font-semibold text-foreground">الكلية والسنة الدراسية *</label>
               <input 
                 type="text" 
                 value={formData.college}
                 onChange={e => { setFormData({...formData, college: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.college; return n; }); }}
-                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
                 placeholder="مثال: الهندسة - السنة الثالثة"
                 required
               />
               {errors.college && <span className="text-red-400 text-xs">{errors.college}</span>}
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-white">رقم الهاتف *</label>
+              <label className="text-sm font-semibold text-foreground">رقم الهاتف *</label>
               <input 
                 type="tel" 
                 value={formData.phone}
                 onChange={e => { setFormData({...formData, phone: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.phone; return n; }); }}
-                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white text-left"
+                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground text-left"
                 placeholder="09X XXX XXXX"
                 dir="ltr"
                 required
@@ -180,11 +180,11 @@ export default function Volunteer() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-white">المجال المفضل للتطوع *</label>
+            <label className="text-sm font-semibold text-foreground">المجال المفضل للتطوع *</label>
             <select 
               value={formData.area}
               onChange={e => { setFormData({...formData, area: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.area; return n; }); }}
-              className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white appearance-none cursor-pointer"
+                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground appearance-none cursor-pointer"
               required
             >
               {CATEGORIES.map(cat => (

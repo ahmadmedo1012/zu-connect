@@ -33,7 +33,7 @@ export default function Planner() {
   return (
     <div className="flex flex-col gap-8 py-8 max-w-4xl mx-auto">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">الأنشطة القادمة</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الأنشطة القادمة</h1>
         <p className="text-muted-foreground">جدول زمني لجميع الفعاليات والأنشطة القادمة التي ينظمها الاتحاد.</p>
       </div>
 
@@ -46,7 +46,7 @@ export default function Planner() {
               "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
               activeMonth === month 
                 ? "bg-primary text-white border-primary" 
-                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-white"
+                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-foreground"
             )}
           >
             {month}
@@ -85,10 +85,10 @@ export default function Planner() {
                 <div className="flex flex-col md:flex-row gap-4 w-full bg-card border border-border p-5 rounded-2xl group-hover:border-primary/50 transition-colors">
                   <div className="flex flex-col items-center justify-center bg-background rounded-xl p-3 min-w-24 text-center shrink-0 border border-border">
                     <span className="text-xs text-muted-foreground font-bold">{event.month}</span>
-                    <span className="text-2xl font-black text-white">{event.date.split(' ')[0]}</span>
+                    <span className="text-2xl font-black text-foreground">{event.date.split(' ')[0]}</span>
                   </div>
                   <div className="flex flex-col gap-2 justify-center">
-                    <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">{event.title}</h3>
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{event.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{event.description}</p>
                     <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground/80 font-bold">
                        <Calendar className="w-3 h-3" /> تم الجدولة

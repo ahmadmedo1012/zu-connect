@@ -32,7 +32,7 @@ export default function FAQ() {
         <div className="w-16 h-16 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-2">
           <HelpCircle className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-black text-white">الأسئلة الشائعة</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground">الأسئلة الشائعة</h1>
         <p className="text-muted-foreground">إجابات لأكثر الأسئلة تداولاً بين طلاب جامعة الزاوية.</p>
       </div>
 
@@ -62,7 +62,7 @@ export default function FAQ() {
                     value={`item-${faq.id}`}
                     className="bg-card border border-border rounded-xl px-4 data-[state=open]:border-primary/50 transition-colors"
                   >
-                    <AccordionTrigger className="text-right font-bold text-white hover:no-underline py-4">
+                    <AccordionTrigger className="text-right font-bold text-foreground hover:no-underline py-4">
                       {faq.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground leading-relaxed pb-4 pt-0">

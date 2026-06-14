@@ -71,7 +71,7 @@ export default function Courses() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">الدورات التدريبية</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الدورات التدريبية</h1>
         <p className="text-muted-foreground max-w-2xl">طور مهاراتك من خلال الدورات المجانية وشبه المجانية المقدمة بالتعاون مع مراكز التدريب المعتمدة.</p>
       </div>
 
@@ -84,7 +84,7 @@ export default function Courses() {
               "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
               activeCategory === cat 
                 ? "bg-primary text-white border-primary" 
-                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-white"
+                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-foreground"
             )}
           >
             {cat}
@@ -138,19 +138,19 @@ export default function Courses() {
                   <p className="text-sm text-muted-foreground line-clamp-2">{course.description}</p>
                   
                   <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex items-center gap-2 text-white/80">
+                    <div className="flex items-center gap-2 text-foreground/80">
                       <User className="w-4 h-4 text-muted-foreground" />
                       <span>{course.instructor}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white/80">
+                    <div className="flex items-center gap-2 text-foreground/80">
                       <Clock className="w-4 h-4 text-muted-foreground" />
                       <span>{course.duration}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white/80">
+                    <div className="flex items-center gap-2 text-foreground/80">
                       <BarChart className="w-4 h-4 text-muted-foreground" />
                       <span>{course.level}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-white/80">
+                    <div className="flex items-center gap-2 text-foreground/80">
                       <Users className="w-4 h-4 text-muted-foreground" />
                       <span>{course.enrolledCount} / {course.totalSeats} مقعد</span>
                     </div>

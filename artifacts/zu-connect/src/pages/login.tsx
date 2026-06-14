@@ -111,7 +111,7 @@ export default function Login() {
           <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-1 border border-border">
             <img src={logoPath} alt="Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight mt-2">تسجيل الدخول</h1>
+          <h1 className="text-2xl font-black text-foreground tracking-tight mt-2">تسجيل الدخول</h1>
           <p className="text-sm text-muted-foreground">أدخل بياناتك للوصول إلى خدمات المنصة</p>
         </div>
 
@@ -127,8 +127,8 @@ export default function Login() {
                 className={cn(
                   "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all",
                   isActive 
-                    ? "bg-card text-white shadow-sm" 
-                    : "text-muted-foreground hover:text-white"
+                    ? "bg-card text-foreground shadow-sm" 
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -140,7 +140,7 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-bold text-white">
+            <label className="text-sm font-bold text-foreground">
               {role === "student" ? "رقم القيد الجامعي" : "البريد الإلكتروني الجامعي"}
             </label>
             <div className="relative flex items-center">
@@ -151,7 +151,7 @@ export default function Login() {
                 type="text"
                 value={identifier}
                 onChange={(e) => { setIdentifier(e.target.value); setErrors(prev => { const n = {...prev}; delete n.identifier; return n; }); }}
-                className="w-full bg-background border border-border rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-primary text-white text-left"
+                className="w-full bg-background border border-border rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground text-left"
                 dir="ltr"
                 required
               />
@@ -161,7 +161,7 @@ export default function Login() {
 
           <div className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-bold text-white">كلمة المرور</label>
+              <label className="text-sm font-bold text-foreground">كلمة المرور</label>
               <a href="#" className="text-xs text-primary font-bold hover:underline">نسيت كلمة المرور؟</a>
             </div>
             <div className="relative flex items-center">
@@ -172,7 +172,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setErrors(prev => { const n = {...prev}; delete n.password; return n; }); }}
-                className="w-full bg-background border border-border rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-primary text-white text-left"
+                className="w-full bg-background border border-border rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground text-left"
                 dir="ltr"
                 required
               />

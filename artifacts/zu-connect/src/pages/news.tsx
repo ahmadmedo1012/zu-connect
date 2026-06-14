@@ -33,7 +33,7 @@ export default function News() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">الأخبار والأنشطة</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الأخبار والأنشطة</h1>
         <p className="text-muted-foreground">تابع آخر التحديثات والأخبار الخاصة بكليات جامعة الزاوية والاتحاد العام.</p>
       </div>
 
@@ -46,7 +46,7 @@ export default function News() {
               "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
               activeCategory === cat 
                 ? "bg-primary text-white border-primary" 
-                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-white"
+                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-foreground"
             )}
           >
             {cat}
@@ -102,7 +102,7 @@ export default function News() {
                   </div>
                   
                   <div className="flex flex-col gap-2">
-                    <h3 className={cn("font-bold text-white group-hover:text-primary transition-colors leading-snug", i === 0 ? "text-2xl" : "text-xl line-clamp-2")}>
+                    <h3 className={cn("font-bold text-foreground group-hover:text-primary transition-colors leading-snug", i === 0 ? "text-2xl" : "text-xl line-clamp-2")}>
                       {item.title}
                     </h3>
                     <p className={cn("text-sm text-muted-foreground leading-relaxed", i === 0 ? "line-clamp-4" : "line-clamp-2")}>

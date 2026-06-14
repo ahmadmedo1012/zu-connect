@@ -69,7 +69,7 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] py-4">
       <div className="flex flex-col gap-2 mb-4">
-        <h1 className="text-2xl md:text-3xl font-black text-white border-r-4 border-primary pr-4">غرف النقاش</h1>
+        <h1 className="text-2xl md:text-3xl font-black text-foreground border-r-4 border-primary pr-4">غرف النقاش</h1>
         <p className="text-muted-foreground text-sm">تواصل مع زملائك، شارك أفكارك، وناقش المواضيع الأكاديمية.</p>
       </div>
 
@@ -77,7 +77,7 @@ export default function Chat() {
         {/* Sidebar */}
         <div className="w-full md:w-64 lg:w-80 border-l border-border flex flex-col bg-background/50 shrink-0">
           <div className="p-4 border-b border-border bg-card">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-foreground flex items-center gap-2">
               <MessageCircle className="w-5 h-5 text-primary" />
               الغرف المتاحة
             </h2>
@@ -94,15 +94,15 @@ export default function Chat() {
                   className={cn(
                     "flex flex-col items-start gap-1 p-3 rounded-xl transition-colors text-right",
                     activeRoomId === room.id
-                      ? "bg-primary text-white"
-                      : "hover:bg-white/5 text-muted-foreground hover:text-white"
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-accent text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <div className="flex items-center justify-between w-full">
                     <span className="font-bold text-sm">{room.name}</span>
                     <span className={cn(
                       "text-[10px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1",
-                      activeRoomId === room.id ? "bg-white/20" : "bg-white/5 text-muted-foreground"
+                      activeRoomId === room.id ? "bg-primary-foreground/20" : "bg-accent text-muted-foreground"
                     )}>
                       <Users className="w-3 h-3" />
                       {room.onlineCount}
@@ -124,7 +124,7 @@ export default function Chat() {
             <>
               <div className="p-4 border-b border-border bg-card/80 flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-white">
+                  <h3 className="font-bold text-foreground">
                     {rooms?.find(r => r.id === activeRoomId)?.name}
                   </h3>
                   <p className="text-xs text-muted-foreground">
@@ -183,7 +183,7 @@ export default function Chat() {
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   placeholder="اكتب رسالتك..."
-                  className="flex-1 bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+                  className="flex-1 bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
                 />
                 <button 
                   type="submit" 

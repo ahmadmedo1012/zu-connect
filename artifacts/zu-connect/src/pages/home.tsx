@@ -78,7 +78,7 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: string; 
       <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary">
         <Icon className="w-6 h-6" />
       </div>
-      <span ref={ref} className="text-4xl font-black text-white">{prefersReducedMotion ? value : displayValue}</span>
+      <span ref={ref} className="text-4xl font-black text-foreground">{prefersReducedMotion ? value : displayValue}</span>
       <span className="text-muted-foreground font-semibold">{label}</span>
     </motion.div>
   );
@@ -257,7 +257,7 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white border-r-4 border-primary pr-3">أحدث الأخبار</h2>
+            <h2 className="text-2xl font-bold text-foreground border-r-4 border-primary pr-3">أحدث الأخبار</h2>
             <Link href="/news" className="text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
           </div>
           
@@ -288,7 +288,7 @@ export default function Home() {
                     </span>
                     <span className="text-xs text-muted-foreground">{item.date}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
                   <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>
                 </Link>
               </motion.div>
@@ -301,7 +301,7 @@ export default function Home() {
         
         <div className="flex flex-col gap-8">
           <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-            <h3 className="font-bold text-lg text-white flex items-center gap-2">
+            <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               الأنشطة القادمة
             </h3>
@@ -321,10 +321,10 @@ export default function Home() {
                 >
                   <div className="flex flex-col items-center justify-center bg-background rounded-lg p-2 min-w-14">
                     <span className="text-xs text-muted-foreground">{event.month}</span>
-                    <span className="text-lg font-bold text-white">{event.date.split(' ')[0]}</span>
+                    <span className="text-lg font-bold text-foreground">{event.date.split(' ')[0]}</span>
                   </div>
                   <div className="flex flex-col pt-1">
-                    <h4 className="font-bold text-sm text-white line-clamp-1">{event.title}</h4>
+                    <h4 className="font-bold text-sm text-foreground line-clamp-1">{event.title}</h4>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>
                   </div>
                 </motion.div>

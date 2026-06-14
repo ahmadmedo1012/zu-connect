@@ -37,7 +37,7 @@ export default function Services() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4 text-center items-center max-w-3xl mx-auto mb-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white">الخدمات الطلابية</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground">الخدمات الطلابية</h1>
         <p className="text-muted-foreground text-lg">بوابة موحدة لجميع الخدمات الأكاديمية والأنشطة الطلابية التي يقدمها الاتحاد لطلبة جامعة الزاوية.</p>
       </div>
 
@@ -56,11 +56,11 @@ export default function Services() {
                 href={service.href}
                 className="bg-card border border-border p-6 rounded-3xl flex flex-col gap-4 hover:bg-primary/5 hover:border-primary/50 transition-all group block"
               >
-                <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center text-white group-hover:bg-primary group-hover:border-primary transition-colors">
+                <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center text-foreground group-hover:bg-primary group-hover:border-primary group-hover:text-primary-foreground transition-colors">
                   <Icon className="w-7 h-7" />
                 </div>
                 <div className="flex flex-col gap-2 mt-2">
-                  <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{service.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{service.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
                 </div>
               </Link>

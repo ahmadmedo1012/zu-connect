@@ -44,12 +44,12 @@ export default function Library() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">المكتبة الرقمية</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">المكتبة الرقمية</h1>
         <p className="text-muted-foreground">آلاف الملفات، الملخصات، والبحوث الأكاديمية متاحة للتحميل مجاناً.</p>
       </div>
 
       <div className="flex flex-wrap items-center gap-4 border-b border-border pb-4">
-        <div className="flex items-center gap-2 text-white font-bold ml-4">
+        <div className="flex items-center gap-2 text-foreground font-bold ml-4">
           <Filter className="w-5 h-5" />
           تصفية حسب:
         </div>
@@ -63,7 +63,7 @@ export default function Library() {
                 "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
                 activeType === type 
                   ? "bg-primary text-white border-primary" 
-                  : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-white"
+                  : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-foreground"
               )}
             >
               {type}
@@ -101,13 +101,13 @@ export default function Library() {
                   <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                     {(() => { const TypeIcon = getLibraryTypeIcon(resource.type); return <TypeIcon className="w-6 h-6" />; })()}
                   </div>
-                  <span className="text-[10px] font-bold bg-white/5 text-white/80 px-2 py-1 rounded">
+                  <span className="text-[10px] font-bold bg-accent text-muted-foreground px-2 py-1 rounded">
                     {resource.type}
                   </span>
                 </div>
               
               <div className="flex flex-col gap-1">
-                <h3 className="font-bold text-lg text-white line-clamp-1" title={resource.title}>{resource.title}</h3>
+                <h3 className="font-bold text-lg text-foreground line-clamp-1" title={resource.title}>{resource.title}</h3>
                 <p className="text-sm text-muted-foreground line-clamp-1">{resource.subtitle}</p>
                 <p className="text-xs text-primary font-semibold mt-1">{resource.college}</p>
               </div>
@@ -126,7 +126,7 @@ export default function Library() {
                   onClick={handleDownload}
                   whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
                   whileHover={prefersReducedMotion ? undefined : { scale: 1.1, boxShadow: "0 0 20px rgba(212, 175, 55, 0.3)" }}
-                  className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-white flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-primary-foreground flex items-center justify-center transition-colors"
                 >
                   <Download className="w-4 h-4" />
                 </motion.button>

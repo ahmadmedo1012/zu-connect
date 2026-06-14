@@ -52,8 +52,8 @@ export function Navbar() {
                   className={cn(
                     "flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-semibold transition-all select-none border-b-2",
                     isActive 
-                      ? "text-white border-primary bg-white/5" 
-                      : "text-muted-foreground border-transparent hover:text-white hover:bg-white/5"
+                      ? "text-foreground border-primary bg-accent" 
+                      : "text-muted-foreground border-transparent hover:text-foreground hover:bg-accent"
                   )}
                 >
                   <Icon className="w-4 h-4" />

@@ -84,7 +84,7 @@ export default function Suggestions() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">اقترح / تواصل</h1>
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">اقترح / تواصل</h1>
         <p className="text-muted-foreground">نحن هنا للاستماع لأفكارك ومقترحاتك أو شكواك. تواصلك معنا يساهم في تحسين البيئة الجامعية.</p>
       </div>
 
@@ -97,37 +97,37 @@ export default function Suggestions() {
       >
         <motion.div variants={itemVariants} className="md:col-span-2">
           <form onSubmit={handleSubmit} className="bg-card border border-border rounded-3xl p-6 md:p-8 flex flex-col gap-6">
-            <h2 className="text-2xl font-bold text-white mb-2">نموذج التواصل</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">نموذج التواصل</h2>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-white">الاسم (اختياري)</label>
+                <label className="text-sm font-semibold text-foreground">الاسم (اختياري)</label>
                 <input 
                   type="text" 
                   value={formData.name}
                   onChange={e => setFormData({...formData, name: e.target.value})}
-                  className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+                  className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
                   placeholder="أدخل اسمك"
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-white">الكلية (اختياري)</label>
+                <label className="text-sm font-semibold text-foreground">الكلية (اختياري)</label>
                 <input 
                   type="text" 
                   value={formData.college}
                   onChange={e => setFormData({...formData, college: e.target.value})}
-                  className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
+                  className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
                   placeholder="اسم كليتك"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-white">نوع الرسالة *</label>
+              <label className="text-sm font-semibold text-foreground">نوع الرسالة *</label>
               <select 
                 value={formData.type}
                 onChange={e => { setFormData({...formData, type: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.type; return n; }); }}
-                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white appearance-none cursor-pointer"
+                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground appearance-none cursor-pointer"
                 required
               >
                 <option value="اقتراح">اقتراح</option>
@@ -139,11 +139,11 @@ export default function Suggestions() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-white">الرسالة أو المقترح *</label>
+              <label className="text-sm font-semibold text-foreground">الرسالة أو المقترح *</label>
               <textarea 
                 value={formData.message}
                 onChange={e => { setFormData({...formData, message: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.message; return n; }); }}
-                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white min-h-[150px] resize-none"
+                className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground min-h-[150px] resize-none"
                 placeholder="اكتب رسالتك هنا بالتفصيل..."
                 required
               />
@@ -163,7 +163,7 @@ export default function Suggestions() {
 
         <motion.div variants={itemVariants} className="flex flex-col gap-6">
           <div className="bg-card border border-border rounded-3xl p-6 flex flex-col gap-6">
-            <h3 className="text-xl font-bold text-white border-r-2 border-primary pr-3">مكتب الاتحاد</h3>
+            <h3 className="text-xl font-bold text-foreground border-r-2 border-primary pr-3">مكتب الاتحاد</h3>
             
             <div className="flex flex-col gap-4 text-sm text-muted-foreground">
               <div className="flex items-start gap-3">
