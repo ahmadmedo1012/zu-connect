@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Bell, Search, User, LogOut } from "lucide-react";
-import logoPath from "@assets/IMG_0792_1781443006842.jpeg";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useState } from "react";
 
@@ -21,9 +21,7 @@ export function Topbar() {
       <div className="flex h-16 items-center px-4 md:px-6 w-full max-w-7xl mx-auto justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-md overflow-hidden bg-white flex items-center justify-center border border-border">
-              <img src={logoPath} alt="U.Z.S.U Logo" className="w-full h-full object-contain" />
-            </div>
+            <LottieAnimation src="/animations/illustration/logo-animation.json" className="w-10 h-10" />
             <div className="flex flex-col">
               <span className="font-bold text-lg leading-tight text-foreground tracking-tight">ZU Connect</span>
               <span className="text-xs text-muted-foreground font-medium">اتحاد طلبة جامعة الزاوية</span>

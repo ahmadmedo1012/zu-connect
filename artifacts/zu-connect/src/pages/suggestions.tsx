@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Building2 } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -84,6 +85,7 @@ export default function Suggestions() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/customer-support.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">اقترح / تواصل</h1>
         <p className="text-muted-foreground">نحن هنا للاستماع لأفكارك ومقترحاتك أو شكواك. تواصلك معنا يساهم في تحسين البيئة الجامعية.</p>
       </div>

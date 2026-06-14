@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { MessageSquare, BookOpen, Library, GraduationCap, CalendarDays, HeartHandshake, Lightbulb, Users, Globe, Flag, ShieldQuestion, Briefcase } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -37,6 +38,7 @@ export default function Services() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4 text-center items-center max-w-3xl mx-auto mb-4">
+        <LottieAnimation src="/animations/illustration/services-desk.json" className="w-[120px] h-[120px]" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground">الخدمات الطلابية</h1>
         <p className="text-muted-foreground text-lg">بوابة موحدة لجميع الخدمات الأكاديمية والأنشطة الطلابية التي يقدمها الاتحاد لطلبة جامعة الزاوية.</p>
       </div>

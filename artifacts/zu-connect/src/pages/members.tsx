@@ -3,7 +3,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { Mail, Phone, MessageCircle, Lock } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
+import { Mail, Phone, MessageCircle, Lock as LockIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
@@ -34,7 +35,8 @@ export default function Members() {
 
   return (
     <div className="flex flex-col gap-8 py-8">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <LottieAnimation src="/animations/illustration/team-illustration.json" className="w-[120px] h-[120px]" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground">أعضاء الاتحاد</h1>
         <p className="text-muted-foreground">تعرف على زملائك الممثلين في الاتحاد العام للطلبة وممثلي الكليات المختلفة.</p>
       </div>
@@ -60,7 +62,7 @@ export default function Members() {
       {!user && (
         <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Lock className="w-5 h-5 text-muted-foreground" />
+            <LockIcon className="w-5 h-5 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">الأسماء متاحة للجميع. سجل الدخول لعرض التفاصيل الكاملة للأعضاء.</p>
           </div>
           <Link href="/login" className="text-sm font-bold text-primary hover:underline">

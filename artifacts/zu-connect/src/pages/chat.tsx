@@ -205,7 +205,8 @@ export default function Chat() {
                 <div ref={messagesEndRef} />
               </motion.div>
 
-              <form onSubmit={handleSend} className="p-3 border-t border-border bg-card flex gap-2">
+              <form onSubmit={handleSend} className="p-3 border-t border-border bg-card flex gap-2 items-center">
+                <LottieAnimation src="/animations/illustration/typing-dots.json" className="w-8 h-8 opacity-50 shrink-0" />
                 <input
                   type="text"
                   value={message}
@@ -223,8 +224,9 @@ export default function Chat() {
               </form>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <Empty icon={MessageCircle} title="اختر غرفة" description="اختر غرفة من القائمة الجانبية للبدء بالنقاش مع زملائك." />
+            <div className="flex-1 flex flex-col items-center justify-center gap-2">
+              <LottieAnimation src="/animations/illustration/chat-bubbles.json" className="w-[120px] h-[120px]" />
+              <p className="text-muted-foreground text-sm">اختر غرفة من القائمة الجانبية للبدء</p>
             </div>
           )}
         </div>

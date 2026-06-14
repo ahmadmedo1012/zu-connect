@@ -5,6 +5,7 @@ import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { getCollegeIcon } from "@/lib/icons/icon-maps";
 import { Users, FileText, Calendar, Activity, GraduationCap, Lock } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
 
@@ -31,6 +32,7 @@ export default function Colleges() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/features-illustration.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الكليات المعتمدة</h1>
         <p className="text-muted-foreground">تضم جامعة الزاوية 14 كلية مختلفة، تصفح خدمات كل كلية ونشاطاتها.</p>
       </div>

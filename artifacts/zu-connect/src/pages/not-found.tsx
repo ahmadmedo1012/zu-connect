@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -29,8 +29,8 @@ export default function NotFound() {
       >
         <Card>
           <CardContent className="pt-6 flex flex-col items-center text-center gap-4">
-            <motion.div variants={itemVariants} className="flex gap-2 items-center">
-              <AlertCircle className="h-8 w-8 text-primary" />
+            <motion.div variants={itemVariants} className="flex flex-col items-center gap-4">
+              <LottieAnimation src="/animations/illustration/robot-404.json" className="w-[120px] h-[120px]" />
               <h1 className="text-2xl font-bold text-foreground">الصفحة غير موجودة</h1>
             </motion.div>
 

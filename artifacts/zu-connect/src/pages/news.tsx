@@ -6,6 +6,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
 import { Eye, Calendar, ArrowUpLeft, Lock } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
 
@@ -36,6 +37,7 @@ export default function News() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/megaphone.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الأخبار والأنشطة</h1>
         <p className="text-muted-foreground">تابع آخر التحديثات والأخبار الخاصة بكليات جامعة الزاوية والاتحاد العام.</p>
       </div>
