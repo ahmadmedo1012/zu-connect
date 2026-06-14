@@ -1,22 +1,43 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: ZU Connect API - منصة طلبة جامعة الزاوية
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: news
+    description: News and activities
+  - name: courses
+    description: Training courses
+  - name: members
+    description: Union members directory
+  - name: colleges
+    description: University colleges/faculties
+  - name: library
+    description: Digital library resources
+  - name: planner
+    description: Activity planner events
+  - name: chat
+    description: Discussion rooms and messages
+  - name: suggestions
+    description: Suggestions and complaints
+  - name: volunteers
+    description: Volunteer registrations
+  - name: faq
+    description: Frequently asked questions
+  - name: stats
+    description: Platform statistics
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +45,350 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /stats:
+    get:
+      operationId: getStats
+      tags: [stats]
+      summary: Get platform statistics
+      responses:
+        "200":
+          description: Platform stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformStats"
+
+  /news:
+    get:
+      operationId: listNews
+      tags: [news]
+      summary: List news and activities
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of news items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsItem"
+    post:
+      operationId: createNews
+      tags: [news]
+      summary: Create a news item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsItem"
+
+  /news/{id}:
+    get:
+      operationId: getNews
+      tags: [news]
+      summary: Get news item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: News item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsItem"
+
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      summary: List training courses
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+    post:
+      operationId: createCourse
+      tags: [courses]
+      summary: Create a course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+
+  /courses/{id}/enroll:
+    post:
+      operationId: enrollCourse
+      tags: [courses]
+      summary: Enroll in a course
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnrollmentInput"
+      responses:
+        "200":
+          description: Enrollment result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+
+  /courses/{id}/unenroll:
+    post:
+      operationId: unenrollCourse
+      tags: [courses]
+      summary: Unenroll from a course
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnrollmentInput"
+      responses:
+        "200":
+          description: Unenrollment result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+
+  /members:
+    get:
+      operationId: listMembers
+      tags: [members]
+      summary: List union members
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+
+  /colleges:
+    get:
+      operationId: listColleges
+      tags: [colleges]
+      summary: List university colleges
+      responses:
+        "200":
+          description: List of colleges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/College"
+
+  /library:
+    get:
+      operationId: listLibrary
+      tags: [library]
+      summary: List library resources
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of library resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LibraryResource"
+
+  /planner:
+    get:
+      operationId: listPlanner
+      tags: [planner]
+      summary: List planned activities
+      parameters:
+        - name: month
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of planned activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlannerEvent"
+
+  /chat/rooms:
+    get:
+      operationId: listChatRooms
+      tags: [chat]
+      summary: List discussion rooms
+      responses:
+        "200":
+          description: List of chat rooms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatRoom"
+
+  /chat/rooms/{roomId}/messages:
+    get:
+      operationId: listChatMessages
+      tags: [chat]
+      summary: Get messages in a room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatMessage"
+    post:
+      operationId: sendChatMessage
+      tags: [chat]
+      summary: Send a message to a room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatMessageInput"
+      responses:
+        "201":
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatMessage"
+
+  /suggestions:
+    post:
+      operationId: createSuggestion
+      tags: [suggestions]
+      summary: Submit a suggestion or complaint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SuggestionInput"
+      responses:
+        "201":
+          description: Submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Suggestion"
+
+  /volunteers:
+    post:
+      operationId: createVolunteer
+      tags: [volunteers]
+      summary: Register as a volunteer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VolunteerInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Volunteer"
+
+  /faq:
+    get:
+      operationId: listFaq
+      tags: [faq]
+      summary: List FAQ items
+      responses:
+        "200":
+          description: List of FAQ items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FaqItem"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +399,388 @@ components:
       required:
         - status
 
+    PlatformStats:
+      type: object
+      properties:
+        totalStudents:
+          type: integer
+        totalColleges:
+          type: integer
+        totalActivities:
+          type: integer
+        totalLibraryFiles:
+          type: integer
+        totalCourses:
+          type: integer
+        totalMembers:
+          type: integer
+      required:
+        - totalStudents
+        - totalColleges
+        - totalActivities
+        - totalLibraryFiles
+        - totalCourses
+        - totalMembers
+
+    NewsItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        body:
+          type: string
+        category:
+          type: string
+        date:
+          type: string
+        viewCount:
+          type: integer
+      required:
+        - id
+        - title
+        - body
+        - category
+        - date
+        - viewCount
+
+    NewsInput:
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        category:
+          type: string
+      required:
+        - title
+        - body
+        - category
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        instructor:
+          type: string
+        duration:
+          type: string
+        level:
+          type: string
+        category:
+          type: string
+        totalSeats:
+          type: integer
+        enrolledCount:
+          type: integer
+        colorScheme:
+          type: integer
+      required:
+        - id
+        - title
+        - description
+        - instructor
+        - duration
+        - level
+        - category
+        - totalSeats
+        - enrolledCount
+        - colorScheme
+
+    CourseInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        instructor:
+          type: string
+        duration:
+          type: string
+        level:
+          type: string
+        category:
+          type: string
+        totalSeats:
+          type: integer
+        colorScheme:
+          type: integer
+      required:
+        - title
+        - description
+        - instructor
+        - duration
+        - level
+        - category
+        - totalSeats
+        - colorScheme
+
+    EnrollmentInput:
+      type: object
+      properties:
+        studentId:
+          type: string
+      required:
+        - studentId
+
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        role:
+          type: string
+        department:
+          type: string
+        year:
+          type: string
+        category:
+          type: string
+        initials:
+          type: string
+      required:
+        - id
+        - name
+        - role
+        - department
+        - year
+        - category
+        - initials
+
+    College:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        studentCount:
+          type: integer
+        hasNews:
+          type: boolean
+        hasSchedules:
+          type: boolean
+        hasFiles:
+          type: boolean
+        hasActivities:
+          type: boolean
+        icon:
+          type: string
+      required:
+        - id
+        - name
+        - studentCount
+        - hasNews
+        - hasSchedules
+        - hasFiles
+        - hasActivities
+        - icon
+
+    LibraryResource:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        subtitle:
+          type: string
+        type:
+          type: string
+        rating:
+          type: number
+        downloadCount:
+          type: integer
+        college:
+          type: string
+      required:
+        - id
+        - title
+        - subtitle
+        - type
+        - rating
+        - downloadCount
+        - college
+
+    PlannerEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+        month:
+          type: string
+        icon:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - date
+        - month
+        - icon
+
+    ChatRoom:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        onlineCount:
+          type: integer
+        icon:
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - onlineCount
+        - icon
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        roomId:
+          type: integer
+        sender:
+          type: string
+        message:
+          type: string
+        isMe:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - roomId
+        - sender
+        - message
+        - isMe
+        - createdAt
+
+    ChatMessageInput:
+      type: object
+      properties:
+        sender:
+          type: string
+        message:
+          type: string
+        isMe:
+          type: boolean
+      required:
+        - sender
+        - message
+        - isMe
+
+    SuggestionInput:
+      type: object
+      properties:
+        name:
+          type: ["string", "null"]
+        college:
+          type: ["string", "null"]
+        type:
+          type: string
+        message:
+          type: string
+      required:
+        - type
+        - message
+
+    Suggestion:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: ["string", "null"]
+        college:
+          type: ["string", "null"]
+        type:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - type
+        - message
+        - createdAt
+
+    VolunteerInput:
+      type: object
+      properties:
+        name:
+          type: string
+        college:
+          type: string
+        phone:
+          type: string
+        area:
+          type: string
+      required:
+        - name
+        - college
+        - phone
+        - area
+
+    Volunteer:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        college:
+          type: string
+        phone:
+          type: string
+        area:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - college
+        - phone
+        - area
+        - createdAt
+
+    FaqItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        answer:
+          type: string
+        category:
+          type: string
+      required:
+        - id
+        - question
+        - answer
+        - category

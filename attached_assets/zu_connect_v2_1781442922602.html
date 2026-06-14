@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="ZU Connect — منصة طلبة جامعة الزاوية: أخبار، أنشطة، كورسات، مكتبة رقمية، وغرف نقاش." />
+<meta name="theme-color" content="#0c447c" />
+<title>ZU Connect — اتحاد طلبة جامعة الزاوية</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css" />
+
+<style>
+/* =============================================================
+   Design Tokens
+   ============================================================= */
+:root{
+  --font-sans: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+
+  --brand-900:#0c447c;
+  --brand-700:#185fa5;
+  --brand-500:#2a7dc8;
+  --brand-100:#e6f1fb;
+  --brand-50:#f3f8fd;
+  --accent:#ef9f27;
+
+  --color-bg:            #f4f7fb;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #f0f4f9;
+  --color-surface-3:     #e9eef5;
+  --color-text:          #1a2436;
+  --color-text-secondary:#5b6577;
+  --color-text-muted:    #8892a4;
+  --color-border:        #e1e7f0;
+  --color-border-strong: #cdd5e2;
+
+  --green-bg:#eaf3de; --green-fg:#27500a;
+  --amber-bg:#faeeda; --amber-fg:#633806;
+  --teal-bg:#e1f5ee;  --teal-fg:#085041;
+  --red-bg:#fcebeb;   --red-fg:#791f1f;
+  --violet-bg:#ece6fb; --violet-fg:#3a228a;
+
+  --radius-sm:6px;
+  --radius:10px;
+  --radius-lg:14px;
+  --radius-xl:18px;
+
+  --shadow-sm:0 1px 2px rgba(15,30,60,.04), 0 1px 1px rgba(15,30,60,.03);
+  --shadow:0 4px 14px rgba(15,30,60,.06), 0 1px 2px rgba(15,30,60,.04);
+  --shadow-lg:0 18px 40px rgba(15,30,60,.12), 0 4px 10px rgba(15,30,60,.06);
+
+  --container:1200px;
+  --header-h:56px;
+
+  --transition:160ms cubic-bezier(.4,0,.2,1);
+}
+
+html[data-theme="dark"]{
+  --color-bg:            #0f1620;
+  --color-surface:       #182232;
+  --color-surface-2:     #1f2a3d;
+  --color-surface-3:     #283347;
+  --color-text:          #e6eaf3;
+  --color-text-secondary:#aab3c4;
+  --color-text-muted:    #7a8499;
+  --color-border:        #283347;
+  --color-border-strong: #364259;
+
+  --brand-100:#16365a;
+  --brand-50:#102640;
+
+  --green-bg:#1b3010; --green-fg:#bfe197;
+  --amber-bg:#3a2810; --amber-fg:#f5c987;
+  --teal-bg:#0f2e26;  --teal-fg:#8edec5;
+  --red-bg:#3a1818;   --red-fg:#f0a3a3;
+  --violet-bg:#231a4a; --violet-fg:#c4b6f5;
+
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow:0 4px 14px rgba(0,0,0,.5);
+  --shadow-lg:0 18px 40px rgba(0,0,0,.6);
+}
+
+/* =============================================================
+   Base
+   ============================================================= */
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--font-sans);
+  font-size:14px;
+  line-height:1.55;
+  color:var(--color-text);
+  background:var(--color-bg);
+  direction:rtl;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition:background var(--transition), color var(--transition);
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--brand-700);text-decoration:none}
+a:hover{text-decoration:underline}
+
+:focus-visible{outline:2px solid var(--brand-500);outline-offset:2px;border-radius:4px}
+
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.container{max-width:var(--container);margin-inline:auto;padding-inline:clamp(12px,3vw,24px)}
+
+/* =============================================================
+   Top bar / Nav
+   ============================================================= */
+.topbar{
+  background:linear-gradient(135deg,var(--brand-900),var(--brand-700));
+  color:#fff;
+  position:sticky;top:0;z-index:50;
+  box-shadow:var(--shadow);
+}
+.topbar-inner{
+  max-width:var(--container);margin-inline:auto;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:0 clamp(12px,3vw,24px);height:var(--header-h);
+}
+.logo{display:flex;align-items:center;gap:10px;min-width:0}
+.logo-mark{
+  width:54px;height:38px;border-radius:10px;
+  background:#fff;color:var(--brand-900);
+  display:grid;place-items:center;font-weight:700;font-size:11px;letter-spacing:.5px;
+  flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+.logo-text{font-size:15px;font-weight:600;line-height:1.1}
+.logo-sub{font-size:11px;opacity:.75;margin-top:2px}
+.topbar-actions{display:flex;align-items:center;gap:6px}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.06);
+  color:#fff;display:grid;place-items:center;cursor:pointer;
+  position:relative;transition:background var(--transition);
+}
+.icon-btn:hover{background:rgba(255,255,255,.22)}
+.icon-btn i{font-size:18px}
+.notif-dot{
+  position:absolute;top:8px;inset-inline-end:8px;
+  width:8px;height:8px;background:var(--accent);border-radius:50%;
+  box-shadow:0 0 0 2px var(--brand-900);
+}
+.btn-pill{
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:#fff;
+  padding:8px 14px;border-radius:10px;font-size:13px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:background var(--transition);
+}
+.btn-pill:hover{background:rgba(255,255,255,.26)}
+
+.nav-bar{
+  background:var(--brand-700);
+  border-top:1px solid rgba(255,255,255,.08);
+  position:sticky;top:var(--header-h);z-index:40;
+}
+.nav-inner{
+  max-width:var(--container);margin-inline:auto;
+  display:flex;gap:2px;padding:0 clamp(8px,2vw,16px);
+  overflow-x:auto;scrollbar-width:thin;
+}
+.nav-inner::-webkit-scrollbar{height:4px}
+.nav-inner::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:4px}
+.nav-link{
+  background:transparent;border:none;color:rgba(255,255,255,.78);
+  padding:12px 14px;font-size:13px;font-weight:500;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  border-bottom:2px solid transparent;cursor:pointer;
+  transition:color var(--transition),border-color var(--transition);
+}
+.nav-link:hover{color:#fff}
+.nav-link.is-active{color:#fff;border-bottom-color:#fff}
+.nav-link i{font-size:16px}
+
+/* =============================================================
+   Hero / Stats
+   ============================================================= */
+.hero{
+  background:
+    radial-gradient(1200px 400px at 80% -20%, rgba(239,159,39,.25), transparent 60%),
+    linear-gradient(135deg,var(--brand-900),var(--brand-700));
+  color:#fff;padding:clamp(2rem,6vw,3.25rem) clamp(12px,3vw,24px);
+  text-align:center;
+}
+.hero h1{font-size:clamp(20px,3vw,28px);font-weight:700;margin:0 0 .5rem}
+.hero p{font-size:clamp(13px,2vw,15px);opacity:.9;line-height:1.7;margin:0 auto 1.4rem;max-width:680px}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;
+  border:1px solid transparent;cursor:pointer;
+  transition:transform var(--transition),background var(--transition),box-shadow var(--transition);
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:#fff;color:var(--brand-900);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.btn-primary:hover{background:#f7faff}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4)}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-solid{background:var(--brand-700);color:#fff}
+.btn-solid:hover{background:var(--brand-900)}
+.btn-outline{background:transparent;color:var(--brand-700);border-color:var(--color-border-strong)}
+.btn-outline:hover{background:var(--color-surface-2)}
+
+.stats-row{
+  max-width:var(--container);margin:-1.5rem auto 0;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  padding:0 clamp(12px,3vw,24px);
+  position:relative;z-index:1;
+}
+.stat-card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1rem;text-align:center;
+  box-shadow:var(--shadow-sm);
+}
+.stat-num{font-size:clamp(20px,3vw,26px);font-weight:700;color:var(--brand-700)}
+.stat-label{font-size:12px;color:var(--color-text-secondary);margin-top:4px}
+
+/* =============================================================
+   Layout / Sections
+   ============================================================= */
+main.body{padding:1.75rem clamp(12px,3vw,24px);max-width:var(--container);margin-inline:auto}
+.page{display:none}
+.page.is-active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sec-head h2{font-size:18px;font-weight:700;color:var(--color-text);display:flex;align-items:center;gap:8px;margin:0}
+.sec-head h2 i{color:var(--brand-700);font-size:20px}
+.sec-head .sub{font-size:12px;color:var(--color-text-secondary)}
+.link{font-size:12px;color:var(--brand-700);cursor:pointer;background:none;border:none;font-family:inherit}
+.link:hover{text-decoration:underline}
+
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}
+
+/* =============================================================
+   Cards / Badges
+   ============================================================= */
+.card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1.1rem 1.25rem;
+  box-shadow:var(--shadow-sm);transition:box-shadow var(--transition),transform var(--transition),border-color var(--transition);
+}
+.card.hoverable:hover{box-shadow:var(--shadow);transform:translateY(-2px);border-color:var(--color-border-strong)}
+
+.news-list{display:grid;gap:12px}
+.news-card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.news-card h3{font-size:15px;font-weight:600;line-height:1.5;margin:0}
+.news-card p{font-size:13px;color:var(--color-text-secondary);margin:.25rem 0 0}
+.news-card .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--color-text-muted)}
+.news-card .meta i{margin-inline-end:3px}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:999px;font-weight:600;line-height:1}
+.b-blue{background:var(--brand-100);color:var(--brand-900)}
+.b-green{background:var(--green-bg);color:var(--green-fg)}
+.b-amber{background:var(--amber-bg);color:var(--amber-fg)}
+.b-teal{background:var(--teal-bg);color:var(--teal-fg)}
+.b-red{background:var(--red-bg);color:var(--red-fg)}
+.b-violet{background:var(--violet-bg);color:var(--violet-fg)}
+.b-muted{background:var(--color-surface-2);color:var(--color-text-secondary)}
+
+.activity-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--color-border)}
+.activity-row:last-child{border-bottom:none}
+.act-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--brand-100);color:var(--brand-700);
+  display:grid;place-items:center;font-size:16px;flex-shrink:0;
+}
+.act-title{font-size:13px;font-weight:500}
+.act-date{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+
+/* =============================================================
+   Grids
+   ============================================================= */
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-auto{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+
+.tile{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1rem;text-align:center;cursor:pointer;
+  transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);
+}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--brand-500)}
+.tile-icon{
+  width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+  margin:0 auto 10px;font-size:22px;
+}
+.tile h4{font-size:14px;font-weight:600;margin:0}
+.tile p{font-size:12px;color:var(--color-text-secondary);margin:4px 0 0;line-height:1.5}
+
+/* =============================================================
+   Members directory
+   ============================================================= */
+.member-card{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:1.25rem 1rem;
+}
+.avatar{
+  width:70px;height:70px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-700),var(--brand-500));
+  color:#fff;display:grid;place-items:center;font-size:22px;font-weight:700;
+  margin-bottom:12px;box-shadow:var(--shadow);
+}
+.member-card .name{font-size:15px;font-weight:600}
+.member-card .role{font-size:12px;color:var(--brand-700);margin-top:3px;font-weight:500}
+.member-card .dept{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+
+@media (max-width: 860px){
+  .gold-president{flex-direction:column;text-align:center}
+}
+
+/* Leadership board - navy & gold theme (from PDF) */
+.leadership-wrap{
+  background:#0b1f3f;
+  border-radius:var(--radius-lg);
+  padding:1.75rem clamp(1rem,3vw,2rem);
+  color:#f4f1e8;
+}
+.leadership-wrap .sec-head h2,
+.leadership-wrap .sec-head .sub{color:#f4f1e8}
+.leadership-wrap .sec-head .sub{opacity:.7}
+.leadership-wrap .sec-head{border-bottom:1px solid rgba(212,175,55,.25)}
+
+.gold-president{
+  display:flex;align-items:center;gap:18px;
+  background:linear-gradient(135deg,#142b52,#0b1f3f);
+  border:1px solid #d4af37;border-radius:var(--radius);
+  padding:1.5rem;box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.gold-president .avatar{
+  width:66px;height:66px;border-radius:50%;
+  background:#0b1f3f;border:2px solid #d4af37;
+  display:grid;place-items:center;font-size:26px;color:#d4af37;flex-shrink:0;
+}
+.gold-president .label{font-size:12px;color:#d4af37;font-weight:600;letter-spacing:.5px}
+.gold-president .name{font-size:20px;font-weight:700;margin-top:4px;color:#fff}
+
+.gold-deputy{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(212,175,55,.35);border-radius:var(--radius);
+  padding:1.25rem 1rem;
+}
+.gold-deputy .avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:#142b52;border:2px solid #d4af37;color:#d4af37;
+  display:grid;place-items:center;font-size:16px;font-weight:700;
+  margin-bottom:10px;
+}
+.gold-deputy .name{font-size:14px;font-weight:600;color:#fff}
+.gold-deputy .role{font-size:11px;color:#d4af37;margin-top:3px;font-weight:600}
+
+.gold-office{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);
+  padding:14px;transition:border-color var(--transition),background var(--transition);
+}
+.gold-office:hover{border-color:#d4af37;background:rgba(212,175,55,.06)}
+.gold-office .icon{
+  width:42px;height:42px;border-radius:10px;flex-shrink:0;
+  background:rgba(212,175,55,.12);color:#d4af37;border:1px solid rgba(212,175,55,.3);
+  display:grid;place-items:center;font-size:18px;
+}
+.gold-office .name{font-size:13px;font-weight:600;color:#fff}
+.gold-office .role{font-size:11px;color:#bcc4d6;margin-top:2px}
+
+.gold-section-title{
+  font-size:15px;font-weight:600;color:#d4af37;margin:22px 0 12px;
+  display:flex;align-items:center;gap:6px;
+}
+.social-row{display:flex;gap:6px;margin-top:12px}
+.social-row a{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--color-surface-2);color:var(--color-text-secondary);
+  display:grid;place-items:center;font-size:14px;
+}
+.social-row a:hover{background:var(--brand-100);color:var(--brand-700)}
+
+/* =============================================================
+   Faculties
+   ============================================================= */
+.faculty-card{padding:1.1rem 1.25rem}
+.faculty-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.faculty-icon{width:42px;height:42px;border-radius:10px;background:var(--brand-100);color:var(--brand-700);display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.faculty-name{font-size:14px;font-weight:600}
+.faculty-count{font-size:11px;color:var(--color-text-secondary)}
+.faculty-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.faculty-tag{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--color-surface-2);color:var(--color-text-secondary)}
+
+/* =============================================================
+   Timeline (History + Activity Planner)
+   ============================================================= */
+.timeline{position:relative;padding-inline-start:0;padding-inline-end:0;margin:0;list-style:none}
+.timeline::before{
+  content:"";position:absolute;top:0;bottom:0;
+  inset-inline-start:18px;width:2px;background:var(--color-border);
+}
+.timeline > li{position:relative;padding-inline-start:48px;padding-block:14px;}
+.timeline > li::before{
+  content:"";position:absolute;inset-inline-start:11px;top:22px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--color-surface);border:3px solid var(--brand-700);
+  box-shadow:0 0 0 3px var(--color-bg);
+}
+.timeline .t-year{font-size:13px;font-weight:700;color:var(--brand-700);margin-bottom:3px}
+.timeline .t-title{font-size:14px;font-weight:600}
+.timeline .t-desc{font-size:12px;color:var(--color-text-secondary);margin-top:3px;line-height:1.6}
+
+/* FAQ Accordion */
+.faq-item{border-bottom:1px solid var(--color-border)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{
+  width:100%;text-align:start;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 4px;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--color-text);
+}
+.faq-q i{transition:transform var(--transition);color:var(--brand-700);flex-shrink:0}
+.faq-item.is-open .faq-q i{transform:rotate(180deg)}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height var(--transition);
+  font-size:13px;color:var(--color-text-secondary);line-height:1.8;
+}
+.faq-item.is-open .faq-a{max-height:240px}
+.faq-a-inner{padding:0 4px 14px}
+
+/* Planner with month tabs */
+.planner-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.planner-tab{
+  padding:7px 14px;border-radius:999px;font-size:12px;font-weight:500;
+  background:var(--color-surface-2);color:var(--color-text-secondary);
+  border:1px solid transparent;cursor:pointer;
+}
+.planner-tab.is-active{background:var(--brand-700);color:#fff;border-color:var(--brand-700)}
+.planner-empty{text-align:center;padding:2rem;color:var(--color-text-muted);font-size:13px}
+
+/* =============================================================
+   News filters
+   ============================================================= */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{
+  padding:6px 14px;border-radius:999px;font-size:12px;font-weight:500;
+  background:var(--color-surface-2);color:var(--color-text-secondary);
+  border:1px solid transparent;cursor:pointer;
+  transition:background var(--transition),color var(--transition);
+}
+.chip:hover{background:var(--color-surface-3)}
+.chip.is-active{background:var(--brand-100);color:var(--brand-900);border-color:var(--brand-500)}
+
+/* =============================================================
+   Courses
+   ============================================================= */
+.course-card{display:flex;flex-direction:column;gap:10px;padding:0;overflow:hidden}
+.course-cover{
+  height:120px;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));
+  display:grid;place-items:center;color:#fff;font-size:36px;
+  position:relative;
+}
+.course-cover.alt-1{background:linear-gradient(135deg,#11998e,#38ef7d)}
+.course-cover.alt-2{background:linear-gradient(135deg,#fc4a1a,#f7b733)}
+.course-cover.alt-3{background:linear-gradient(135deg,#834d9b,#d04ed6)}
+.course-cover.alt-4{background:linear-gradient(135deg,#0072ff,#00c6ff)}
+.course-body{padding:0 1.25rem 1.1rem;display:flex;flex-direction:column;gap:8px}
+.course-title{font-size:15px;font-weight:600;line-height:1.4}
+.course-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.6;flex:1}
+.course-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--color-text-secondary);padding-top:8px;border-top:1px dashed var(--color-border)}
+.course-cta{display:flex;gap:8px;margin-top:6px}
+.course-cta .btn{flex:1;justify-content:center;font-size:12px;padding:8px 12px}
+
+/* =============================================================
+   Library
+   ============================================================= */
+.lib-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.lib-icon-btn{
+  width:36px;height:36px;border-radius:10px;background:var(--brand-100);
+  color:var(--brand-700);display:grid;place-items:center;font-size:18px;cursor:pointer;border:none;
+}
+.lib-icon-btn:hover{background:var(--brand-500);color:#fff}
+
+/* =============================================================
+   AI assistant card
+   ============================================================= */
+.ai-card{
+  background:linear-gradient(135deg,var(--brand-50),var(--brand-100));
+  border:1px solid var(--brand-100);
+  border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-top:1.5rem;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.ai-avatar{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-700),var(--brand-900));
+  color:#fff;display:grid;place-items:center;font-size:22px;flex-shrink:0;
+  box-shadow:var(--shadow);
+}
+.ai-body{flex:1;min-width:0}
+.ai-body h3{font-size:15px;font-weight:600;color:var(--brand-900);margin:0}
+.ai-body > p{font-size:12px;color:var(--brand-700);margin:4px 0 0;line-height:1.6}
+.ai-input-row{display:flex;gap:8px;margin-top:10px}
+.ai-input-row input{
+  flex:1;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--color-border-strong);background:var(--color-surface);
+  font-size:13px;font-family:inherit;color:var(--color-text);
+}
+.ai-input-row input:focus{outline:none;border-color:var(--brand-500);box-shadow:0 0 0 3px rgba(42,125,200,.15)}
+.ai-log{
+  max-height:240px;overflow:auto;margin-top:10px;
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:10px;padding:10px;font-size:13px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.ai-msg{padding:8px 12px;border-radius:10px;line-height:1.5;max-width:90%}
+.ai-msg.user{align-self:flex-start;background:var(--brand-100);color:var(--brand-900)}
+.ai-msg.bot{align-self:flex-end;background:var(--color-surface-2);color:var(--color-text)}
+
+/* =============================================================
+   Chat rooms
+   ============================================================= */
+.chat-shell{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;min-height:520px}
+.chat-rooms{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:10px;overflow:auto;
+}
+.room-item{
+  display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;
+  cursor:pointer;transition:background var(--transition);
+}
+.room-item:hover{background:var(--color-surface-2)}
+.room-item.is-active{background:var(--brand-100)}
+.room-item.is-active .room-name{color:var(--brand-900)}
+.room-icon{width:34px;height:34px;border-radius:10px;background:var(--color-surface-2);display:grid;place-items:center;color:var(--brand-700);flex-shrink:0;font-size:16px}
+.room-name{font-size:13px;font-weight:600;color:var(--color-text)}
+.room-meta{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.room-online{margin-inline-start:auto;font-size:10px;background:var(--green-bg);color:var(--green-fg);padding:2px 8px;border-radius:999px;font-weight:600}
+
+.chat-main{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);display:flex;flex-direction:column;overflow:hidden;
+}
+.chat-header{padding:14px 18px;border-bottom:1px solid var(--color-border);display:flex;align-items:center;gap:10px}
+.chat-header .room-icon{width:40px;height:40px}
+.chat-header h3{font-size:15px;font-weight:600;margin:0}
+.chat-header .desc{font-size:11px;color:var(--color-text-secondary)}
+.chat-stream{flex:1;padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;background:var(--color-surface-2)}
+.bubble{
+  max-width:75%;padding:10px 14px;border-radius:14px;
+  font-size:13px;line-height:1.5;word-wrap:break-word;
+  position:relative;
+}
+.bubble .b-author{display:block;font-size:11px;font-weight:600;margin-bottom:3px;opacity:.8}
+.bubble .b-time{font-size:10px;opacity:.65;margin-top:4px;display:block}
+.bubble.them{background:var(--color-surface);align-self:flex-start;border-top-left-radius:4px;color:var(--color-text);box-shadow:var(--shadow-sm)}
+.bubble.me{background:var(--brand-700);color:#fff;align-self:flex-end;border-top-right-radius:4px}
+.chat-typing{font-size:11px;color:var(--color-text-muted);padding:0 18px 4px;height:16px}
+.chat-input{
+  display:flex;gap:8px;padding:12px;border-top:1px solid var(--color-border);background:var(--color-surface);
+}
+.chat-input input{
+  flex:1;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--color-border-strong);background:var(--color-surface-2);
+  font-size:13px;font-family:inherit;color:var(--color-text);
+}
+.chat-input input:focus{outline:none;border-color:var(--brand-500);background:var(--color-surface)}
+.chat-send{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--brand-700);color:#fff;border:none;display:grid;place-items:center;font-size:18px;
+}
+.chat-send:hover{background:var(--brand-900)}
+
+/* =============================================================
+   Login
+   ============================================================= */
+.login-wrap{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:2rem 0}
+.login-box{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);padding:2rem;width:min(100%,400px);
+  box-shadow:var(--shadow-lg);
+}
+.login-box h2{font-size:20px;font-weight:700;text-align:center;margin:0 0 4px}
+.login-box .sub{font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:1.4rem}
+.role-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.4rem}
+.role-btn{
+  padding:12px 8px;border-radius:10px;
+  border:1px solid var(--color-border-strong);background:transparent;
+  font-size:12px;color:var(--color-text-secondary);text-align:center;font-family:inherit;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:all var(--transition);
+}
+.role-btn i{font-size:20px}
+.role-btn:hover{border-color:var(--brand-500);color:var(--brand-700)}
+.role-btn.is-selected{background:var(--brand-100);border-color:var(--brand-500);color:var(--brand-900)}
+.form-row{margin-bottom:12px}
+.form-row label{font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:6px;font-weight:500}
+.form-row input{
+  width:100%;padding:11px 14px;border-radius:10px;
+  border:1px solid var(--color-border-strong);background:var(--color-surface);
+  font-size:13px;font-family:inherit;color:var(--color-text);
+}
+.form-row input:focus{outline:none;border-color:var(--brand-500);box-shadow:0 0 0 3px rgba(42,125,200,.15)}
+.login-btn{
+  width:100%;background:var(--brand-700);color:#fff;border:none;
+  padding:12px;border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;
+  margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.login-btn:hover{background:var(--brand-900)}
+
+/* =============================================================
+   Modal
+   ============================================================= */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(10,18,30,.55);backdrop-filter:blur(2px);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:1rem;
+}
+.modal-backdrop.is-open{display:flex;animation:fade .2s ease}
+.modal{
+  background:var(--color-surface);border-radius:var(--radius-xl);
+  width:min(100%,460px);max-height:90vh;overflow:auto;
+  box-shadow:var(--shadow-lg);
+}
+.modal-head{padding:18px;border-bottom:1px solid var(--color-border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.modal-head h3{font-size:16px;font-weight:600;margin:0}
+.modal-close{background:transparent;border:none;color:var(--color-text-secondary);font-size:22px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px}
+.modal-close:hover{background:var(--color-surface-2);color:var(--color-text)}
+.modal-body{padding:18px}
+.modal-foot{padding:14px 18px;border-top:1px solid var(--color-border);display:flex;justify-content:flex-end;gap:8px}
+
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--color-text);color:var(--color-bg);
+  padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;
+  transition:opacity var(--transition),transform var(--transition);z-index:200;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* =============================================================
+   Footer
+   ============================================================= */
+.footer{
+  background:var(--brand-900);color:rgba(255,255,255,.78);
+  padding:1.5rem clamp(12px,3vw,24px);margin-top:2rem;
+}
+.footer-inner{
+  max-width:var(--container);margin-inline:auto;
+  display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:24px;
+}
+.footer h4{color:#fff;font-size:14px;font-weight:600;margin:0 0 10px}
+.footer ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.footer a{color:rgba(255,255,255,.78);font-size:12px}
+.footer a:hover{color:#fff}
+.footer-bottom{
+  max-width:var(--container);margin:1.5rem auto 0;padding-top:1rem;
+  border-top:1px solid rgba(255,255,255,.12);
+  text-align:center;font-size:12px;color:rgba(255,255,255,.6);
+}
+.footer-bottom span{color:#fff;font-weight:600}
+
+/* =============================================================
+   Responsive
+   ============================================================= */
+@media (max-width: 980px){
+  .two-col{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:repeat(3,1fr)}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 720px){
+  .grid-3,.grid-4{grid-template-columns:repeat(2,1fr)}
+  .chat-shell{grid-template-columns:1fr;min-height:auto}
+  .chat-rooms{max-height:200px}
+  .footer-inner{grid-template-columns:1fr}
+  .topbar-actions .btn-pill .label-md{display:none}
+  .logo-sub{display:none}
+}
+@media (max-width: 480px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .nav-link{padding:10px 10px;font-size:12px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="sr-only">تخطي إلى المحتوى الرئيسي</a>
+
+<!-- ====== TOP BAR ====== -->
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-mark" aria-hidden="true">U.Z.S.U</div>
+      <div>
+        <div class="logo-text">ZU Connect</div>
+        <div class="logo-sub">اتحاد طلبة جامعة الزاوية</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-pill" data-nav="login" type="button">
+        <i class="ti ti-user" aria-hidden="true"></i>
+        <span class="label-md">تسجيل دخول</span>
+      </button>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="تبديل الوضع الداكن">
+        <i class="ti ti-moon" aria-hidden="true"></i>
+      </button>
+      <button class="icon-btn" type="button" aria-label="الإشعارات">
+        <i class="ti ti-bell" aria-hidden="true"></i>
+        <span class="notif-dot" aria-hidden="true"></span>
+      </button>
+      <button class="icon-btn" type="button" aria-label="بحث">
+        <i class="ti ti-search" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ====== NAV ====== -->
+<nav class="nav-bar" aria-label="التنقل الرئيسي">
+  <div class="nav-inner" id="primaryNav">
+    <button class="nav-link is-active" data-nav="home"><i class="ti ti-home" aria-hidden="true"></i>الرئيسية</button>
+    <button class="nav-link" data-nav="about"><i class="ti ti-info-circle" aria-hidden="true"></i>عن الاتحاد</button>
+    <button class="nav-link" data-nav="members"><i class="ti ti-users-group" aria-hidden="true"></i>أعضاء الاتحاد</button>
+    <button class="nav-link" data-nav="colleges"><i class="ti ti-building" aria-hidden="true"></i>الكليات</button>
+    <button class="nav-link" data-nav="news"><i class="ti ti-news" aria-hidden="true"></i>الأخبار والأنشطة</button>
+    <button class="nav-link" data-nav="courses"><i class="ti ti-school" aria-hidden="true"></i>الدورات التدريبية</button>
+    <button class="nav-link" data-nav="planner"><i class="ti ti-calendar-event" aria-hidden="true"></i>الأنشطة القادمة</button>
+    <button class="nav-link" data-nav="chat"><i class="ti ti-messages" aria-hidden="true"></i>غرف النقاش</button>
+    <button class="nav-link" data-nav="services"><i class="ti ti-grid-dots" aria-hidden="true"></i>الخدمات</button>
+    <button class="nav-link" data-nav="suggestions"><i class="ti ti-bulb" aria-hidden="true"></i>اقترح / تواصل</button>
+    <button class="nav-link" data-nav="volunteer"><i class="ti ti-heart-handshake" aria-hidden="true"></i>تطوع معنا</button>
+    <button class="nav-link" data-nav="faq"><i class="ti ti-help-circle" aria-hidden="true"></i>الأسئلة الشائعة</button>
+    <button class="nav-link" data-nav="library"><i class="ti ti-books" aria-hidden="true"></i>المكتبة</button>
+    <button class="nav-link" data-nav="login"><i class="ti ti-lock" aria-hidden="true"></i>الدخول</button>
+  </div>
+</nav>
+
+<main id="main">
+
+
+<!-- ====== HOME ====== -->
+<section id="page-home" class="page is-active" aria-labelledby="home-title">
+  <div class="hero">
+    <h1 id="home-title">مرحباً بك في ZU Connect</h1>
+    <p>منصتك الطلابية الشاملة — أخبار، أنشطة، كورسات، مكتبة رقمية، وغرف نقاش حية.<br>كل ما يحتاجه طالب جامعة الزاوية في مكان واحد.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" data-nav="services"><i class="ti ti-rocket" aria-hidden="true"></i>استكشف الخدمات</button>
+      <button class="btn btn-ghost" data-nav="login"><i class="ti ti-login" aria-hidden="true"></i>تسجيل الدخول</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">5,240</div><div class="stat-label">طالب مسجل</div></div>
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">كلية ومعهد</div></div>
+    <div class="stat-card"><div class="stat-num">48</div><div class="stat-label">نشاط هذا العام</div></div>
+    <div class="stat-card"><div class="stat-num">320</div><div class="stat-label">ملف في المكتبة</div></div>
+  </div>
+
+  <!-- ====== LEADERSHIP BOARD ====== -->
+  <div class="container" style="padding-top:1.75rem">
+    <div class="leadership-wrap">
+      <div class="sec-head"><h2><i class="ti ti-hierarchy-2" aria-hidden="true"></i>الهيكل الإداري للاتحاد العام</h2><span class="sub">الاتحاد العام لطلبة جامعة الزاوية</span></div>
+
+      <!-- President -->
+      <div class="gold-president" style="margin-top:16px">
+        <div class="avatar"><i class="ti ti-star" aria-hidden="true"></i></div>
+        <div>
+          <div class="label">رئيس الاتحاد العام</div>
+          <div class="name">محمد وسام الفراح</div>
+        </div>
+      </div>
+
+      <!-- Deputies -->
+      <div class="grid grid-2" style="margin-top:14px">
+        <div class="gold-deputy">
+          <div class="avatar">م.ك</div>
+          <div class="name">مالك علي كشلاف</div>
+          <div class="role">النائب الأول</div>
+        </div>
+        <div class="gold-deputy">
+          <div class="avatar">ع.ح</div>
+          <div class="name">عبد المجيد محمد الحمري</div>
+          <div class="role">النائب الثاني</div>
+        </div>
+      </div>
+
+      <!-- Offices -->
+      <div class="gold-section-title"><i class="ti ti-building-bank" aria-hidden="true"></i> المكاتب التنفيذية</div>
+      <div class="grid grid-3" id="leadershipOffices"></div>
+    </div>
+  </div>
+
+
+  <div class="container" style="padding-top:1.75rem">
+    <div class="two-col">
+      <div>
+        <div class="sec-head">
+          <h2><i class="ti ti-news" aria-hidden="true"></i>آخر الأخبار</h2>
+          <button class="link" data-nav="news">عرض الكل ←</button>
+        </div>
+        <div class="news-list" id="homeNews"></div>
+      </div>
+      <aside>
+        <div class="card">
+          <h3 style="font-size:14px;font-weight:600;margin:0 0 6px"><i class="ti ti-calendar-event" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:4px"></i>الأنشطة القادمة</h3>
+          <div id="homeUpcoming"></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3 style="font-size:14px;font-weight:600;margin:0 0 6px"><i class="ti ti-trending-up" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:4px"></i>المنح والفرص</h3>
+          <div class="activity-row"><div class="act-icon" style="background:var(--green-bg);color:var(--green-fg)"><i class="ti ti-school" aria-hidden="true"></i></div><div><div class="act-title">منحة دراسية تركية</div><div class="act-date">آخر موعد: 30 مايو</div></div></div>
+          <div class="activity-row"><div class="act-icon" style="background:var(--green-bg);color:var(--green-fg)"><i class="ti ti-world" aria-hidden="true"></i></div><div><div class="act-title">برنامج تبادل طلابي</div><div class="act-date">آخر موعد: 10 يونيو</div></div></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="ai-card">
+      <div class="ai-avatar"><i class="ti ti-robot" aria-hidden="true"></i></div>
+      <div class="ai-body">
+        <h3>المساعد الذكي للطلبة</h3>
+        <p>اسألني عن مواعيد الامتحانات، خطة دراستك، أو أي شيء يخص حياتك الجامعية.</p>
+        <div class="ai-input-row">
+          <input type="text" id="aiInput" placeholder="اكتب سؤالك هنا..." aria-label="سؤال للمساعد" />
+          <button class="btn btn-solid" id="aiSend" type="button">إرسال<i class="ti ti-send" aria-hidden="true"></i></button>
+        </div>
+        <div class="ai-log" id="aiLog" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== ABOUT & HISTORY ====== -->
+<section id="page-about" class="page" aria-labelledby="about-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head"><h2 id="about-title"><i class="ti ti-info-circle" aria-hidden="true"></i>عن اتحاد الطلبة</h2></div>
+
+    <div class="grid grid-2" style="margin-bottom:24px">
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin:0 0 8px;color:var(--brand-900)"><i class="ti ti-target-arrow" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:6px"></i>رسالتنا</h3>
+        <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;margin:0">نمثل أصوات طلبة جامعة الزاوية ونسعى لخلق بيئة أكاديمية وثقافية واجتماعية داعمة، من خلال التواصل الفعّال مع إدارة الجامعة، ونقل مطالب الطلاب، وتنظيم أنشطة تثري تجربتهم الجامعية.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin:0 0 8px;color:var(--brand-900)"><i class="ti ti-eye" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:6px"></i>رؤيتنا 2030</h3>
+        <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;margin:0">أن نكون نموذجاً لاتحاد طلابي فعّال يساهم في التنمية الأكاديمية، يحقق تطلعات الجيل الجديد نحو مستقبل واعد، ويُعد جامعة الزاوية مرجعاً للعمل الطلابي في المنطقة.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-bottom:28px">
+      <div class="card" style="text-align:center"><div style="font-size:28px;color:var(--brand-700)"><i class="ti ti-flag" aria-hidden="true"></i></div><div style="font-size:22px;font-weight:700;margin-top:6px">2008</div><div style="font-size:12px;color:var(--color-text-secondary)">سنة التأسيس</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:28px;color:var(--brand-700)"><i class="ti ti-users" aria-hidden="true"></i></div><div style="font-size:22px;font-weight:700;margin-top:6px">5,240+</div><div style="font-size:12px;color:var(--color-text-secondary)">طالب وطالبة</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:28px;color:var(--brand-700)"><i class="ti ti-trophy" aria-hidden="true"></i></div><div style="font-size:22px;font-weight:700;margin-top:6px">120+</div><div style="font-size:12px;color:var(--color-text-secondary)">نشاط ومبادرة</div></div>
+    </div>
+
+    <div class="sec-head"><h2><i class="ti ti-history" aria-hidden="true"></i>المسيرة التاريخية</h2><span class="sub">من التأسيس إلى اليوم</span></div>
+    <div class="card">
+      <ul class="timeline">
+        <li><div class="t-year">2008</div><div class="t-title">تأسيس اتحاد الطلبة</div><div class="t-desc">انطلاقة الاتحاد كصوت رسمي لطلبة جامعة الزاوية، بمجلس مكوّن من 9 أعضاء.</div></li>
+        <li><div class="t-year">2012</div><div class="t-title">أول مؤتمر طلابي وطني</div><div class="t-desc">استضافة وفود من 7 جامعات ليبية لمناقشة تطوير العمل الطلابي.</div></li>
+        <li><div class="t-year">2016</div><div class="t-title">إطلاق برامج التدريب الصيفي</div><div class="t-desc">شراكات مع شركات محلية لتأهيل الطلاب في تخصصات الهندسة والتقنية.</div></li>
+        <li><div class="t-year">2019</div><div class="t-title">توسعة كليات الاتحاد</div><div class="t-desc">انضمام 3 كليات جديدة، ليصبح إجمالي الكليات 12 كلية ومعهد.</div></li>
+        <li><div class="t-year">2022</div><div class="t-title">إطلاق المكتبة الرقمية</div><div class="t-desc">منصة إلكترونية تضم ملخصات وبحوث وكتب PDF بإتاحة كاملة للطلاب.</div></li>
+        <li><div class="t-year">2024</div><div class="t-title">إطلاق برنامج المنح الدولية</div><div class="t-desc">تنسيق مع جامعات تركية وتونسية ومغربية لإيفاد الطلاب المتميزين.</div></li>
+        <li><div class="t-year">2026</div><div class="t-title">منصة ZU Connect</div><div class="t-desc">إطلاق المنصة الرقمية الموحّدة لربط الطلاب بالخدمات والأنشطة وغرف النقاش.</div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MEMBERS DIRECTORY ====== -->
+<section id="page-members" class="page" aria-labelledby="members-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head">
+      <h2 id="members-title"><i class="ti ti-users-group" aria-hidden="true"></i>أعضاء مجلس الاتحاد</h2>
+      <span class="sub">الدورة 2025 - 2027</span>
+    </div>
+
+    <div class="filter-row" id="memberFilters">
+      <button class="chip is-active" data-filter="all">الكل</button>
+      <button class="chip" data-filter="leadership">القيادة التنفيذية</button>
+      <button class="chip" data-filter="committees">رؤساء اللجان</button>
+      <button class="chip" data-filter="reps">ممثلو الكليات</button>
+    </div>
+
+    <div class="grid grid-3" id="membersGrid"></div>
+  </div>
+</section>
+
+<!-- ====== COLLEGES ====== -->
+<section id="page-colleges" class="page" aria-labelledby="colleges-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head">
+      <h2 id="colleges-title"><i class="ti ti-building" aria-hidden="true"></i>كليات جامعة الزاوية</h2>
+      <span class="sub">12 كلية ومعهد تشكّل الاتحاد</span>
+    </div>
+    <div class="grid grid-3" id="collegesGrid"></div>
+  </div>
+</section>
+
+<!-- ====== NEWS & ACTIVITIES FEED ====== -->
+<section id="page-news" class="page" aria-labelledby="news-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head">
+      <h2 id="news-title"><i class="ti ti-news" aria-hidden="true"></i>الأخبار والأنشطة</h2>
+      <span class="sub">آخر التحديثات والفعاليات</span>
+    </div>
+    <div class="filter-row" id="newsFilters">
+      <button class="chip is-active" data-filter="all">الكل</button>
+      <button class="chip" data-filter="news">أخبار</button>
+      <button class="chip" data-filter="event">فعاليات</button>
+      <button class="chip" data-filter="course">دورات</button>
+      <button class="chip" data-filter="urgent">عاجل</button>
+      <button class="chip" data-filter="completed">أنشطة منجزة</button>
+    </div>
+    <div class="news-list" id="newsList"></div>
+  </div>
+</section>
+
+<!-- ====== COURSES ====== -->
+<section id="page-courses" class="page" aria-labelledby="courses-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head">
+      <h2 id="courses-title"><i class="ti ti-school" aria-hidden="true"></i>بوابة الدورات التدريبية</h2>
+      <span class="sub">سجل في الدورات المتاحة وتابع تقدمك</span>
+    </div>
+    <div class="filter-row" id="courseFilters">
+      <button class="chip is-active" data-filter="all">جميع التخصصات</button>
+      <button class="chip" data-filter="tech">تقنية وبرمجة</button>
+      <button class="chip" data-filter="lang">لغات</button>
+      <button class="chip" data-filter="soft">مهارات شخصية</button>
+      <button class="chip" data-filter="business">إدارة وأعمال</button>
+    </div>
+    <div class="grid grid-3" id="coursesGrid"></div>
+  </div>
+</section>
+
+<!-- ====== ACTIVITY PLANNER ====== -->
+<section id="page-planner" class="page" aria-labelledby="planner-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head">
+      <h2 id="planner-title"><i class="ti ti-calendar-event" aria-hidden="true"></i>مخطط الأنشطة القادمة</h2>
+      <span class="sub">جدول زمني للفعاليات والمبادرات</span>
+    </div>
+    <div class="planner-tabs" id="plannerTabs"></div>
+    <div class="card">
+      <ul class="timeline" id="plannerTimeline"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====== CHAT ROOMS ====== -->
+<section id="page-chat" class="page" aria-labelledby="chat-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head">
+      <h2 id="chat-title"><i class="ti ti-messages" aria-hidden="true"></i>غرف النقاش</h2>
+      <span class="sub">تواصل مع زملائك حسب الكلية أو الاهتمام</span>
+    </div>
+    <div class="chat-shell">
+      <div class="chat-rooms" id="chatRooms" role="tablist" aria-label="قائمة الغرف"></div>
+      <div class="chat-main">
+        <div class="chat-header" id="chatHeader"></div>
+        <div class="chat-stream" id="chatStream" aria-live="polite"></div>
+        <div class="chat-typing" id="chatTyping"></div>
+        <form class="chat-input" id="chatForm" autocomplete="off">
+          <input type="text" id="chatInput" placeholder="اكتب رسالتك..." aria-label="رسالة" required />
+          <button class="chat-send" type="submit" aria-label="إرسال"><i class="ti ti-send" aria-hidden="true"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SERVICES ====== -->
+<section id="page-services" class="page" aria-labelledby="services-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head"><h2 id="services-title"><i class="ti ti-grid-dots" aria-hidden="true"></i>الخدمات الطلابية</h2></div>
+    <div class="grid grid-4">
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-download" aria-hidden="true"></i></div><h4>تحميل النماذج</h4><p>نماذج رسمية جاهزة للتحميل</p></div>
+      <div class="tile" tabindex="0" data-nav="suggestions"><div class="tile-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-message-circle" aria-hidden="true"></i></div><h4>طلب دعم / شكوى</h4><p>أرسل مقترحاتك وشكاواك</p></div>
+      <div class="tile" tabindex="0" data-nav="planner"><div class="tile-icon" style="background:var(--green-bg);color:var(--green-fg)"><i class="ti ti-calendar-plus" aria-hidden="true"></i></div><h4>التسجيل في أنشطة</h4><p>سجل في الفعاليات والدورات</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--green-bg);color:var(--green-fg)"><i class="ti ti-certificate" aria-hidden="true"></i></div><h4>شهادات حضور</h4><p>احصل على شهادتك تلقائياً</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--amber-bg);color:var(--amber-fg)"><i class="ti ti-qrcode" aria-hidden="true"></i></div><h4>QR الفعاليات</h4><p>تسجيل دخول سريع للفعالية</p></div>
+      <div class="tile" tabindex="0" data-nav="suggestions"><div class="tile-icon" style="background:var(--amber-bg);color:var(--amber-fg)"><i class="ti ti-bulb" aria-hidden="true"></i></div><h4>صندوق اقتراحات</h4><p>ساهم في تطوير الجامعة</p></div>
+      <div class="tile" tabindex="0" data-nav="volunteer"><div class="tile-icon" style="background:var(--green-bg);color:var(--green-fg)"><i class="ti ti-heart-handshake" aria-hidden="true"></i></div><h4>تطوع معنا</h4><p>انضم لفريق العمل التطوعي</p></div>
+      <div class="tile" tabindex="0" data-nav="faq"><div class="tile-icon" style="background:var(--violet-bg);color:var(--violet-fg)"><i class="ti ti-help-circle" aria-hidden="true"></i></div><h4>الأسئلة الشائعة</h4><p>إجابات سريعة لاستفساراتك</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--teal-bg);color:var(--teal-fg)"><i class="ti ti-map" aria-hidden="true"></i></div><h4>خريطة الجامعة</h4><p>دليل تفاعلي للحرم الجامعي</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--teal-bg);color:var(--teal-fg)"><i class="ti ti-checklist" aria-hidden="true"></i></div><h4>التصويت الإلكتروني</h4><p>شارك في انتخابات الاتحاد</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SUGGESTIONS / CONTACT ====== -->
+<section id="page-suggestions" class="page" aria-labelledby="suggestions-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head"><h2 id="suggestions-title"><i class="ti ti-bulb" aria-hidden="true"></i>اقترح / شكوى / تواصل معنا</h2></div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin:0 0 8px;color:var(--brand-900)"><i class="ti ti-message-2" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:6px"></i>أرسل اقتراحك أو شكواك</h3>
+        <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;margin:0 0 14px">رأيك يهمنا! سواء كان مقترحاً لتطوير الخدمات، شكوى أكاديمية أو إدارية، أو فكرة لنشاط جديد — الاتحاد يستمع لك ويعمل على إيصال صوتك للجهات المعنية.</p>
+        <form id="suggestForm">
+          <div class="form-row">
+            <label for="suggName">الاسم (اختياري)</label>
+            <input id="suggName" type="text" placeholder="اسمك الكامل" />
+          </div>
+          <div class="form-row">
+            <label for="suggCollege">الكلية</label>
+            <input id="suggCollege" type="text" placeholder="مثال: كلية التربية" />
+          </div>
+          <div class="form-row">
+            <label for="suggType">نوع الرسالة</label>
+            <select id="suggType" style="width:100%;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font-family:var(--font-sans);font-size:13px">
+              <option value="suggestion">اقتراح</option>
+              <option value="complaint">شكوى</option>
+              <option value="idea">فكرة نشاط</option>
+              <option value="other">أخرى</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="suggMsg">نص الرسالة</label>
+            <textarea id="suggMsg" rows="4" placeholder="اكتب تفاصيل اقتراحك أو شكواك هنا..." required style="width:100%;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font-family:var(--font-sans);font-size:13px;resize:vertical"></textarea>
+          </div>
+          <button class="login-btn" type="submit"><i class="ti ti-send" aria-hidden="true"></i>إرسال إلى الاتحاد</button>
+        </form>
+      </div>
+      <aside>
+        <div class="card">
+          <h3 style="font-size:15px;font-weight:600;margin:0 0 8px;color:var(--brand-900)"><i class="ti ti-phone" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:6px"></i>طرق التواصل المباشر</h3>
+          <div class="activity-row"><div class="act-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-mail" aria-hidden="true"></i></div><div><div class="act-title">البريد الإلكتروني</div><div class="act-date">union@zu.edu.ly</div></div></div>
+          <div class="activity-row"><div class="act-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-phone" aria-hidden="true"></i></div><div><div class="act-title">الهاتف</div><div class="act-date">+218 23 762 0000</div></div></div>
+          <div class="activity-row"><div class="act-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-brand-facebook" aria-hidden="true"></i></div><div><div class="act-title">صفحة الفيسبوك الرسمية</div><div class="act-date">اتحاد طلبة جامعة الزاوية</div></div></div>
+          <div class="activity-row"><div class="act-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-map-pin" aria-hidden="true"></i></div><div><div class="act-title">المقر</div><div class="act-date">مبنى الاتحاد - الحرم الجامعي، الزاوية</div></div></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3 style="font-size:14px;font-weight:600;margin:0 0 6px"><i class="ti ti-clock" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:4px"></i>أوقات الاستقبال</h3>
+          <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;margin:0">من الأحد إلى الخميس<br>9:00 صباحاً - 2:00 مساءً<br>مكتب الاتحاد - الإدارة العامة</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ====== VOLUNTEER ====== -->
+<section id="page-volunteer" class="page" aria-labelledby="volunteer-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head"><h2 id="volunteer-title"><i class="ti ti-heart-handshake" aria-hidden="true"></i>تطوع معنا</h2></div>
+    <div class="card" style="margin-bottom:20px">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.9;margin:0">انضم إلى فريق العمل التطوعي في الاتحاد، وكن جزءاً من المبادرات الطلابية والأنشطة الوطنية التي تخدم زملاءك والمجتمع. التطوع فرصة لتطوير مهاراتك في القيادة والتنظيم والعمل الجماعي.</p>
+    </div>
+    <div class="grid grid-3" style="margin-bottom:24px">
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--green-bg);color:var(--green-fg)"><i class="ti ti-recycle" aria-hidden="true"></i></div><h4>حملات بيئية</h4><p>تنظيف الحرم الجامعي وحملات التوعية البيئية</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--red-bg);color:var(--red-fg)"><i class="ti ti-droplet" aria-hidden="true"></i></div><h4>حملات التبرع بالدم</h4><p>بالتعاون مع المركز الوطني لنقل الدم</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--amber-bg);color:var(--amber-fg)"><i class="ti ti-calendar-event" aria-hidden="true"></i></div><h4>تنظيم الفعاليات</h4><p>دعم لوجستي للمؤتمرات والمعارض والبطولات</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--teal-bg);color:var(--teal-fg)"><i class="ti ti-flag" aria-hidden="true"></i></div><h4>أعمال وطنية</h4><p>مبادرات مجتمعية بالتعاون مع جهات رسمية</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--violet-bg);color:var(--violet-fg)"><i class="ti ti-users" aria-hidden="true"></i></div><h4>استقبال الطلاب الجدد</h4><p>تيسير الإجراءات الأكاديمية لطلاب السنة الأولى</p></div>
+      <div class="tile" tabindex="0"><div class="tile-icon" style="background:var(--brand-100);color:var(--brand-700)"><i class="ti ti-microphone" aria-hidden="true"></i></div><h4>الإعلام والتصوير</h4><p>تغطية الأنشطة وإدارة محتوى الاتحاد</p></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:600;margin:0 0 10px;color:var(--brand-900)"><i class="ti ti-clipboard-list" aria-hidden="true" style="color:var(--brand-700);margin-inline-end:6px"></i>سجل كمتطوع</h3>
+      <form id="volunteerForm">
+        <div class="form-row">
+          <label for="volName">الاسم الكامل</label>
+          <input id="volName" type="text" placeholder="اسمك الكامل" required />
+        </div>
+        <div class="form-row">
+          <label for="volCollege">الكلية والسنة الدراسية</label>
+          <input id="volCollege" type="text" placeholder="مثال: كلية الآداب - السنة الثانية" required />
+        </div>
+        <div class="form-row">
+          <label for="volPhone">رقم الهاتف</label>
+          <input id="volPhone" type="text" placeholder="09xxxxxxxx" required />
+        </div>
+        <div class="form-row">
+          <label for="volArea">مجال التطوع المفضل</label>
+          <select id="volArea" style="width:100%;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font-family:var(--font-sans);font-size:13px">
+            <option value="env">حملات بيئية</option>
+            <option value="blood">التبرع بالدم</option>
+            <option value="events">تنظيم الفعاليات</option>
+            <option value="national">أعمال وطنية</option>
+            <option value="welcome">استقبال الطلاب الجدد</option>
+            <option value="media">الإعلام والتصوير</option>
+          </select>
+        </div>
+        <button class="login-btn" type="submit"><i class="ti ti-heart-handshake" aria-hidden="true"></i>سجل تطوعي الآن</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FAQ ====== -->
+<section id="page-faq" class="page" aria-labelledby="faq-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head"><h2 id="faq-title"><i class="ti ti-help-circle" aria-hidden="true"></i>الأسئلة الشائعة</h2><span class="sub">إجابات سريعة لطلاب الجامعة</span></div>
+    <div class="card" id="faqList"></div>
+  </div>
+</section>
+<section id="page-library" class="page" aria-labelledby="library-title">
+  <div class="container" style="padding-block:1.75rem">
+    <div class="sec-head"><h2 id="library-title"><i class="ti ti-books" aria-hidden="true"></i>المكتبة الرقمية</h2></div>
+    <div class="filter-row" id="libFilters">
+      <button class="chip is-active" data-filter="all">الكل</button>
+      <button class="chip" data-filter="summary">ملخصات</button>
+      <button class="chip" data-filter="research">بحوث</button>
+      <button class="chip" data-filter="book">كتب PDF</button>
+      <button class="chip" data-filter="record">تسجيلات</button>
+    </div>
+    <div class="grid grid-2" id="libGrid"></div>
+  </div>
+</section>
+
+<!-- ====== LOGIN ====== -->
+<section id="page-login" class="page" aria-labelledby="login-title">
+  <div class="login-wrap">
+    <div class="login-box">
+      <h2 id="login-title">تسجيل الدخول</h2>
+      <p class="sub">اختر نوع حسابك للمتابعة</p>
+      <div class="role-row" id="roleRow">
+        <button class="role-btn is-selected" type="button" data-role="student"><i class="ti ti-user" aria-hidden="true"></i>طالب</button>
+        <button class="role-btn" type="button" data-role="teacher"><i class="ti ti-chalkboard" aria-hidden="true"></i>أستاذ</button>
+        <button class="role-btn" type="button" data-role="admin"><i class="ti ti-settings" aria-hidden="true"></i>إدارة</button>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <div class="form-row">
+          <label for="loginUser">رقم القيد / البريد الجامعي</label>
+          <input id="loginUser" type="text" placeholder="أدخل رقم القيد" required />
+        </div>
+        <div class="form-row">
+          <label for="loginPass">كلمة المرور</label>
+          <input id="loginPass" type="password" placeholder="••••••••" required minlength="4" />
+        </div>
+        <button class="login-btn" type="submit">دخول<i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+      </form>
+      <p style="text-align:center;font-size:12px;color:var(--color-text-secondary);margin-top:14px">
+        هل نسيت كلمة المرور؟ <a href="#">استعادة</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ====== FOOTER ====== -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <h4>ZU Connect</h4>
+      <p style="font-size:12px;line-height:1.7;margin:0">المنصة الرقمية لاتحاد طلبة جامعة الزاوية. نسعى لتمكين الطالب أكاديمياً واجتماعياً.</p>
+    </div>
+    <div>
+      <h4>روابط سريعة</h4>
+      <ul>
+        <li><a href="#" data-nav="about">عن الاتحاد</a></li>
+        <li><a href="#" data-nav="news">الأخبار والأنشطة</a></li>
+        <li><a href="#" data-nav="suggestions">اقترح / تواصل</a></li>
+        <li><a href="#" data-nav="volunteer">تطوع معنا</a></li>
+        <li><a href="#" data-nav="faq">الأسئلة الشائعة</a></li>
+        <li><a href="#" data-nav="library">المكتبة الرقمية</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>تواصل معنا</h4>
+      <ul>
+        <li><i class="ti ti-mail" aria-hidden="true"></i> union@zu.edu.ly</li>
+        <li><i class="ti ti-phone" aria-hidden="true"></i> +218 23 762 0000</li>
+        <li><i class="ti ti-map-pin" aria-hidden="true"></i> جامعة الزاوية، ليبيا</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    جميع الحقوق محفوظة © 2026 | <span>ZU Connect — منصة طلبة جامعة الزاوية</span>
+  </div>
+</footer>
+
+<!-- ====== MODAL ====== -->
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">العنوان</h3>
+      <button class="modal-close" type="button" aria-label="إغلاق" data-close-modal>×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   DATA
+   ============================================================ */
+const NEWS = [
+  {id:1, type:"news",      tag:"جديد",  badge:"b-blue",  title:"انطلاق أسبوع الطالب السنوي بمشاركة جميع الكليات", body:"تنظم الاتحاد فعاليات متنوعة تشمل معارض، ورش عمل، ومسابقات ثقافية ورياضية.", date:"20 مايو 2026", views:412},
+  {id:2, type:"urgent",    tag:"عاجل",  badge:"b-amber", title:"إعلان مواعيد امتحانات الفصل الثاني 2025-2026",     body:"تبدأ امتحانات الفصل الثاني بتاريخ 15 يونيو، يرجى مراجعة الجداول لكل كلية.",      date:"18 مايو 2026", views:1830},
+  {id:3, type:"course",    tag:"دورة",  badge:"b-green", title:"دورة تدريبية مجانية في البرمجة بالتعاون مع شركة تقنية", body:"سجل الآن في الدورة المجانية لطلاب كليات الحاسوب والهندسة، تنطلق الأسبوع القادم.", date:"15 مايو 2026", views:967},
+  {id:4, type:"event",     tag:"فعالية", badge:"b-violet", title:"معرض المشاريع الطلابية 2026", body:"عرض لأفضل مشاريع التخرج من جميع الكليات، مع جوائز للمراكز الثلاثة الأولى.", date:"12 مايو 2026", views:540},
+  {id:5, type:"completed", tag:"منجز",  badge:"b-teal",  title:"اختتام بطولة الشطرنج الجامعية بنجاح",            body:"شارك أكثر من 80 طالباً، وحصد كأس البطولة طالب من كلية الهندسة.",                  date:"5 مايو 2026",  views:285},
+  {id:6, type:"news",      tag:"خبر",   badge:"b-blue",  title:"توقيع مذكرة تعاون مع جامعة طرابلس",            body:"تتضمن تبادل الخبرات والمشاركة في الأنشطة الطلابية والمؤتمرات العلمية.",          date:"2 مايو 2026",  views:610},
+  {id:7, type:"completed", tag:"منجز",  badge:"b-teal",  title:"حملة تبرع بالدم بمشاركة 200 طالب",                  body:"بالتعاون مع المركز الوطني لنقل الدم، حققت الحملة هدفها المستهدف.",              date:"28 أبريل 2026", views:430},
+];
+
+const MEMBERS = [
+  {ini:"م.ع", name:"محمد العماري",   role:"رئيس الاتحاد",        dept:"كلية الهندسة - السنة الخامسة",       cat:"leadership"},
+  {ini:"س.أ", name:"سارة الأحمدي",   role:"نائب الرئيس",         dept:"كلية الطب - السنة الرابعة",          cat:"leadership"},
+  {ini:"ع.م", name:"عبدالله المنصوري", role:"الأمين العام",       dept:"كلية القانون - السنة الثالثة",       cat:"leadership"},
+  {ini:"ف.خ", name:"فاطمة الخليفي",  role:"أمين الصندوق",        dept:"كلية الاقتصاد - السنة الرابعة",      cat:"leadership"},
+  {ini:"ي.ش", name:"يوسف الشريف",    role:"رئيس لجنة الثقافة",   dept:"كلية الآداب - السنة الثالثة",        cat:"committees"},
+  {ini:"ل.ر", name:"ليلى الرويمي",   role:"رئيس لجنة الأنشطة",   dept:"كلية التربية - السنة الثانية",       cat:"committees"},
+  {ini:"خ.ز", name:"خالد الزروق",    role:"رئيس اللجنة التقنية", dept:"كلية الحاسوب - السنة الرابعة",       cat:"committees"},
+  {ini:"ن.ب", name:"نور البشير",     role:"رئيس لجنة العلاقات",  dept:"كلية الإعلام - السنة الثالثة",       cat:"committees"},
+  {ini:"أ.ج", name:"أحمد الجبالي",   role:"ممثل كلية الهندسة",   dept:"السنة الرابعة - تخصص اتصالات",       cat:"reps"},
+  {ini:"ر.ع", name:"رنا العامري",    role:"ممثل كلية الطب",      dept:"السنة الخامسة - الطب البشري",        cat:"reps"},
+  {ini:"س.ق", name:"سالم القاضي",    role:"ممثل كلية القانون",   dept:"السنة الثالثة - قانون عام",          cat:"reps"},
+  {ini:"ه.م", name:"هدى المهدي",     role:"ممثل كلية الصيدلة",   dept:"السنة الرابعة - علوم صيدلية",        cat:"reps"},
+];
+
+const COLLEGES = [
+  {icon:"ti-cpu",            name:"الهندسة والتقنية",       count:"+850 طالب", tags:["أخبار","جداول","ملفات","نشاطات"]},
+  {icon:"ti-stethoscope",    name:"الطب البشري",            count:"+620 طالب", tags:["أخبار","جداول","ملفات","نشاطات"]},
+  {icon:"ti-vaccine",        name:"الصيدلة",                count:"+310 طالب", tags:["أخبار","جداول","ملفات"]},
+  {icon:"ti-scale",          name:"القانون والعلوم السياسية", count:"+410 طالب", tags:["أخبار","جداول","ملفات","نشاطات"]},
+  {icon:"ti-calculator",     name:"الاقتصاد والأعمال",      count:"+560 طالب", tags:["أخبار","جداول","ملفات","نشاطات"]},
+  {icon:"ti-device-desktop", name:"الحاسوب والمعلوماتية",   count:"+490 طالب", tags:["أخبار","جداول","ملفات","نشاطات"]},
+  {icon:"ti-atom",           name:"العلوم الأساسية",        count:"+380 طالب", tags:["أخبار","جداول","ملفات"]},
+  {icon:"ti-book",           name:"الآداب والإنسانيات",     count:"+520 طالب", tags:["أخبار","جداول","ملفات","نشاطات"]},
+  {icon:"ti-school",         name:"التربية",                count:"+460 طالب", tags:["أخبار","جداول","ملفات"]},
+  {icon:"ti-broadcast",      name:"الإعلام والاتصال",       count:"+220 طالب", tags:["أخبار","جداول","ملفات"]},
+  {icon:"ti-leaf",           name:"الزراعة",                count:"+180 طالب", tags:["أخبار","جداول","ملفات"]},
+  {icon:"ti-tools",          name:"المعهد العالي للتقنية",  count:"+250 طالب", tags:["أخبار","جداول","ملفات"]},
+];
+
+const COURSES = [
+  {id:"c1", icon:"ti-code",        cover:"alt-1", cat:"tech",     title:"مقدمة في تطوير الويب",    desc:"تعلم HTML, CSS, JavaScript من الصفر حتى بناء أول موقع متكامل.", instructor:"م. خالد الزروق", duration:"6 أسابيع", level:"مبتدئ", seats:30, enrolled:18},
+  {id:"c2", icon:"ti-brain",       cover:"alt-2", cat:"tech",     title:"الذكاء الاصطناعي للمبتدئين", desc:"مفاهيم الـAI والـMachine Learning مع تطبيقات عملية بـPython.",  instructor:"د. مراد الزاوي", duration:"8 أسابيع", level:"متوسط", seats:25, enrolled:25},
+  {id:"c3", icon:"ti-language",    cover:"alt-3", cat:"lang",     title:"الإنجليزية للأغراض الأكاديمية", desc:"تطوير مهارات القراءة والكتابة الأكاديمية باللغة الإنجليزية.", instructor:"أ. سارة المنتصر", duration:"10 أسابيع", level:"متوسط", seats:35, enrolled:22},
+  {id:"c4", icon:"ti-presentation",cover:"alt-4", cat:"soft",     title:"مهارات العرض والتقديم",    desc:"كيف تعرض أفكارك بثقة، تصمم شرائح احترافية، وتتعامل مع الجمهور.", instructor:"أ. ليلى الرويمي", duration:"4 أسابيع", level:"مبتدئ", seats:40, enrolled:31},
+  {id:"c5", icon:"ti-chart-pie",   cover:"",      cat:"business", title:"إدارة المشاريع الصغيرة",   desc:"دليل عملي لرواد الأعمال الطلاب من الفكرة إلى التنفيذ.",         instructor:"د. عماد المنصوري", duration:"6 أسابيع", level:"متوسط", seats:30, enrolled:12},
+  {id:"c6", icon:"ti-database",    cover:"alt-1", cat:"tech",     title:"قواعد البيانات SQL",       desc:"تعلم تصميم وإدارة قواعد البيانات العلائقية باستخدام SQL.",       instructor:"م. أحمد الجبالي", duration:"5 أسابيع", level:"مبتدئ", seats:28, enrolled:9},
+  {id:"c7", icon:"ti-microphone-2",cover:"alt-3", cat:"soft",     title:"فن التحدث أمام الجمهور",   desc:"بناء الثقة بالنفس وتقنيات الإلقاء الفعّال.",                     instructor:"أ. نور البشير",  duration:"3 أسابيع", level:"مبتدئ", seats:50, enrolled:38},
+  {id:"c8", icon:"ti-briefcase",   cover:"alt-2", cat:"business", title:"كتابة السيرة الذاتية",     desc:"كيف تصمم CV احترافي يفتح لك أبواب التوظيف.",                    instructor:"أ. هدى المهدي",  duration:"أسبوعان", level:"مبتدئ", seats:60, enrolled:44},
+  {id:"c9", icon:"ti-language-katakana", cover:"alt-4", cat:"lang", title:"اللغة التركية - مستوى أول", desc:"أساسيات اللغة التركية للراغبين في الدراسة بتركيا.",            instructor:"أ. مصطفى أوغلو", duration:"12 أسبوع", level:"مبتدئ", seats:25, enrolled:14},
+];
+
+const PLANNER = [
+  {month:"مايو 2026",  items:[
+    {date:"25 مايو", title:"بطولة كرة القدم بين الكليات", desc:"البطولة السنوية بمشاركة 8 فرق ممثلة لكليات الجامعة.", icon:"ti-tournament"},
+    {date:"30 مايو", title:"ورشة كتابة البحث العلمي",    desc:"ورشة تدريبية لطلاب الدراسات العليا والسنوات النهائية.", icon:"ti-writing"},
+  ]},
+  {month:"يونيو 2026", items:[
+    {date:"2 يونيو",  title:"حفل تكريم الطلاب المتفوقين", desc:"تكريم أوائل الكليات للعام الأكاديمي 2025-2026.",     icon:"ti-award"},
+    {date:"8 يونيو",  title:"ورشة الذكاء الاصطناعي",      desc:"ورشة عملية بالتعاون مع شركة تقنية ليبية.",          icon:"ti-device-laptop"},
+    {date:"14 يونيو", title:"حملة تطوعية لتنظيف الحرم",   desc:"مبادرة بيئية يقودها الاتحاد بمشاركة المتطوعين.",   icon:"ti-heart-handshake"},
+    {date:"22 يونيو", title:"معرض الكتاب الجامعي",        desc:"بمشاركة دور نشر محلية وعربية، وعروض خاصة للطلاب.",  icon:"ti-book"},
+  ]},
+  {month:"يوليو 2026", items:[
+    {date:"5 يوليو",  title:"المؤتمر الطلابي الوطني",     desc:"استضافة وفود من جامعات ليبية لمناقشة العمل الطلابي.", icon:"ti-microphone"},
+    {date:"12 يوليو", title:"بدء برنامج التدريب الصيفي",  desc:"فرص تدريبية في شركات نفطية وتقنية وصحية.",         icon:"ti-briefcase"},
+  ]},
+  {month:"أغسطس 2026", items:[
+    {date:"10 أغسطس", title:"رحلة طلابية إلى تونس",        desc:"رحلة ثقافية لـ40 طالبا متفوقا.",                  icon:"ti-plane"},
+    {date:"25 أغسطس", title:"ملتقى رواد الأعمال الطلاب",   desc:"عرض أفكار المشاريع والاستثمار في الأكثر وعداً.",  icon:"ti-rocket"},
+  ]},
+];
+
+const LIBRARY = [
+  {type:"summary",  badge:"b-blue",   tag:"ملخص",   title:"ملخص مقرر الخوارزميات – فصل 1",    sub:"هندسة الحاسوب · السنة الثالثة · 24 صفحة", stat:"230 تحميل", rating:"4.8", icon:"ti-download"},
+  {type:"book",     badge:"b-teal",   tag:"كتاب PDF",title:"مبادئ القانون التجاري الليبي",   sub:"كلية القانون · 180 صفحة",               stat:"180 تحميل", rating:"4.6", icon:"ti-download"},
+  {type:"research", badge:"b-amber",  tag:"بحث",    title:"التنمية الاقتصادية في ليبيا بعد 2011", sub:"كلية الاقتصاد · 56 صفحة",          stat:"95 تحميل",  rating:"4.4", icon:"ti-download"},
+  {type:"record",   badge:"b-red",    tag:"تسجيل",  title:"محاضرة الكيمياء العضوية – د. محمد", sub:"كلية العلوم · 1:20 ساعة",              stat:"340 مشاهدة", rating:"4.9", icon:"ti-player-play"},
+  {type:"summary",  badge:"b-blue",   tag:"ملخص",   title:"ملخص مقرر التشريح - الجهاز العصبي", sub:"كلية الطب · السنة الثانية · 38 صفحة",  stat:"410 تحميل", rating:"4.7", icon:"ti-download"},
+  {type:"book",     badge:"b-teal",   tag:"كتاب PDF",title:"أساسيات إدارة المشاريع",          sub:"كلية الاقتصاد · 220 صفحة",             stat:"150 تحميل", rating:"4.5", icon:"ti-download"},
+];
+
+const CHAT_ROOMS = [
+  {id:"general",   name:"الغرفة العامة",        desc:"نقاشات عامة لكل طلبة الجامعة", icon:"ti-message-2",   online:124},
+  {id:"engineering",name:"كلية الهندسة",        desc:"طلبة الهندسة والتقنية",        icon:"ti-cpu",         online:42},
+  {id:"medicine",  name:"كلية الطب والصيدلة",   desc:"تخصصات الطب والصيدلة",         icon:"ti-stethoscope", online:28},
+  {id:"computer",  name:"كلية الحاسوب",         desc:"البرمجة والذكاء الاصطناعي",    icon:"ti-device-desktop",online:51},
+  {id:"law",       name:"كلية القانون",         desc:"الدراسات القانونية والسياسية", icon:"ti-scale",       online:19},
+  {id:"events",    name:"الفعاليات والأنشطة",   desc:"تنسيق الأنشطة الطلابية",       icon:"ti-calendar-event",online:33},
+  {id:"help",      name:"المساعدة والدعم",      desc:"اطرح أسئلتك واحصل على إجابة",  icon:"ti-help",        online:14},
+];
+
+const SEED_MESSAGES = {
+  general: [
+    {author:"محمد العماري",  text:"السلام عليكم جميعاً، مرحبا بكم في الغرفة العامة 👋", time:"09:12", me:false},
+    {author:"سارة الأحمدي",  text:"أسبوع الطالب الجاي راح يكون ممتاز ان شاء الله 🎉", time:"09:18", me:false},
+    {author:"فاطمة الخليفي", text:"متى آخر موعد للتسجيل في الفعاليات؟",                time:"09:22", me:false},
+    {author:"عبدالله المنصوري",text:"التسجيل مفتوح لغاية 22 مايو من خلال صفحة الخدمات.", time:"09:25", me:false},
+  ],
+  engineering: [
+    {author:"أحمد الجبالي", text:"سلام، عندنا ورشة AutoCAD يوم الخميس", time:"10:01", me:false},
+    {author:"خالد الزروق",  text:"ممتاز! نحتاج برضه ورشة عن MATLAB",   time:"10:04", me:false},
+  ],
+  medicine: [
+    {author:"رنا العامري", text:"حد عنده ملخص جيد للجهاز التنفسي؟", time:"11:30", me:false},
+    {author:"هدى المهدي",  text:"موجود في المكتبة الرقمية، تبويب 'ملخصات'", time:"11:35", me:false},
+  ],
+  computer: [
+    {author:"خالد الزروق", text:"عندنا دورة جديدة في الذكاء الاصطناعي 🚀", time:"08:45", me:false},
+    {author:"يوسف الشريف", text:"شكلها قوية، سجلت فيها ✋",              time:"08:50", me:false},
+    {author:"محمد العماري",text:"المقاعد محدودة، سجلوا بسرعة!",           time:"08:55", me:false},
+  ],
+  law:       [{author:"سالم القاضي", text:"أي حد يعرف موعد محاضرة د. عبدالرحمن؟", time:"12:10", me:false}],
+  events:    [{author:"ليلى الرويمي",  text:"اللي يبي يساعد في تنظيم بطولة كرة القدم يكتب هنا 🙋‍♀️", time:"13:00", me:false}],
+  help:      [{author:"الدعم الفني",   text:"مرحباً، نحن هنا للمساعدة. اكتب سؤالك وسنرد عليك في أقرب وقت.", time:"08:00", me:false}],
+};
+
+const OFFICES = [
+  {icon:"ti-user-shield",   name:"عبد الإله عبد الرؤوف راشد", role:"مكتب شؤون الطلبة"},
+  {icon:"ti-speakerphone",  name:"أنور المقطوف",              role:"مكتب العلاقات العامة"},
+  {icon:"ti-briefcase",     name:"محمد هشام البشكار",         role:"مكتب الشؤون الإدارية"},
+  {icon:"ti-id-badge-2",    name:"عبد العزيز دخيل",           role:"مكتب العضوية"},
+  {icon:"ti-camera",        name:"إسلام غريبي",               role:"مكتب الإعلام"},
+  {icon:"ti-calendar-event",name:"أيهم نصرات",                role:"مكتب البرامج والأنشطة"},
+  {icon:"ti-gavel",         name:"عبد الكريم يحي",            role:"مكتب الشؤون القانونية"},
+  {icon:"ti-woman",         name:"أبرار علي سعيد",            role:"مكتب شؤون الطالبات"},
+  {icon:"ti-device-laptop", name:"عبد الرؤوف الطاهر",         role:"مكتب المنظومة والتحول الرقمي"},
+  {icon:"ti-ball-football",name:"إبراهيم يوسف ساسي",          role:"مكتب الأنشطة الرياضية"},
+  {icon:"ti-school",        name:"قاسم عبد السلام النمروش",   role:"مكتب شؤون الخريجين"},
+  {icon:"ti-chart-line",    name:"أبوبكر بكير",               role:"مكتب المتابعة والتطوير"},
+];
+
+const FAQ = [
+  {q:"كيف يمكنني تقديم اقتراح أو شكوى للاتحاد؟", a:"توجه إلى صفحة 'اقترح / تواصل' من القائمة الرئيسية، واملأ النموذج بنوع رسالتك (اقتراح، شكوى، فكرة نشاط). يمكنك أيضاً التواصل مباشرة عبر البريد union@zu.edu.ly أو زيارة مكتب الاتحاد."},
+  {q:"كيف أسجل في الدورات التدريبية؟", a:"من صفحة 'الدورات التدريبية' اختر الدورة المناسبة واضغط على زر التسجيل. تأكد من وجود مقاعد متاحة، وستصلك تفاصيل الدورة عبر بريدك الجامعي."},
+  {q:"كيف أنضم لفريق التطوع في الاتحاد؟", a:"زر صفحة 'تطوع معنا'، تصفح المجالات المتاحة (بيئية، تبرع بالدم، فعاليات، أعمال وطنية...) وسجل بياناتك في نموذج التطوع، وسيتواصل معك منسق المجال."},
+  {q:"أين أجد ملخصات ومراجع المقررات؟", a:"المكتبة الرقمية تحتوي على ملخصات، بحوث، كتب PDF، وتسجيلات محاضرات منظمة حسب التخصص. يمكنك التصفية حسب نوع المحتوى من صفحة 'المكتبة'."},
+  {q:"كيف أعرف مواعيد الأنشطة والفعاليات القادمة؟", a:"صفحة 'الأنشطة القادمة' تعرض جميع الفعاليات مرتبة شهرياً مع التواريخ والتفاصيل، كما تظهر آخر 4 أنشطة في الصفحة الرئيسية."},
+  {q:"من هم أعضاء مجلس الاتحاد الحالي؟", a:"يمكنك التعرف على القيادة التنفيذية، رؤساء اللجان، وممثلي الكليات من صفحة 'أعضاء الاتحاد'، مع إمكانية التصفية حسب الفئة."},
+  {q:"كيف أتواصل مع ممثل كليتي في الاتحاد؟", a:"ابحث عن اسم ممثل كليتك في صفحة 'أعضاء الاتحاد' تحت تصنيف 'ممثلو الكليات'، أو تواصل مع الاتحاد عبر صفحة 'اقترح / تواصل' وسنوجهك للشخص المناسب."},
+  {q:"هل يمكنني المشاركة في انتخابات الاتحاد؟", a:"نعم، التصويت الإلكتروني متاح لجميع الطلاب المسجلين عبر صفحة 'الخدمات الطلابية' في موعد الانتخابات السنوية، بعد تسجيل الدخول بحسابك الجامعي."},
+];
+
+const BOT_RESPONSES = [
+  "تم إرسال رسالتك إلى الغرفة 👍",
+  "شكراً لمشاركتك! نحن نقرأ جميع الرسائل.",
+  "ملاحظة جيدة، سنأخذها بعين الاعتبار.",
+  "للمزيد من التفاصيل تواصل مع منسق الكلية.",
+  "تم استلام طلبك، سيتم الرد خلال 24 ساعة.",
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  page: "home",
+  enrolled: new Set(JSON.parse(localStorage.getItem("zu_enrolled") || "[]")),
+  chats: JSON.parse(localStorage.getItem("zu_chats") || "null") || (() => {
+    const init = {};
+    Object.keys(SEED_MESSAGES).forEach(k => init[k] = [...SEED_MESSAGES[k]]);
+    return init;
+  })(),
+  activeRoom: "general",
+  user: { name: localStorage.getItem("zu_user") || "أنت" },
+};
+
+const persistChats = () => localStorage.setItem("zu_chats", JSON.stringify(state.chats));
+const persistEnrolled = () => localStorage.setItem("zu_enrolled", JSON.stringify([...state.enrolled]));
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $  = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const escapeHTML = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+let toastTimer;
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function navigate(target) {
+  const id = `page-${target}`;
+  const next = document.getElementById(id);
+  if (!next) return;
+  $$(".page").forEach(p => p.classList.remove("is-active"));
+  next.classList.add("is-active");
+  $$(".nav-link").forEach(b => b.classList.toggle("is-active", b.dataset.nav === target));
+  state.page = target;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.addEventListener("click", (e) => {
+  const navEl = e.target.closest("[data-nav]");
+  if (navEl) {
+    e.preventDefault();
+    navigate(navEl.dataset.nav);
+  }
+});
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+const root = document.documentElement;
+const savedTheme = localStorage.getItem("zu_theme");
+if (savedTheme === "dark" || (!savedTheme && window.matchMedia?.("(prefers-color-scheme: dark)").matches)) {
+  root.dataset.theme = "dark";
+}
+function syncThemeIcon() {
+  const dark = root.dataset.theme === "dark";
+  const ico = $("#themeToggle i");
+  if (ico) ico.className = dark ? "ti ti-sun" : "ti ti-moon";
+}
+syncThemeIcon();
+$("#themeToggle").addEventListener("click", () => {
+  const dark = root.dataset.theme === "dark";
+  if (dark) delete root.dataset.theme; else root.dataset.theme = "dark";
+  localStorage.setItem("zu_theme", dark ? "light" : "dark");
+  syncThemeIcon();
+});
+
+/* ============================================================
+   RENDERERS
+   ============================================================ */
+function renderNewsList(target, items) {
+  target.innerHTML = items.map(n => `
+    <article class="card news-card hoverable">
+      <div class="top">
+        <h3>${escapeHTML(n.title)}</h3>
+        <span class="badge ${n.badge}">${escapeHTML(n.tag)}</span>
+      </div>
+      <p>${escapeHTML(n.body)}</p>
+      <div class="meta">
+        <span><i class="ti ti-calendar" aria-hidden="true"></i>${escapeHTML(n.date)}</span>
+        <span><i class="ti ti-eye" aria-hidden="true"></i>${n.views.toLocaleString("ar-EG")} مشاهدة</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderHomeNews()  { renderNewsList($("#homeNews"), NEWS.slice(0, 3)); }
+function renderHomeUpcoming() {
+  const upcoming = PLANNER.flatMap(m => m.items).slice(0, 4);
+  $("#homeUpcoming").innerHTML = upcoming.map(a => `
+    <div class="activity-row">
+      <div class="act-icon"><i class="ti ${a.icon}" aria-hidden="true"></i></div>
+      <div><div class="act-title">${escapeHTML(a.title)}</div><div class="act-date">${escapeHTML(a.date)}</div></div>
+    </div>
+  `).join("");
+}
+
+function renderMembers(filter = "all") {
+  const list = filter === "all" ? MEMBERS : MEMBERS.filter(m => m.cat === filter);
+  $("#membersGrid").innerHTML = list.map(m => `
+    <article class="card member-card hoverable">
+      <div class="avatar" aria-hidden="true">${escapeHTML(m.ini)}</div>
+      <div class="name">${escapeHTML(m.name)}</div>
+      <div class="role">${escapeHTML(m.role)}</div>
+      <div class="dept">${escapeHTML(m.dept)}</div>
+      <div class="social-row">
+        <a href="#" aria-label="بريد"><i class="ti ti-mail" aria-hidden="true"></i></a>
+        <a href="#" aria-label="هاتف"><i class="ti ti-phone" aria-hidden="true"></i></a>
+        <a href="#" aria-label="رسالة"><i class="ti ti-message" aria-hidden="true"></i></a>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderColleges() {
+  $("#collegesGrid").innerHTML = COLLEGES.map(c => `
+    <article class="card faculty-card hoverable">
+      <div class="faculty-top">
+        <div class="faculty-icon"><i class="ti ${c.icon}" aria-hidden="true"></i></div>
+        <div>
+          <div class="faculty-name">${escapeHTML(c.name)}</div>
+          <div class="faculty-count">${escapeHTML(c.count)}</div>
+        </div>
+      </div>
+      <div class="faculty-tags">
+        ${c.tags.map(t => `<span class="faculty-tag">${escapeHTML(t)}</span>`).join("")}
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderNews(filter = "all") {
+  const list = filter === "all" ? NEWS : NEWS.filter(n => n.type === filter);
+  if (!list.length) { $("#newsList").innerHTML = `<div class="planner-empty">لا توجد أخبار في هذا التصنيف.</div>`; return; }
+  renderNewsList($("#newsList"), list);
+}
+
+function renderCourses(filter = "all") {
+  const list = filter === "all" ? COURSES : COURSES.filter(c => c.cat === filter);
+  $("#coursesGrid").innerHTML = list.map(c => {
+    const enrolled = state.enrolled.has(c.id);
+    const full = c.enrolled >= c.seats;
+    const pct = Math.round((c.enrolled / c.seats) * 100);
+    return `
+      <article class="card course-card hoverable">
+        <div class="course-cover ${c.cover}"><i class="ti ${c.icon}" aria-hidden="true"></i></div>
+        <div class="course-body">
+          <div class="course-title">${escapeHTML(c.title)}</div>
+          <div class="course-desc">${escapeHTML(c.desc)}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--color-text-secondary)">
+            <span class="badge b-muted"><i class="ti ti-user" aria-hidden="true"></i>${escapeHTML(c.instructor)}</span>
+            <span class="badge b-muted"><i class="ti ti-clock" aria-hidden="true"></i>${escapeHTML(c.duration)}</span>
+            <span class="badge b-muted"><i class="ti ti-stairs-up" aria-hidden="true"></i>${escapeHTML(c.level)}</span>
+          </div>
+          <div class="course-meta">
+            <span><i class="ti ti-users" aria-hidden="true"></i> ${c.enrolled}/${c.seats} مسجل (${pct}%)</span>
+            <span style="color:${full ? "var(--red-fg)" : "var(--green-fg)"}">${full ? "مكتمل" : "متاح"}</span>
+          </div>
+          <div class="course-cta">
+            <button class="btn ${enrolled ? "btn-outline" : "btn-solid"}" data-course="${c.id}" ${full && !enrolled ? "disabled" : ""}>
+              <i class="ti ${enrolled ? "ti-check" : "ti-pencil-plus"}" aria-hidden="true"></i>
+              ${enrolled ? "مُسجّل — إلغاء" : (full ? "مكتمل" : "تسجيل في الدورة")}
+            </button>
+            <button class="btn btn-outline" data-course-info="${c.id}"><i class="ti ti-info-circle" aria-hidden="true"></i>تفاصيل</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function renderPlanner() {
+  $("#plannerTabs").innerHTML = PLANNER.map((m, i) =>
+    `<button class="planner-tab${i === 0 ? " is-active" : ""}" data-month="${i}">${escapeHTML(m.month)}</button>`
+  ).join("") + `<button class="planner-tab" data-month="all">عرض الكل</button>`;
+  showPlannerMonth(0);
+}
+function showPlannerMonth(idx) {
+  const items = idx === "all" ? PLANNER.flatMap(m => m.items) : PLANNER[idx].items;
+  $("#plannerTimeline").innerHTML = items.map(it => `
+    <li>
+      <div class="t-year"><i class="ti ${it.icon}" aria-hidden="true" style="margin-inline-end:4px"></i>${escapeHTML(it.date)}</div>
+      <div class="t-title">${escapeHTML(it.title)}</div>
+      <div class="t-desc">${escapeHTML(it.desc)}</div>
+    </li>
+  `).join("");
+}
+
+function renderLibrary(filter = "all") {
+  const list = filter === "all" ? LIBRARY : LIBRARY.filter(l => l.type === filter);
+  if (!list.length) { $("#libGrid").innerHTML = `<div class="planner-empty">لا توجد ملفات في هذا التصنيف.</div>`; return; }
+  $("#libGrid").innerHTML = list.map(l => `
+    <article class="card lib-card hoverable">
+      <div class="top">
+        <div>
+          <span class="badge ${l.badge}" style="margin-bottom:6px;display:inline-block">${escapeHTML(l.tag)}</span>
+          <h3 style="font-size:14px;font-weight:600;margin:4px 0 0">${escapeHTML(l.title)}</h3>
+        </div>
+        <button class="lib-icon-btn" type="button" aria-label="فتح الملف" data-toast="جاري التحميل..."><i class="ti ${l.icon}" aria-hidden="true"></i></button>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-secondary);margin:8px 0 0">${escapeHTML(l.sub)}</p>
+      <div class="meta" style="display:flex;gap:10px;margin-top:10px;font-size:11px;color:var(--color-text-secondary)">
+        <span><i class="ti ti-download" aria-hidden="true"></i> ${escapeHTML(l.stat)}</span>
+        <span><i class="ti ti-star" aria-hidden="true"></i> ${escapeHTML(l.rating)}</span>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderLeadershipOffices() {
+  $("#leadershipOffices").innerHTML = OFFICES.map(o => `
+    <div class="gold-office">
+      <div class="icon"><i class="ti ${o.icon}" aria-hidden="true"></i></div>
+      <div>
+        <div class="name">${escapeHTML(o.name)}</div>
+        <div class="role">${escapeHTML(o.role)}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderFAQ() {
+  $("#faqList").innerHTML = FAQ.map((f, i) => `
+    <div class="faq-item${i === 0 ? " is-open" : ""}">
+      <button class="faq-q" type="button" data-faq="${i}">
+        ${escapeHTML(f.q)}
+        <i class="ti ti-chevron-down" aria-hidden="true"></i>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">${escapeHTML(f.a)}</div></div>
+    </div>
+  `).join("");
+}
+
+
+function wireFilters(rootSel, onChange) {
+  const r = $(rootSel);
+  if (!r) return;
+  r.addEventListener("click", (e) => {
+    const chip = e.target.closest("[data-filter]");
+    if (!chip) return;
+    $$("[data-filter]", r).forEach(c => c.classList.remove("is-active"));
+    chip.classList.add("is-active");
+    onChange(chip.dataset.filter);
+  });
+}
+
+wireFilters("#newsFilters",   renderNews);
+wireFilters("#memberFilters", renderMembers);
+wireFilters("#courseFilters", renderCourses);
+wireFilters("#libFilters",    renderLibrary);
+
+/* ============================================================
+   COURSE ENROLLMENT (Modal)
+   ============================================================ */
+const modal = $("#modal");
+function openModal({ title, body, actions = [] }) {
+  $("#modalTitle").textContent = title;
+  $("#modalBody").innerHTML = body;
+  $("#modalFoot").innerHTML = "";
+  actions.forEach(a => {
+    const b = document.createElement("button");
+    b.className = `btn ${a.kind || "btn-outline"}`;
+    b.textContent = a.label;
+    b.addEventListener("click", () => { a.onClick?.(); closeModal(); });
+    $("#modalFoot").appendChild(b);
+  });
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+}
+function closeModal() {
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+}
+modal.addEventListener("click", (e) => {
+  if (e.target === modal || e.target.matches("[data-close-modal]")) closeModal();
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+document.addEventListener("click", (e) => {
+  const enrollBtn = e.target.closest("[data-course]");
+  const infoBtn   = e.target.closest("[data-course-info]");
+  if (enrollBtn) {
+    const c = COURSES.find(x => x.id === enrollBtn.dataset.course);
+    if (!c) return;
+    if (state.enrolled.has(c.id)) {
+      openModal({
+        title: "إلغاء التسجيل",
+        body: `<p style="font-size:13px">هل أنت متأكد من إلغاء تسجيلك في دورة <strong>${escapeHTML(c.title)}</strong>؟</p>`,
+        actions: [
+          { label: "إلغاء", kind: "btn-outline" },
+          { label: "نعم، ألغِ التسجيل", kind: "btn-solid", onClick() {
+              state.enrolled.delete(c.id); c.enrolled = Math.max(0, c.enrolled - 1);
+              persistEnrolled(); renderCourses(currentFilter("#courseFilters")); toast("تم إلغاء تسجيلك");
+          }},
+        ],
+      });
+    } else {
+      openModal({
+        title: "تأكيد التسجيل في الدورة",
+        body: `
+          <p style="font-size:13px;margin:0 0 10px">سيتم تسجيلك في دورة <strong>${escapeHTML(c.title)}</strong>.</p>
+          <ul style="font-size:13px;color:var(--color-text-secondary);padding-inline-start:18px;line-height:1.9;margin:0">
+            <li>المدرّب: ${escapeHTML(c.instructor)}</li>
+            <li>المدة: ${escapeHTML(c.duration)}</li>
+            <li>المستوى: ${escapeHTML(c.level)}</li>
+            <li>المقاعد المتبقية: ${c.seats - c.enrolled}</li>
+          </ul>`,
+        actions: [
+          { label: "إلغاء", kind: "btn-outline" },
+          { label: "تأكيد التسجيل", kind: "btn-solid", onClick() {
+              state.enrolled.add(c.id); c.enrolled++;
+              persistEnrolled(); renderCourses(currentFilter("#courseFilters")); toast("تم التسجيل بنجاح ✓");
+          }},
+        ],
+      });
+    }
+  }
+  if (infoBtn) {
+    const c = COURSES.find(x => x.id === infoBtn.dataset.courseInfo);
+    if (!c) return;
+    openModal({
+      title: c.title,
+      body: `
+        <p style="font-size:13px;line-height:1.8;margin:0 0 10px">${escapeHTML(c.desc)}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--color-text-secondary)">
+          <div><i class="ti ti-user"></i> ${escapeHTML(c.instructor)}</div>
+          <div><i class="ti ti-clock"></i> ${escapeHTML(c.duration)}</div>
+          <div><i class="ti ti-stairs-up"></i> ${escapeHTML(c.level)}</div>
+          <div><i class="ti ti-users"></i> ${c.enrolled}/${c.seats} مسجل</div>
+        </div>`,
+      actions: [{ label: "حسناً", kind: "btn-solid" }],
+    });
+  }
+});
+function currentFilter(rootSel) {
+  return $(`${rootSel} .is-active`)?.dataset.filter || "all";
+}
+
+/* ============================================================
+   PLANNER TABS
+   ============================================================ */
+$("#plannerTabs").addEventListener("click", (e) => {
+  const tab = e.target.closest("[data-month]");
+  if (!tab) return;
+  $$("#plannerTabs .planner-tab").forEach(t => t.classList.remove("is-active"));
+  tab.classList.add("is-active");
+  const v = tab.dataset.month;
+  showPlannerMonth(v === "all" ? "all" : Number(v));
+});
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+function renderRooms() {
+  $("#chatRooms").innerHTML = CHAT_ROOMS.map(r => `
+    <div class="room-item ${r.id === state.activeRoom ? "is-active" : ""}" data-room="${r.id}" role="tab" tabindex="0" aria-selected="${r.id === state.activeRoom}">
+      <div class="room-icon"><i class="ti ${r.icon}" aria-hidden="true"></i></div>
+      <div style="min-width:0;flex:1">
+        <div class="room-name">${escapeHTML(r.name)}</div>
+        <div class="room-meta">${escapeHTML(r.desc)}</div>
+      </div>
+      <div class="room-online">${r.online}</div>
+    </div>
+  `).join("");
+}
+
+function renderChatHeader() {
+  const r = CHAT_ROOMS.find(x => x.id === state.activeRoom);
+  $("#chatHeader").innerHTML = `
+    <div class="room-icon"><i class="ti ${r.icon}" aria-hidden="true"></i></div>
+    <div>
+      <h3>${escapeHTML(r.name)}</h3>
+      <div class="desc">${escapeHTML(r.desc)} · ${r.online} متصل الآن</div>
+    </div>`;
+}
+
+function renderStream() {
+  const msgs = state.chats[state.activeRoom] || [];
+  const stream = $("#chatStream");
+  stream.innerHTML = msgs.map(m => `
+    <div class="bubble ${m.me ? "me" : "them"}">
+      ${m.me ? "" : `<span class="b-author">${escapeHTML(m.author)}</span>`}
+      <span class="b-text">${escapeHTML(m.text)}</span>
+      <span class="b-time">${escapeHTML(m.time)}</span>
+    </div>
+  `).join("");
+  stream.scrollTop = stream.scrollHeight;
+}
+
+function nowHM() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+}
+
+$("#chatRooms").addEventListener("click", (e) => {
+  const item = e.target.closest("[data-room]");
+  if (!item) return;
+  state.activeRoom = item.dataset.room;
+  renderRooms(); renderChatHeader(); renderStream();
+});
+$("#chatRooms").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    const item = e.target.closest("[data-room]");
+    if (item) { e.preventDefault(); item.click(); }
+  }
+});
+
+$("#chatForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = $("#chatInput");
+  const txt = input.value.trim();
+  if (!txt) return;
+  state.chats[state.activeRoom].push({ author: state.user.name, text: txt, time: nowHM(), me: true });
+  persistChats(); renderStream(); input.value = "";
+
+  // Simulated reply
+  $("#chatTyping").textContent = "أحدهم يكتب...";
+  setTimeout(() => {
+    $("#chatTyping").textContent = "";
+    const reply = BOT_RESPONSES[Math.floor(Math.random() * BOT_RESPONSES.length)];
+    const bots = ["موجه الغرفة","عضو الاتحاد","مشرف القسم"];
+    state.chats[state.activeRoom].push({ author: bots[Math.floor(Math.random()*bots.length)], text: reply, time: nowHM(), me: false });
+    persistChats(); renderStream();
+  }, 900 + Math.random() * 700);
+});
+
+/* ============================================================
+   AI ASSISTANT (simulated)
+   ============================================================ */
+const AI_KNOWLEDGE = [
+  { match: /امتحان|اختبار|exam/i, reply: "تبدأ امتحانات الفصل الثاني بتاريخ 15 يونيو 2026. تابع جداول كل كلية في صفحة الأخبار." },
+  { match: /تسجيل|دورة|كورس|course/i, reply: "يمكنك التسجيل في الدورات من صفحة 'الدورات التدريبية'. اضغط على زر 'تسجيل في الدورة' داخل البطاقة." },
+  { match: /مكتب|كتاب|ملخص|library/i, reply: "المكتبة الرقمية تحتوي على ملخصات وكتب وبحوث. ستجدها في تبويب 'المكتبة'." },
+  { match: /منح|scholarship/i, reply: "تتوفر حالياً منحة دراسية تركية (آخر موعد 30 مايو) وبرنامج تبادل طلابي (10 يونيو)." },
+  { match: /غرف|دردش|chat/i, reply: "غرف النقاش متاحة لكل كلية. ادخل التبويب 'غرف النقاش' وابدأ التواصل." },
+  { match: /اتحاد|union|عن/i, reply: "اتحاد طلبة جامعة الزاوية تأسس عام 2008 ويضم اليوم 12 كلية ومعهداً." },
+];
+function aiReply(q) {
+  for (const r of AI_KNOWLEDGE) if (r.match.test(q)) return r.reply;
+  return "هذا سؤال جيد! سأحوّله لفريق الدعم وسيردون عليك قريباً. تأكد من تسجيل الدخول لمتابعة الإجابة.";
+}
+function appendAIMsg(text, who) {
+  const log = $("#aiLog");
+  const div = document.createElement("div");
+  div.className = `ai-msg ${who}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+$("#aiSend").addEventListener("click", askAI);
+$("#aiInput").addEventListener("keydown", (e) => { if (e.key === "Enter") askAI(); });
+function askAI() {
+  const q = $("#aiInput").value.trim();
+  if (!q) return;
+  appendAIMsg(q, "user");
+  $("#aiInput").value = "";
+  setTimeout(() => appendAIMsg(aiReply(q), "bot"), 500);
+}
+
+/* ============================================================
+   LOGIN
+   ============================================================ */
+$("#roleRow").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-role]");
+  if (!b) return;
+  $$("#roleRow .role-btn").forEach(x => x.classList.remove("is-selected"));
+  b.classList.add("is-selected");
+});
+$("#loginForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const user = $("#loginUser").value.trim();
+  if (!user) return;
+  state.user.name = user.split("@")[0] || "أنت";
+  localStorage.setItem("zu_user", state.user.name);
+  toast("تم تسجيل الدخول (محاكاة) ✓");
+  navigate("home");
+});
+
+/* ============================================================
+   FAQ ACCORDION
+   ============================================================ */
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-faq]");
+  if (!btn) return;
+  const item = btn.closest(".faq-item");
+  const wasOpen = item.classList.contains("is-open");
+  $$(".faq-item").forEach(it => it.classList.remove("is-open"));
+  if (!wasOpen) item.classList.add("is-open");
+});
+
+/* ============================================================
+   SUGGESTIONS / CONTACT FORM
+   ============================================================ */
+$("#suggestForm")?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const msg = $("#suggMsg").value.trim();
+  if (!msg) return;
+  toast("تم إرسال رسالتك إلى الاتحاد بنجاح ✓");
+  e.target.reset();
+});
+
+/* ============================================================
+   VOLUNTEER FORM
+   ============================================================ */
+$("#volunteerForm")?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  toast("تم تسجيلك كمتطوع، سنتواصل معك قريباً ✓");
+  e.target.reset();
+});
+
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-toast]");
+  if (t) toast(t.dataset.toast);
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderHomeNews();
+renderHomeUpcoming();
+renderLeadershipOffices();
+renderMembers();
+renderColleges();
+renderNews();
+renderCourses();
+renderPlanner();
+renderLibrary();
+renderFAQ();
+renderRooms();
+renderChatHeader();
+renderStream();
+</script>
+</body>
+</html>

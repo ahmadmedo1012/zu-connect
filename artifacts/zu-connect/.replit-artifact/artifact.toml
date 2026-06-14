@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "ZU Connect"
+version = "1.0.0"
+id = "artifacts/zu-connect"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23952
+
+[services.development]
+run = "pnpm --filter @workspace/zu-connect run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/zu-connect", "run", "build" ]
+publicDir = "artifacts/zu-connect/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23952"
+BASE_PATH = "/"

@@ -1,10 +1,11 @@
-# [Project name]
+# ZU Connect — منصة طلبة جامعة الزاوية
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Arabic RTL student platform for the General Union of Zawia University Students. Dark editorial design (MasterClass-inspired) with full Arabic content.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/zu-connect run dev` — run the frontend (port assigned by env)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
@@ -14,6 +15,7 @@ _Replace the heading above with the project's name, and this line with one sente
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
+- Frontend: React + Vite, Tailwind CSS, shadcn/ui, framer-motion, wouter, Cairo font
 - API: Express 5
 - DB: PostgreSQL + Drizzle ORM
 - Validation: Zod (`zod/v4`), `drizzle-zod`
@@ -22,15 +24,39 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- Frontend pages: `artifacts/zu-connect/src/pages/`
+- Frontend components: `artifacts/zu-connect/src/components/`
+- API routes: `artifacts/api-server/src/routes/`
+- DB schema: `lib/db/src/schema/` (one file per entity)
+- OpenAPI spec: `lib/api-spec/openapi.yaml`
+- Generated hooks: `lib/api-client-react/src/generated/`
+- Image assets: `attached_assets/` (logo IMG_0792, campus IMG_0793)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- MasterClass Dark Editorial design: pure black (#000) background, red (#E32652) accent, charcoal (#1F2125) surfaces
+- Full Arabic RTL: dir="rtl" on html, Cairo Google font, all text in Arabic
+- Frontend is fully static (no SSR) — connects to Express backend at /api
+- Course enrollment tracked in DB (enrolledCount increments/decrements per API call)
+- Chat rooms and messages persisted in PostgreSQL (no WebSocket — polling)
+- Suggestions and volunteer registrations stored in DB
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **الرئيسية**: Hero + stats row + leadership board (navy/gold) + news + AI assistant
+- **عن الاتحاد**: Mission, vision 2030, historical timeline 2008→2026
+- **أعضاء الاتحاد**: Filterable union council directory (16 members)
+- **الكليات**: 14 university faculties with student counts
+- **الأخبار**: News feed with category filtering
+- **الدورات التدريبية**: 9 training courses with enroll/unenroll
+- **الأنشطة القادمة**: Month-tabbed activity planner
+- **غرف النقاش**: 7 multi-room chat with real messages
+- **الخدمات**: Service tiles linking to all major sections
+- **اقترح / تواصل**: Suggestion/complaint form
+- **تطوع معنا**: Volunteer registration (6 categories)
+- **الأسئلة الشائعة**: FAQ accordion (10 items)
+- **المكتبة**: 10 digital library resources with type filters
+- **الدخول**: 3-role login (student/teacher/admin), simulated
 
 ## User preferences
 
@@ -38,7 +64,10 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After any OpenAPI spec change: run `pnpm --filter @workspace/api-spec run codegen` before touching frontend or backend
+- Cairo font import must be the FIRST line in index.css (before @import "tailwindcss")
+- All frontend routes use BASE_URL prefix via wouter Router base prop
+- Courses enrollment uses `studentId: "guest"` for unauthenticated users
 
 ## Pointers
 

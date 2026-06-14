@@ -1,0 +1,170 @@
+import { useListCourses, useEnrollCourse, useUnenrollCourse, getListCoursesQueryKey } from "@workspace/api-client-react";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { User, Clock, BarChart, Users } from "lucide-react";
+
+const CATEGORIES = ["الكل", "لغات", "تقنية", "مهارات شخصية", "علمي"];
+
+export default function Courses() {
+  const [activeCategory, setActiveCategory] = useState("الكل");
+  const { data: courses, isLoading } = useListCourses(
+    activeCategory !== "الكل" ? { category: activeCategory } : {}
+  );
+  
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  
+  const enrollCourse = useEnrollCourse();
+  const unenrollCourse = useUnenrollCourse();
+  
+  // Local state for mocked enrollment status
+  const [enrolledIds, setEnrolledIds] = useState<number[]>([]);
+
+  const handleEnroll = (id: number) => {
+    enrollCourse.mutate(
+      { id, data: { studentId: "guest" } },
+      {
+        onSuccess: () => {
+          setEnrolledIds(prev => [...prev, id]);
+          toast({ title: "تم التسجيل بنجاح", description: "سيتم التواصل معك لتأكيد الحضور" });
+          queryClient.invalidateQueries({ queryKey: getListCoursesQueryKey() });
+        }
+      }
+    );
+  };
+
+  const handleUnenroll = (id: number) => {
+    unenrollCourse.mutate(
+      { id, data: { studentId: "guest" } },
+      {
+        onSuccess: () => {
+          setEnrolledIds(prev => prev.filter(courseId => courseId !== id));
+          toast({ title: "تم إلغاء التسجيل" });
+          queryClient.invalidateQueries({ queryKey: getListCoursesQueryKey() });
+        }
+      }
+    );
+  };
+
+  return (
+    <div className="flex flex-col gap-8 py-8">
+      <div className="flex flex-col gap-4">
+        <h1 className="text-3xl md:text-4xl font-black text-white border-r-4 border-primary pr-4">الدورات التدريبية</h1>
+        <p className="text-muted-foreground max-w-2xl">طور مهاراتك من خلال الدورات المجانية وشبه المجانية المقدمة بالتعاون مع مراكز التدريب المعتمدة.</p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={cn(
+              "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
+              activeCategory === cat 
+                ? "bg-primary text-white border-primary" 
+                : "bg-card text-muted-foreground border-border hover:border-muted-foreground hover:text-white"
+            )}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1,2,3].map(i => (
+            <div key={i} className="bg-card border border-border rounded-2xl h-[400px] animate-pulse" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses?.map(course => {
+            const isEnrolled = enrolledIds.includes(course.id);
+            const percentFull = Math.round((course.enrolledCount / course.totalSeats) * 100);
+            
+            // Generate a color based on colorScheme integer
+            const colors = [
+              "from-blue-600 to-blue-900",
+              "from-emerald-500 to-teal-900",
+              "from-orange-500 to-red-900",
+              "from-purple-500 to-pink-900",
+              "from-primary to-[#4a0a18]"
+            ];
+            const gradient = colors[course.colorScheme % colors.length];
+
+            return (
+              <div key={course.id} className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col group">
+                <div className={cn("h-32 bg-gradient-to-br relative p-4 flex items-end", gradient)}>
+                  <div className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white text-xs px-2 py-1 rounded font-bold">
+                    {course.category}
+                  </div>
+                  <h3 className="text-xl font-bold text-white drop-shadow-md leading-tight">{course.title}</h3>
+                </div>
+                
+                <div className="p-5 flex flex-col gap-5 flex-1">
+                  <p className="text-sm text-muted-foreground line-clamp-2">{course.description}</p>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="flex items-center gap-2 text-white/80">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      <span>{course.instructor}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/80">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <span>{course.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/80">
+                      <BarChart className="w-4 h-4 text-muted-foreground" />
+                      <span>{course.level}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/80">
+                      <Users className="w-4 h-4 text-muted-foreground" />
+                      <span>{course.enrolledCount} / {course.totalSeats} مقعد</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-border/50">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <span>نسبة التسجيل</span>
+                      <span>{percentFull}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-background rounded-full overflow-hidden">
+                      <div 
+                        className={cn("h-full rounded-full", percentFull >= 100 ? "bg-red-500" : "bg-primary")} 
+                        style={{ width: `${Math.min(percentFull, 100)}%` }} 
+                      />
+                    </div>
+                    
+                    <div className="flex gap-2 mt-4">
+                      {isEnrolled ? (
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 text-red-500 border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                          onClick={() => handleUnenroll(course.id)}
+                          disabled={unenrollCourse.isPending}
+                        >
+                          إلغاء التسجيل
+                        </Button>
+                      ) : (
+                        <Button 
+                          className="flex-1 font-bold"
+                          disabled={percentFull >= 100 || enrollCourse.isPending}
+                          onClick={() => handleEnroll(course.id)}
+                        >
+                          {percentFull >= 100 ? "مكتمل العدد" : "تسجيل في الدورة"}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
