@@ -43,7 +43,8 @@ export default function Library() {
 
   return (
     <div className="flex flex-col gap-8 py-8">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col items-center gap-4">
+        <LottieAnimation src="/animations/illustration/book-sparkle.json" className="w-[120px] h-[120px] md:w-[150px] md:h-[150px]" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">المكتبة الرقمية</h1>
         <p className="text-muted-foreground">آلاف الملفات، الملخصات، والبحوث الأكاديمية متاحة للتحميل مجاناً.</p>
       </div>

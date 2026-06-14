@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
+import { LottieAnimation } from "@/components/ui/lottie";
 import { User, Users, ShieldAlert, KeyRound, Mail } from "lucide-react";
 
 const containerVariants = {
@@ -97,7 +98,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4">
+    <div className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12 px-4 gap-8">
+      <LottieAnimation src="/animations/empty/student-illustration.json" className="w-[200px] h-[200px] md:w-[260px] md:h-[260px]" />
       <motion.div
         variants={containerVariants}
         initial={prefersReducedMotion ? undefined : "hidden"}

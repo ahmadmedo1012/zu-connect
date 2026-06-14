@@ -9,6 +9,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getCourseCategoryIcon } from "@/lib/icons/icon-maps";
 import { User, Clock, BarChart, Users } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -93,10 +94,8 @@ export default function Courses() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1,2,3].map(i => (
-            <Skeleton key={i} variant="card" className="h-[400px]" />
-          ))}
+        <div className="flex items-center justify-center min-h-[400px]">
+          <LottieAnimation src="/animations/loading/loading-books.json" className="w-[180px] h-[180px]" speed={1.2} />
         </div>
       ) : (
         <motion.div

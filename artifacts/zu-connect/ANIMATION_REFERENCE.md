@@ -60,6 +60,8 @@ Every location where animations may appear, organized by page/module.
 |---|---|---|
 | Room list | hover bg | Keep as-is |
 | Messages | framer-motion layout AnimatePresence | Keep as-is |
+| **Messages loading** | Spinner → **Lottie loading** | Replaced with loading-main |
+| **Header illustration** | None → **Lottie section** | study-discussion added |
 
 #### Library (`/library`)
 | Zone | Current Type | Notes |
@@ -84,6 +86,7 @@ Every location where animations may appear, organized by page/module.
 | Zone | Current Type | Notes |
 |---|---|---|
 | Form card | framer-motion stagger, gradient bar | Keep as-is |
+| **Above form** | None → **Lottie educational** | student-illustration added |
 
 #### All other pages (courses, news, planner, suggestions, volunteer, faq)
 | Zone | Current Type | Notes |
@@ -132,14 +135,14 @@ Every location where animations may appear, organized by page/module.
 ## Placement Matrix
 
 | Section | Priority | Allowed Types | Max Count | Recommended Size | Mobile Behavior | Performance |
-|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|
 | Library — Empty | High | Empty State | 1 | 180×180px | Scale 80% | Low cost |
-| Library — Loading | Medium | Loading State | 1 | 160×160px | Scale 80% | Low cost |
-| Members — Empty | High | Empty State | 1 | 180×180px | Scale 80% | Low cost |
-| Colleges — Loading | Medium | Loading State | 1 | 160×160px | Scale 80% | Low cost |
-| Home — Hero | Low | Hero Animation | 1 | 300×300px (if added) | Hide on mobile | Moderate |
-| About — Header | Low | Section Illustration | 1 | 150×150px (if added) | Hide on mobile | Low cost |
-| Login — Card | Low | Educational Illustration | 1 | 200×200px (if added) | Move above form | Low cost |
+| Library — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Chat — Messages Loading | High | Loading State | 1 | 200×200px | Scale 80% | Moderate |
+| Chat — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Moderate |
+| Login — Card | High | Educational Illustration | 1 | 200×200px | Move above form, scale 60% | Moderate |
+| About — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Courses — Loading | Medium | Loading State | 1 | 160×160px | Scale 80% | Moderate |
 
 ### Mobile Rules
 - Animations must scale down proportionally (max 80% of original size).
@@ -182,10 +185,15 @@ Every animation added to the platform is recorded here.
 ### Registered Animations
 
 | File | Description | Classification | Placement | Alternative | Score | Status |
-|---|---|---|---|---|---|---|
-| `book-flip.json` | Open book with page flipping | Empty State | Library — Empty state | Courses — loading | 4.6 | ✅ Approved |
-| `student-illustration.json` | Student with books and academic elements | Empty State | Members — Empty state | Login — illustration | 4.2 | ✅ Approved |
-| `loading-main.json` | Circular loading indicator with motion | Loading State | Colleges — Loading state | Global page loading | 4.0 | ✅ Approved |
+|---|---|---|---|---|---|---|---|
+| `book-flip.json` | Open book with page flipping | Empty State | Library — Empty state | — | 4.6 | ✅ Approved |
+| `student-illustration.json` | Student with books, device, study scene | Educational Illustration | Login — Above form | About — header | 4.2 | ✅ Approved |
+| `loading-main.json` | Circular loading indicator with motion | Loading State | Chat — Messages loading | Courses — Loading | 4.0 | ✅ Approved |
+| `teacher.json` | Teacher character with glasses and pointer | Section Illustration | About — Header | Courses — Header | 4.3 | ✅ Approved |
+| `book-sparkle.json` | Book opening with sparkle particles | Section Illustration | Library — Header | Library — Empty (alt) | 4.1 | ✅ Approved |
+| `study-discussion.json` | Two characters studying with laptop | Section Illustration | Chat — Header | Courses — Header | 4.4 | ✅ Approved |
+| `loading-books.json` | Books, hat, pins bouncing loading animation | Loading State | Courses — Loading state | Library — Loading | 3.8 | ⚠️ Conditional (size) |
+| `graduation.json` | Graduation cap, certificate, books animation | Section Illustration | — | About — Stats | 4.5 | ⏳ Pending (not placed yet) |
 
 ### Pending Review
 

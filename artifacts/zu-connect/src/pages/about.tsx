@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -19,7 +20,8 @@ export default function About() {
   const prefersReducedMotion = useReducedMotion();
   return (
     <div className="flex flex-col gap-12 max-w-4xl mx-auto py-8">
-      <div className="flex flex-col gap-4 text-center">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <LottieAnimation src="/animations/illustration/teacher.json" className="w-[120px] h-[120px] md:w-[150px] md:h-[150px]" />
         <h1 className="text-4xl md:text-5xl font-black text-foreground">عن الاتحاد</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           الممثل الشرعي والوحيد لطلبة جامعة الزاوية، نسعى لبناء بيئة جامعية متكاملة تدعم التفوق والإبداع.

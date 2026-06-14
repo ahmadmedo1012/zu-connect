@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Send, Users, MessageCircle } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 import { cn } from "@/lib/utils";
 
 const containerVariants = {
@@ -69,8 +70,13 @@ export default function Chat() {
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] py-4">
       <div className="flex flex-col gap-2 mb-4">
-        <h1 className="text-2xl md:text-3xl font-black text-foreground border-r-4 border-primary pr-4">غرف النقاش</h1>
-        <p className="text-muted-foreground text-sm">تواصل مع زملائك، شارك أفكارك، وناقش المواضيع الأكاديمية.</p>
+        <div className="flex items-center gap-4 mb-2">
+          <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[100px] h-[100px] md:w-[130px] md:h-[130px] hidden md:block" />
+          <div>
+            <h1 className="text-2xl md:text-3xl font-black text-foreground border-r-4 border-primary pr-4">غرف النقاش</h1>
+            <p className="text-muted-foreground text-sm mt-1">تواصل مع زملائك، شارك أفكارك، وناقش المواضيع الأكاديمية.</p>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row flex-1 bg-card border border-border rounded-3xl overflow-hidden shadow-2xl">
@@ -142,7 +148,7 @@ export default function Chat() {
               >
                 {isLoadingMessages ? (
                   <div className="flex items-center justify-center h-full">
-                    <Skeleton variant="circle" className="w-8 h-8" />
+                    <LottieAnimation src="/animations/loading/loading-main.json" className="w-[160px] h-[160px]" speed={0.8} />
                   </div>
                 ) : messages?.length === 0 ? (
                   <motion.div variants={itemVariants} className="flex items-center justify-center h-full">
