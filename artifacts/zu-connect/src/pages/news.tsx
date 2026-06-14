@@ -5,7 +5,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
-import { Eye, Calendar, ArrowUpLeft } from "lucide-react";
+import { Eye, Calendar, ArrowUpLeft, Lock } from "lucide-react";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { Link } from "wouter";
 
 const containerVariants = {
   hidden: {},
@@ -26,6 +28,7 @@ const CATEGORIES = ["الكل", "أخبار الكليات", "إعلانات ع�
 export default function News() {
   const prefersReducedMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState("الكل");
+  const { user } = useAuth();
   const { data: news, isLoading } = useListNews(
     activeCategory !== "الكل" ? { category: activeCategory } : {}
   );
@@ -53,6 +56,18 @@ export default function News() {
           </button>
         ))}
       </div>
+
+      {!user && (
+        <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Lock className="w-5 h-5 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">عناوين الأخبار متاحة للجميع. سجل الدخول لقراءة المحتوى الكامل.</p>
+          </div>
+          <Link href="/login" className="text-sm font-bold text-primary hover:underline">
+            تسجيل الدخول
+          </Link>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex flex-col gap-4">
@@ -105,14 +120,18 @@ export default function News() {
                     <h3 className={cn("font-bold text-foreground group-hover:text-primary transition-colors leading-snug", i === 0 ? "text-2xl" : "text-xl line-clamp-2")}>
                       {item.title}
                     </h3>
-                    <p className={cn("text-sm text-muted-foreground leading-relaxed", i === 0 ? "line-clamp-4" : "line-clamp-2")}>
-                      {item.body}
-                    </p>
+                    {user && (
+                      <p className={cn("text-sm text-muted-foreground leading-relaxed", i === 0 ? "line-clamp-4" : "line-clamp-2")}>
+                        {item.body}
+                      </p>
+                    )}
                   </div>
                   
-                  <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[-4px] transition-transform w-fit">
-                    اقرأ المزيد <ArrowUpLeft className="w-4 h-4 ml-1" />
-                  </div>
+                  {user && (
+                    <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[-4px] transition-transform w-fit">
+                      اقرأ المزيد <ArrowUpLeft className="w-4 h-4 ml-1" />
+                    </div>
+                  )}
                 </div>
               </motion.div>
             );

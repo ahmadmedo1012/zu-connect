@@ -7,6 +7,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { User, Users, ShieldAlert, KeyRound, Mail } from "lucide-react";
+import { useAuth, type Role } from "@/lib/auth/AuthContext";
 
 const containerVariants = {
   hidden: {},
@@ -45,6 +46,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const validate = () => {
     const result = loginSchema.safeParse({ identifier, password });
@@ -78,8 +80,7 @@ export default function Login() {
         throw new Error(data.error || "فشل تسجيل الدخول");
       }
       const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("username", data.name);
+      login(data.token, data.name, data.role as Role);
       toast({
         title: "تم تسجيل الدخول بنجاح",
         description: `مرحباً، ${data.name}`

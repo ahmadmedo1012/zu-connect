@@ -5,7 +5,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
-import { Calendar, CalendarX } from "lucide-react";
+import { Calendar, CalendarX, Lock } from "lucide-react";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { Link } from "wouter";
 
 const containerVariants = {
   hidden: {},
@@ -26,6 +28,7 @@ const MONTHS = ["مايو 2026", "يونيو 2026", "يوليو 2026", "أغسط
 export default function Planner() {
   const prefersReducedMotion = useReducedMotion();
   const [activeMonth, setActiveMonth] = useState("مايو 2026");
+  const { user } = useAuth();
   const { data: plannerEvents, isLoading } = useListPlanner(
     activeMonth !== "عرض الكل" ? { month: activeMonth } : {}
   );
@@ -53,6 +56,18 @@ export default function Planner() {
           </button>
         ))}
       </div>
+
+      {!user && (
+        <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Lock className="w-5 h-5 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">عناوين الأنشطة متاحة للجميع. سجل الدخول لمشاهدة التفاصيل والتواريخ الكاملة.</p>
+          </div>
+          <Link href="/login" className="text-sm font-bold text-primary hover:underline">
+            تسجيل الدخول
+          </Link>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex flex-col gap-6 relative pl-4 md:pl-0 pr-4 md:pr-12">
@@ -85,14 +100,24 @@ export default function Planner() {
                 <div className="flex flex-col md:flex-row gap-4 w-full bg-card border border-border p-5 rounded-2xl group-hover:border-primary/50 transition-colors">
                   <div className="flex flex-col items-center justify-center bg-background rounded-xl p-3 min-w-24 text-center shrink-0 border border-border">
                     <span className="text-xs text-muted-foreground font-bold">{event.month}</span>
-                    <span className="text-2xl font-black text-foreground">{event.date.split(' ')[0]}</span>
+                    {user ? (
+                      <span className="text-2xl font-black text-foreground">{event.date.split(' ')[0]}</span>
+                    ) : (
+                      <span className="text-2xl font-black text-muted-foreground">--</span>
+                    )}
                   </div>
                   <div className="flex flex-col gap-2 justify-center">
                     <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{event.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{event.description}</p>
-                    <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground/80 font-bold">
-                       <Calendar className="w-3 h-3" /> تم الجدولة
-                    </div>
+                    {user ? (
+                      <>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{event.description}</p>
+                        <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground/80 font-bold">
+                          <Calendar className="w-3 h-3" /> {event.date}
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">سجل الدخول لمشاهدة التفاصيل</p>
+                    )}
                   </div>
                 </div>
               </motion.div>

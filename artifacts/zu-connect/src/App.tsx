@@ -7,6 +7,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import NotFound from "@/pages/not-found";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { AuthProvider } from "@/lib/auth/AuthContext";
+import { setupAuthTokenGetter } from "@/lib/auth/setupAuth";
 
 import Home from "@/pages/home";
 import About from "@/pages/about";
@@ -24,6 +26,8 @@ import Library from "@/pages/library";
 import Login from "@/pages/login";
 
 const queryClient = new QueryClient();
+
+setupAuthTokenGetter();
 
 function AnimatedPage({ children }: { children: React.ReactNode }) {
   const prefersReducedMotion = useReducedMotion()
@@ -75,14 +79,16 @@ function Router() {
 function App() {
   return (
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
-      </QueryClientProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

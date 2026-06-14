@@ -7,8 +7,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getLibraryTypeIcon } from "@/lib/icons/icon-maps";
-import { Download, Star, Filter } from "lucide-react";
+import { Download, Star, Filter, Lock } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { Link } from "wouter";
 
 const containerVariants = {
   hidden: {},
@@ -29,6 +31,7 @@ const TYPES = ["الكل", "ملخصات", "بحوث", "كتب PDF", "محاضر
 export default function Library() {
   const prefersReducedMotion = useReducedMotion();
   const [activeType, setActiveType] = useState("الكل");
+  const { user } = useAuth();
   const { data: resources, isLoading } = useListLibrary(
     activeType !== "الكل" ? { type: activeType } : {}
   );
@@ -73,6 +76,18 @@ export default function Library() {
         </div>
       </div>
 
+      {!user && (
+        <div className="bg-card border border-border rounded-2xl p-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Lock className="w-5 h-5 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">العناوين والأنواع متاحة للجميع. سجل الدخول لتحميل الملفات وعرض التفاصيل.</p>
+          </div>
+          <Link href="/login" className="text-sm font-bold text-primary hover:underline">
+            تسجيل الدخول
+          </Link>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1,2,3,4,5,6,7,8].map(i => (
@@ -113,8 +128,12 @@ export default function Library() {
               
               <div className="flex flex-col gap-1">
                 <h3 className="font-bold text-lg text-foreground line-clamp-1" title={resource.title}>{resource.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-1">{resource.subtitle}</p>
-                <p className="text-xs text-primary font-semibold mt-1">{resource.college}</p>
+                {user && (
+                  <>
+                    <p className="text-sm text-muted-foreground line-clamp-1">{resource.subtitle}</p>
+                    <p className="text-xs text-primary font-semibold mt-1">{resource.college}</p>
+                  </>
+                )}
               </div>
               
               <div className="mt-auto pt-4 border-t border-border/50 flex items-center justify-between">
@@ -122,19 +141,23 @@ export default function Library() {
                   <span className="flex items-center gap-1">
                     <Star className="w-3 h-3 text-[#d4af37] fill-[#d4af37]" /> {resource.rating}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Download className="w-3 h-3" /> {resource.downloadCount}
-                  </span>
+                  {user && (
+                    <span className="flex items-center gap-1">
+                      <Download className="w-3 h-3" /> {resource.downloadCount}
+                    </span>
+                  )}
                 </div>
                 
-                <motion.button
-                  onClick={handleDownload}
-                  whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
-                  whileHover={prefersReducedMotion ? undefined : { scale: 1.1, boxShadow: "0 0 20px rgba(212, 175, 55, 0.3)" }}
-                  className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-primary-foreground flex items-center justify-center transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                </motion.button>
+                {user && (
+                  <motion.button
+                    onClick={handleDownload}
+                    whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                    whileHover={prefersReducedMotion ? undefined : { scale: 1.1, boxShadow: "0 0 20px rgba(212, 175, 55, 0.3)" }}
+                    className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-primary-foreground flex items-center justify-center transition-colors"
+                  >
+                    <Download className="w-4 h-4" />
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           ))}

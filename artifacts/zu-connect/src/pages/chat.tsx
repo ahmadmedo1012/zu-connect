@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { Send, Users, MessageCircle } from "lucide-react";
+import { Send, Users, MessageCircle, Lock } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { Link } from "wouter";
 
 const containerVariants = {
   hidden: {},
@@ -25,13 +27,14 @@ const itemVariants = {
 
 export default function Chat() {
   const prefersReducedMotion = useReducedMotion();
+  const { user } = useAuth();
   const [activeRoomId, setActiveRoomId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   
   const { data: rooms, isLoading: isLoadingRooms } = useListChatRooms();
   const { data: messages, isLoading: isLoadingMessages } = useListChatMessages(activeRoomId || 0, {
     query: {
-      enabled: !!activeRoomId,
+      enabled: !!activeRoomId && !!user,
       queryKey: getListChatMessagesQueryKey(activeRoomId || 0)
     }
   });
@@ -66,6 +69,25 @@ export default function Chat() {
       }
     });
   };
+
+  if (!user) {
+    return (
+      <div className="flex flex-col h-[calc(100vh-8rem)] py-4">
+        <div className="flex flex-col items-center justify-center h-full gap-8">
+          <Lock className="w-20 h-20 text-muted-foreground" />
+          <div className="text-center max-w-md flex flex-col gap-4">
+            <h2 className="text-2xl font-black text-foreground">غرف النقاش</h2>
+            <p className="text-muted-foreground">هذه الميزة متاحة للأعضاء المسجلين فقط. سجل الدخول للمشاركة في النقاشات والتواصل مع زملائك.</p>
+            <Link href="/login" className="inline-block">
+              <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full text-sm font-bold transition-all">
+                تسجيل الدخول
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] py-4">

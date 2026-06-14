@@ -12,29 +12,32 @@ import {
   Lightbulb, 
   HeartHandshake, 
   HelpCircle, 
-  Library
+  Library,
+  Lock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 const NAV_LINKS = [
-  { href: "/", label: "الرئيسية", icon: Home },
-  { href: "/about", label: "عن الاتحاد", icon: Info },
-  { href: "/members", label: "أعضاء الاتحاد", icon: Users },
-  { href: "/colleges", label: "الكليات", icon: GraduationCap },
-  { href: "/news", label: "الأخبار", icon: Newspaper },
-  { href: "/courses", label: "الدورات", icon: BookOpen },
-  { href: "/planner", label: "الأنشطة", icon: CalendarDays },
-  { href: "/chat", label: "غرف النقاش", icon: MessageSquare },
-  { href: "/services", label: "الخدمات", icon: Grid2X2 },
-  { href: "/suggestions", label: "اقترح", icon: Lightbulb },
-  { href: "/volunteer", label: "تطوع", icon: HeartHandshake },
-  { href: "/faq", label: "الأسئلة", icon: HelpCircle },
-  { href: "/library", label: "المكتبة", icon: Library },
+  { href: "/", label: "الرئيسية", icon: Home, requiresAuth: false },
+  { href: "/about", label: "عن الاتحاد", icon: Info, requiresAuth: false },
+  { href: "/members", label: "أعضاء الاتحاد", icon: Users, requiresAuth: false },
+  { href: "/colleges", label: "الكليات", icon: GraduationCap, requiresAuth: false },
+  { href: "/news", label: "الأخبار", icon: Newspaper, requiresAuth: false },
+  { href: "/courses", label: "الدورات", icon: BookOpen, requiresAuth: false },
+  { href: "/planner", label: "الأنشطة", icon: CalendarDays, requiresAuth: false },
+  { href: "/chat", label: "غرف النقاش", icon: MessageSquare, requiresAuth: true },
+  { href: "/services", label: "الخدمات", icon: Grid2X2, requiresAuth: false },
+  { href: "/suggestions", label: "اقترح", icon: Lightbulb, requiresAuth: false },
+  { href: "/volunteer", label: "تطوع", icon: HeartHandshake, requiresAuth: false },
+  { href: "/faq", label: "الأسئلة", icon: HelpCircle, requiresAuth: false },
+  { href: "/library", label: "المكتبة", icon: Library, requiresAuth: false },
 ];
 
 export function Navbar() {
   const [location] = useLocation();
+  const { user } = useAuth();
 
   return (
     <div className="sticky top-16 z-40 w-full border-b border-border bg-card">
@@ -44,19 +47,22 @@ export function Navbar() {
             {NAV_LINKS.map((link) => {
               const Icon = link.icon;
               const isActive = location === link.href;
+              const locked = link.requiresAuth && !user;
               
               return (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={locked ? "/login" : link.href}
                   className={cn(
                     "flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-semibold transition-all select-none border-b-2",
                     isActive 
                       ? "text-foreground border-primary bg-accent" 
-                      : "text-muted-foreground border-transparent hover:text-foreground hover:bg-accent"
+                      : locked
+                        ? "text-muted-foreground/50 border-transparent cursor-not-allowed"
+                        : "text-muted-foreground border-transparent hover:text-foreground hover:bg-accent"
                   )}
                 >
-                  <Icon className="w-4 h-4" />
+                  {locked ? <Lock className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
                   {link.label}
                 </Link>
               );

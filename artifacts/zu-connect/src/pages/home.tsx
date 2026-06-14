@@ -1,7 +1,7 @@
 import { useGetStats, useListNews, useListPlanner } from "@workspace/api-client-react";
 import campusPath from "@assets/IMG_0793_1781443006842.jpeg";
 import { Link } from "wouter";
-import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle } from "lucide-react";
+import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -9,6 +9,7 @@ import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 const containerVariants = {
   hidden: {},
@@ -86,6 +87,7 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: string; 
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
+  const { user } = useAuth();
   const { scrollY } = useScroll();
   const parallaxY = useTransform(scrollY, [0, 500], [0, 100]);
 
@@ -203,8 +205,8 @@ export default function Home() {
       >
         <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
-        <StatCard label="نشاط" value={String(stats?.totalActivities ?? "48")} icon={Calendar} />
-        <StatCard label="ملف" value={String(stats?.totalLibraryFiles ?? "320")} icon={FileText} />
+        {user && <StatCard label="نشاط" value={String(stats?.totalActivities ?? "48")} icon={Calendar} />}
+        {user && <StatCard label="ملف" value={String(stats?.totalLibraryFiles ?? "320")} icon={FileText} />}
       </motion.section>
 
       <section className="flex flex-col gap-8 bg-[#0b1f3f] -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-16 rounded-3xl border border-[#d4af37]/20 relative overflow-hidden">
@@ -289,7 +291,7 @@ export default function Home() {
                     <span className="text-xs text-muted-foreground">{item.date}</span>
                   </div>
                   <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>
+                  {user && <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>}
                 </Link>
               </motion.div>
             ))}
@@ -321,11 +323,11 @@ export default function Home() {
                 >
                   <div className="flex flex-col items-center justify-center bg-background rounded-lg p-2 min-w-14">
                     <span className="text-xs text-muted-foreground">{event.month}</span>
-                    <span className="text-lg font-bold text-foreground">{event.date.split(' ')[0]}</span>
+                    <span className="text-lg font-bold text-foreground">{user ? event.date.split(' ')[0] : '--'}</span>
                   </div>
                   <div className="flex flex-col pt-1">
                     <h4 className="font-bold text-sm text-foreground line-clamp-1">{event.title}</h4>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>
+                    {user && <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>}
                   </div>
                 </motion.div>
               ))}
