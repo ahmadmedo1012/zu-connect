@@ -3,12 +3,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Empty } from "@/components/ui/empty";
 import { useToast } from "@/hooks/use-toast";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getLibraryTypeIcon } from "@/lib/icons/icon-maps";
-import { Download, Star, Filter, BookOpen } from "lucide-react";
+import { Download, Star, Filter } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -87,8 +87,12 @@ export default function Library() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {resources?.length === 0 ? (
-            <div className="col-span-full">
-              <Empty icon={BookOpen} title="لا توجد نتائج" description="لم نجد أي ملفات تطابق بحثك. حاول تغيير نوع الملف أو البحث بكلمة مختلفة." />
+            <div className="col-span-full flex flex-col items-center justify-center gap-6 py-16">
+              <LottieAnimation src="/animations/empty/book-flip.json" className="w-[180px] h-[180px]" />
+              <div className="flex flex-col items-center gap-2 text-center max-w-sm">
+                <h3 className="text-lg font-medium text-foreground">لا توجد نتائج</h3>
+                <p className="text-sm text-muted-foreground">لم نجد أي ملفات تطابق بحثك. حاول تغيير نوع الملف أو البحث بكلمة مختلفة.</p>
+              </div>
             </div>
           ) : resources?.map(resource => (
             <motion.div

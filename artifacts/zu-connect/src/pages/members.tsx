@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Mail, Phone, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -59,6 +60,14 @@ export default function Members() {
           {[1,2,3,4,5,6,7,8].map(i => (
             <Skeleton key={i} variant="card" className="h-[300px]" />
           ))}
+        </div>
+      ) : !members?.length ? (
+        <div className="flex flex-col items-center justify-center gap-6 py-24">
+          <LottieAnimation src="/animations/empty/student-illustration.json" className="w-[200px] h-[200px]" />
+          <div className="flex flex-col items-center gap-2 text-center max-w-sm">
+            <h3 className="text-lg font-medium text-foreground">لا يوجد أعضاء</h3>
+            <p className="text-sm text-muted-foreground">لم يتم إضافة أي أعضاء بعد. تحقق لاحقاً من قائمة الأعضاء المحدثة.</p>
+          </div>
         </div>
       ) : (
         <motion.div

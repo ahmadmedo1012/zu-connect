@@ -5,6 +5,7 @@ import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { getCollegeIcon } from "@/lib/icons/icon-maps";
 import { Users, FileText, Calendar, Activity, GraduationCap } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -32,10 +33,8 @@ export default function Colleges() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[1,2,3,4,5,6].map(i => (
-            <Skeleton key={i} variant="card" className="h-[200px]" />
-          ))}
+        <div className="flex items-center justify-center min-h-[300px]">
+          <LottieAnimation src="/animations/loading/loading-main.json" className="w-[160px] h-[160px]" speed={0.8} />
         </div>
       ) : (
         <motion.div
