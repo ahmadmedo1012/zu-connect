@@ -97,24 +97,24 @@
   --popover-foreground: 240 10% 4%;
   --popover-border: 240 6% 90%;
 
-  --primary: 347 76% 51%;
+  --primary: 210 100% 53%; /* #1877F2 - Vibrant, trustworthy blue */
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 240 5% 96%;
-  --secondary-foreground: 240 10% 4%;
+  --secondary: 225 51% 40%; /* #4267B2 - Secondary blue */
+  --secondary-foreground: 0 0% 100%;
 
   --muted: 240 5% 96%;
   --muted-foreground: 240 4% 46%;
 
-  --accent: 240 5% 96%;
+  --accent: 210 100% 90%; /* Light blue accent for highlights */
   --accent-foreground: 240 10% 4%;
 
-  --destructive: 0 84% 60%;
+  --destructive: 210 100% 30%; /* #1877F2 - Darker blue for destructive actions */
   --destructive-foreground: 0 0% 100%;
 
   --border: 240 6% 90%;
   --input: 240 6% 90%;
-  --ring: 347 76% 51%;
+  --ring: 210 100% 53%; /* #1877F2 - Vibrant, trustworthy blue */
 
   --app-font-sans: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
   --radius: 0.5rem;
@@ -132,7 +132,7 @@
   --popover-foreground: 0 0% 100%;
   --popover-border: 220 17% 27%;
 
-  --primary: 347 76% 51%;
+  --primary: 210 100% 53%; /* #1877F2 - Vibrant, trustworthy blue */
   --primary-foreground: 0 0% 100%;
 
   --secondary: 220 5% 18%;
@@ -141,15 +141,15 @@
   --muted: 220 5% 14%;
   --muted-foreground: 220 5% 75%;
 
-  --accent: 220 5% 18%;
+  --accent: 225 51% 25%; /* Darker blue accent for dark mode */
   --accent-foreground: 0 0% 100%;
 
-  --destructive: 0 62.8% 30.6%;
+  --destructive: 210 100% 30%; /* #1877F2 - Darker blue for destructive actions */
   --destructive-foreground: 0 0% 100%;
 
   --border: 220 17% 27%;
   --input: 220 5% 14%;
-  --ring: 347 76% 51%;
+  --ring: 210 100% 53%; /* #1877F2 - Vibrant, trustworthy blue */
 
   --app-font-sans: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
   --radius: 0.5rem;
