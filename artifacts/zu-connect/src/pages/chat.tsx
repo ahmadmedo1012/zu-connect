@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Send, Users, MessageCircle, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -78,10 +79,10 @@ export default function Chat() {
           <div className="text-center max-w-md flex flex-col gap-4">
             <h2 className="text-2xl font-black text-foreground">غرف النقاش</h2>
             <p className="text-muted-foreground">هذه الميزة متاحة للأعضاء المسجلين فقط. سجل الدخول للمشاركة في النقاشات والتواصل مع زملائك.</p>
-            <Link href="/login" className="inline-block">
-              <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full text-sm font-bold transition-all">
+            <Link href="/login">
+              <Button size="lg" className="rounded-full font-bold">
                 تسجيل الدخول
-              </button>
+              </Button>
             </Link>
           </div>
         </div>
@@ -93,7 +94,7 @@ export default function Chat() {
     <div className="flex flex-col h-[calc(100vh-8rem)] py-4">
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex items-center gap-4 mb-2">
-          <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[100px] h-[100px] md:w-[130px] md:h-[130px] hidden md:block" />
+          <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[80px] h-[80px] md:w-[130px] md:h-[130px]" />
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-foreground border-r-4 border-primary pr-4">غرف النقاش</h1>
             <p className="text-muted-foreground text-sm mt-1">تواصل مع زملائك، شارك أفكارك، وناقش المواضيع الأكاديمية.</p>
@@ -214,13 +215,14 @@ export default function Chat() {
                   placeholder="اكتب رسالتك..."
                   className="flex-1 bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
                 />
-                <button 
+                <Button 
                   type="submit" 
                   disabled={!message.trim() || sendMessage.isPending}
-                  className="bg-primary text-white px-4 rounded-xl flex items-center justify-center hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                  size="icon"
+                  className="rounded-xl shrink-0"
                 >
                   <Send className="w-5 h-5 rtl:-scale-x-100" />
-                </button>
+                </Button>
               </form>
             </>
           ) : (

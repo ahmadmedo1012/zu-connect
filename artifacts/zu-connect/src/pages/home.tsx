@@ -259,7 +259,7 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-foreground border-r-4 border-primary pr-3">أحدث الأخبار</h2>
+            <h2 className="text-2xl font-bold text-foreground border-r-4 border-primary pr-4">أحدث الأخبار</h2>
             <Link href="/news" className="text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
           </div>
           

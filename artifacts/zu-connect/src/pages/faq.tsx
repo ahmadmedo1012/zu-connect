@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -29,9 +30,7 @@ export default function FAQ() {
   return (
     <div className="flex flex-col gap-8 py-8 max-w-3xl mx-auto">
       <div className="flex flex-col gap-4 text-center items-center">
-        <div className="w-16 h-16 bg-primary/20 text-primary rounded-full flex items-center justify-center mb-2">
-          <HelpCircle className="w-8 h-8" />
-        </div>
+        <LottieAnimation src="/animations/illustration/faq-help.json" className="w-[100px] h-[100px]" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground">الأسئلة الشائعة</h1>
         <p className="text-muted-foreground">إجابات لأكثر الأسئلة تداولاً بين طلاب جامعة الزاوية.</p>
       </div>

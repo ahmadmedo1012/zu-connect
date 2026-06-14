@@ -35,9 +35,9 @@ export default function Members() {
 
   return (
     <div className="flex flex-col gap-8 py-8">
-      <div className="flex flex-col items-center gap-4 text-center">
-        <LottieAnimation src="/animations/illustration/team-illustration.json" className="w-[120px] h-[120px]" />
-        <h1 className="text-3xl md:text-4xl font-black text-foreground">أعضاء الاتحاد</h1>
+      <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/team-illustration.json" className="w-[120px] h-[120px] self-start" />
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">أعضاء الاتحاد</h1>
         <p className="text-muted-foreground">تعرف على زملائك الممثلين في الاتحاد العام للطلبة وممثلي الكليات المختلفة.</p>
       </div>
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { Leaf, Droplet, PartyPopper, Flag, Users, Radio } from "lucide-react";
+import { LottieAnimation } from "@/components/ui/lottie";
 
 const containerVariants = {
   hidden: {},
@@ -92,7 +93,8 @@ export default function Volunteer() {
 
   return (
     <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto">
-      <div className="flex flex-col gap-4 text-center">
+      <div className="flex flex-col gap-4 text-center items-center">
+        <LottieAnimation src="/animations/illustration/volunteer.json" className="w-[120px] h-[120px]" />
         <h1 className="text-4xl md:text-5xl font-black text-foreground">تطوع معنا</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           التطوع هو جوهر العمل الطلابي. كن جزءاً من صناعة التغيير، اكتسب مهارات جديدة، ووسع دائرة معارفك بالانضمام للجان التطوعية في الاتحاد.

@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { LottieAnimation } from "@/components/ui/lottie";
 import { cn } from "@/lib/utils";
 import { getCourseCategoryIcon } from "@/lib/icons/icon-maps";
 import { User, Clock, BarChart, Users, Lock } from "lucide-react";
-import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
 
@@ -74,6 +74,7 @@ export default function Courses() {
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/graduation.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الدورات التدريبية</h1>
         <p className="text-muted-foreground max-w-2xl">طور مهاراتك من خلال الدورات المجانية وشبه المجانية المقدمة بالتعاون مع مراكز التدريب المعتمدة.</p>
       </div>

@@ -28,7 +28,7 @@ Every location where animations may appear, organized by page/module.
 ### Navigation & Layout
 | Zone | Location | Current Animation Type |
 |---|---|---|
-| Topbar | All pages | None |
+| Topbar | All pages | **Lottie logo-animation** |
 | Navbar | All pages | `hover:bg-accent`, `text-foreground` transition |
 | Footer | All pages | None |
 | Page transitions | Router level | framer-motion `fadeIn` + `y` slide (0.2s) |
@@ -44,17 +44,6 @@ Every location where animations may appear, organized by page/module.
 | News section | framer-motion: stagger, hover scale + color | On `bg-card` — keep as-is |
 | AI Chat widget | framer-motion: message bubbles, send button pulse | Navy header — keep as-is |
 
-#### About (`/about`)
-| Zone | Current Type | Notes |
-|---|---|---|
-| Cards | framer-motion stagger | Keep as-is |
-| Timeline | framer-motion stagger, timeline dot transition | Keep as-is |
-
-#### Services (`/services`)
-| Zone | Current Type | Notes |
-|---|---|---|
-| Service cards | framer-motion stagger, hover scale, hover color | Keep as-is |
-
 #### Chat (`/chat`)
 | Zone | Current Type | Notes |
 |---|---|---|
@@ -62,25 +51,52 @@ Every location where animations may appear, organized by page/module.
 | Messages | framer-motion layout AnimatePresence | Keep as-is |
 | **Messages loading** | Spinner → **Lottie loading** | Replaced with loading-main |
 | **Header illustration** | None → **Lottie section** | study-discussion added |
+| **Empty room state** | Lucide icon → **Lottie chat-bubbles** | Replaced Empty component |
+| **Input area** | None → **Lottie typing-dots** | Small decorative element |
 
 #### Library (`/library`)
 | Zone | Current Type | Notes |
 |---|---|---|
 | Cards | framer-motion stagger, hover scale + color | Keep as-is |
-| **Empty state** | Lucide icon | **Can be upgraded to Lottie** |
+| **Empty state** | Lucide icon → **Lottie book-flip** | Upgraded |
 | **Loading state** | Skeleton cards | **Can be upgraded to Lottie** |
+| **Header illustration** | None → **Lottie book-sparkle** | Added |
 
 #### Members (`/members`)
 | Zone | Current Type | Notes |
 |---|---|---|
 | Cards | framer-motion stagger, hover scale | Keep as-is |
-| **Empty state** | Lucide icon (not currently used) | **Can be upgraded to Lottie** |
+| **Header illustration** | None → **Lottie team-illustration** | Added |
+
+#### Planner (`/planner`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| Events list | framer-motion stagger | Keep as-is |
+| **Header illustration** | None → **Lottie calendar-planning** | Added |
+
+#### News (`/news`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| News cards | framer-motion stagger | Keep as-is |
+| **Header illustration** | None → **Lottie megaphone** | Added |
+
+#### Services (`/services`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| Service cards | framer-motion stagger, hover scale, hover color | Keep as-is |
+| **Header illustration** | None → **Lottie services-desk** | Added |
+
+#### Suggestions (`/suggestions`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| Form & contact | framer-motion stagger | Keep as-is |
+| **Header illustration** | None → **Lottie customer-support** | Added |
 
 #### Colleges (`/colleges`)
 | Zone | Current Type | Notes |
 |---|---|---|
 | Cards | framer-motion stagger, hover scale | Keep as-is |
-| **Loading state** | Skeleton cards | **Can be upgraded to Lottie** |
+| **Header illustration** | None → **Lottie features-illustration** | Added |
 
 #### Login (`/login`)
 | Zone | Current Type | Notes |
@@ -88,7 +104,26 @@ Every location where animations may appear, organized by page/module.
 | Form card | framer-motion stagger, gradient bar | Keep as-is |
 | **Above form** | None → **Lottie educational** | student-illustration added |
 
-#### All other pages (courses, news, planner, suggestions, volunteer, faq)
+#### Courses (`/courses`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| Cards | framer-motion stagger, hover scale | Keep as-is |
+| **Loading state** | Skeleton → **Lottie loading-books** | Replaced |
+| **Header illustration** | None → **Lottie graduation** | Added |
+
+#### About (`/about`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| Cards | framer-motion stagger | Keep as-is |
+| Timeline | framer-motion stagger, timeline dot transition | Keep as-is |
+| **Header illustration** | None → **Lottie teacher** | Added |
+
+#### Not Found (`/*`)
+| Zone | Current Type | Notes |
+|---|---|---|
+| Hero | Lucide icon → **Lottie robot-404** | Replaced AlertCircle |
+
+#### All other pages (volunteer, faq)
 | Zone | Current Type | Notes |
 |---|---|---|
 | Cards/items | framer-motion stagger | Keep as-is |
@@ -136,13 +171,24 @@ Every location where animations may appear, organized by page/module.
 
 | Section | Priority | Allowed Types | Max Count | Recommended Size | Mobile Behavior | Performance |
 |---|---|---|---|---|---|---|---|
+| Topbar — Logo | Medium | Section Illustration | 1 | 40×40px | Keep visible | Low cost |
 | Library — Empty | High | Empty State | 1 | 180×180px | Scale 80% | Low cost |
 | Library — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
 | Chat — Messages Loading | High | Loading State | 1 | 200×200px | Scale 80% | Moderate |
 | Chat — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Moderate |
+| Chat — Empty Room | Medium | Empty State | 1 | 120×120px | Scale 80% | Low cost |
+| Chat — Input | Low | Section Illustration | 1 | 32×32px | Keep visible | Low cost |
 | Login — Card | High | Educational Illustration | 1 | 200×200px | Move above form, scale 60% | Moderate |
 | About — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
 | Courses — Loading | Medium | Loading State | 1 | 160×160px | Scale 80% | Moderate |
+| Courses — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Members — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Planner — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| News — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Services — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Suggestions — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| Colleges — Header | Medium | Section Illustration | 1 | 120×120px | Hide on mobile | Low cost |
+| 404 — Hero | Medium | Empty State | 1 | 120×120px | Scale 80% | Low cost |
 
 ### Mobile Rules
 - Animations must scale down proportionally (max 80% of original size).
@@ -193,7 +239,17 @@ Every animation added to the platform is recorded here.
 | `book-sparkle.json` | Book opening with sparkle particles | Section Illustration | Library — Header | Library — Empty (alt) | 4.1 | ✅ Approved |
 | `study-discussion.json` | Two characters studying with laptop | Section Illustration | Chat — Header | Courses — Header | 4.4 | ✅ Approved |
 | `loading-books.json` | Books, hat, pins bouncing loading animation | Loading State | Courses — Loading state | Library — Loading | 3.8 | ⚠️ Conditional (size) |
-| `graduation.json` | Graduation cap, certificate, books animation | Section Illustration | — | About — Stats | 4.5 | ⏳ Pending (not placed yet) |
+| `graduation.json` | Graduation cap, certificate, books animation | Section Illustration | Courses — Header | About — Stats | 4.5 | ✅ Approved |
+| `team-illustration.json` | Group of connected people/team | Section Illustration | Members — Header | About — Header | 4.3 | ✅ Approved |
+| `calendar-planning.json` | Calendar with planning elements | Section Illustration | Planner — Header | — | 4.2 | ✅ Approved |
+| `megaphone.json` | Megaphone/announcement illustration | Section Illustration | News — Header | — | 4.1 | ✅ Approved |
+| `services-desk.json` | Service desk/customer counter | Section Illustration | Services — Header | — | 4.3 | ✅ Approved |
+| `customer-support.json` | Support agent assisting user | Section Illustration | Suggestions — Header | — | 4.4 | ✅ Approved |
+| `features-illustration.json` | Feature highlights/showcase | Section Illustration | Colleges — Header | — | 4.0 | ✅ Approved |
+| `robot-404.json` | Robot holding 404 sign | Empty State | 404 page — Hero | — | 4.5 | ✅ Approved |
+| `chat-bubbles.json` | Animated chat conversation bubbles | Empty State | Chat — Empty room state | — | 4.2 | ✅ Approved |
+| `typing-dots.json` | Typing indicator dots | Section Illustration | Chat — Input area | — | 3.9 | ✅ Approved |
+| `logo-animation.json` | Animated ZU Connect logo | Section Illustration | Topbar — Logo | — | 4.6 | ✅ Approved |
 
 ### Pending Review
 
