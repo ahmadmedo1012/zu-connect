@@ -1,8 +1,26 @@
 import { useListFaq } from "@workspace/api-client-react";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { HelpCircle } from "lucide-react";
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 export default function FAQ() {
+  const prefersReducedMotion = useReducedMotion();
   const { data: faqs, isLoading } = useListFaq();
 
   // Group FAQs by category
@@ -21,13 +39,19 @@ export default function FAQ() {
       {isLoading ? (
         <div className="flex flex-col gap-4">
           {[1,2,3,4,5].map(i => (
-            <div key={i} className="h-16 bg-card border border-border rounded-xl animate-pulse" />
+            <Skeleton key={i} variant="card" className="h-16" />
           ))}
         </div>
       ) : (
-        <div className="flex flex-col gap-8 mt-4">
+        <motion.div
+          variants={containerVariants}
+          initial={prefersReducedMotion ? undefined : "hidden"}
+          whileInView={prefersReducedMotion ? undefined : "visible"}
+          viewport={{ once: true, amount: 0.1 }}
+          className="flex flex-col gap-8 mt-4"
+        >
           {categories.map(category => (
-            <div key={category} className="flex flex-col gap-4">
+            <motion.div key={category} variants={itemVariants} className="flex flex-col gap-4">
               <h2 className="text-xl font-bold text-primary border-b border-border/50 pb-2 inline-block w-fit">
                 {category}
               </h2>
@@ -47,9 +71,9 @@ export default function FAQ() {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

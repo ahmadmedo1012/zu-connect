@@ -1,9 +1,25 @@
 import { useCreateSuggestion } from "@workspace/api-client-react";
 import { useState } from "react";
 import { z } from "zod";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Building2 } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const suggestionSchema = z.object({
   name: z.string().optional(),
@@ -13,6 +29,7 @@ const suggestionSchema = z.object({
 });
 
 export default function Suggestions() {
+  const prefersReducedMotion = useReducedMotion();
   const { toast } = useToast();
   const createSuggestion = useCreateSuggestion();
   
@@ -71,8 +88,14 @@ export default function Suggestions() {
         <p className="text-muted-foreground">نحن هنا للاستماع لأفكارك ومقترحاتك أو شكواك. تواصلك معنا يساهم في تحسين البيئة الجامعية.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2">
+      <motion.div
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        viewport={{ once: true, amount: 0.1 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+      >
+        <motion.div variants={itemVariants} className="md:col-span-2">
           <form onSubmit={handleSubmit} className="bg-card border border-border rounded-3xl p-6 md:p-8 flex flex-col gap-6">
             <h2 className="text-2xl font-bold text-white mb-2">نموذج التواصل</h2>
             
@@ -136,9 +159,9 @@ export default function Suggestions() {
               إرسال الرسالة
             </Button>
           </form>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col gap-6">
+        <motion.div variants={itemVariants} className="flex flex-col gap-6">
           <div className="bg-card border border-border rounded-3xl p-6 flex flex-col gap-6">
             <h3 className="text-xl font-bold text-white border-r-2 border-primary pr-3">مكتب الاتحاد</h3>
             
@@ -169,8 +192,8 @@ export default function Suggestions() {
               الخط الساخن: 1442
             </Button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

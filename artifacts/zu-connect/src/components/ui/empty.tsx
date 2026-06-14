@@ -1,8 +1,39 @@
 import { cva, type VariantProps } from "class-variance-authority"
+import type { LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
+interface EmptyWrapperProps extends React.ComponentProps<"div"> {
+  icon?: LucideIcon
+  title?: string
+  description?: string
+}
+
+function Empty({ icon: Icon, title, description, className, children, ...props }: EmptyWrapperProps) {
+  if (Icon || title || description) {
+    return (
+      <div
+        data-slot="empty"
+        className={cn(
+          "flex min-w-0 flex-1 flex-col items-center justify-center gap-6 text-balance rounded-lg border-dashed p-6 text-center md:p-12",
+          className
+        )}
+        {...props}
+      >
+        <EmptyHeader>
+          {Icon && (
+            <EmptyMedia variant="icon">
+              <Icon className="size-6" />
+            </EmptyMedia>
+          )}
+          {title && <EmptyTitle>{title}</EmptyTitle>}
+          {description && <EmptyDescription>{description}</EmptyDescription>}
+        </EmptyHeader>
+        {children}
+      </div>
+    )
+  }
+
   return (
     <div
       data-slot="empty"

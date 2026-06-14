@@ -1,10 +1,29 @@
 import { useListChatRooms, useListChatMessages, useSendChatMessage, getListChatMessagesQueryKey } from "@workspace/api-client-react";
 import { useState, useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Empty } from "@/components/ui/empty";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Send, Users, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 export default function Chat() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeRoomId, setActiveRoomId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   
@@ -66,7 +85,7 @@ export default function Chat() {
           
           <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-1">
             {isLoadingRooms ? (
-              [1,2,3,4].map(i => <div key={i} className="h-16 bg-card rounded-xl animate-pulse" />)
+              [1,2,3,4].map(i => <Skeleton key={i} variant="card" className="h-16" />)
             ) : (
               rooms?.map(room => (
                 <button
@@ -114,39 +133,49 @@ export default function Chat() {
                 </div>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-background">
+              <motion.div
+                variants={containerVariants}
+                initial={prefersReducedMotion ? undefined : "hidden"}
+                whileInView={prefersReducedMotion ? undefined : "visible"}
+                viewport={{ once: true }}
+                className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-background"
+              >
                 {isLoadingMessages ? (
-                  <div className="flex items-center justify-center h-full text-muted-foreground animate-pulse">
-                    جاري تحميل المحادثات...
+                  <div className="flex items-center justify-center h-full">
+                    <Skeleton variant="circle" className="w-8 h-8" />
                   </div>
                 ) : messages?.length === 0 ? (
-                  <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
-                    لا توجد رسائل سابقة. كن أول من يرسل!
-                  </div>
+                  <motion.div variants={itemVariants} className="flex items-center justify-center h-full">
+                    <Empty icon={MessageCircle} title="لا توجد رسائل" description="لا توجد رسائل سابقة. كن أول من يرسل!" />
+                  </motion.div>
                 ) : (
-                  messages?.map(msg => (
-                    <div 
-                      key={msg.id} 
-                      className={cn(
-                        "flex flex-col max-w-[80%] md:max-w-[70%]",
-                        msg.isMe ? "self-end items-end" : "self-start items-start"
-                      )}
-                    >
-                      <span className="text-[10px] text-muted-foreground mb-1 px-1">{msg.sender}</span>
-                      <div className={cn(
-                        "px-4 py-2 rounded-2xl text-sm leading-relaxed",
-                        msg.isMe 
-                          ? "bg-primary text-white rounded-tl-sm" 
-                          : "bg-card border border-border text-foreground rounded-tr-sm"
-                      )}>
-                        {msg.message}
-                      </div>
-                      <span className="text-[10px] text-muted-foreground mt-1 px-1">{msg.createdAt}</span>
-                    </div>
-                  ))
+                  <AnimatePresence mode="popLayout">
+                    {messages?.map(msg => (
+                      <motion.div
+                        key={msg.id}
+                        variants={itemVariants}
+                        layout
+                        className={cn(
+                          "flex flex-col max-w-[80%] md:max-w-[70%]",
+                          msg.isMe ? "self-end items-end" : "self-start items-start"
+                        )}
+                      >
+                        <span className="text-[10px] text-muted-foreground mb-1 px-1">{msg.sender}</span>
+                        <div className={cn(
+                          "px-4 py-2 rounded-2xl text-sm leading-relaxed",
+                          msg.isMe
+                            ? "bg-primary text-white rounded-tl-sm"
+                            : "bg-card border border-border text-foreground rounded-tr-sm"
+                        )}>
+                          {msg.message}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground mt-1 px-1">{msg.createdAt}</span>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 )}
                 <div ref={messagesEndRef} />
-              </div>
+              </motion.div>
 
               <form onSubmit={handleSend} className="p-3 border-t border-border bg-card flex gap-2">
                 <input
@@ -166,9 +195,8 @@ export default function Chat() {
               </form>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground flex-col gap-2">
-              <MessageCircle className="w-12 h-12 text-border" />
-              <p>اختر غرفة للبدء بالنقاش</p>
+            <div className="flex-1 flex items-center justify-center">
+              <Empty icon={MessageCircle} title="اختر غرفة" description="اختر غرفة من القائمة الجانبية للبدء بالنقاش مع زملائك." />
             </div>
           )}
         </div>

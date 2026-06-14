@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
+import { getCourseCategoryIcon } from "@/lib/icons/icon-maps";
 import { User, Clock, BarChart, Users } from "lucide-react";
 
 const containerVariants = {
@@ -126,7 +127,8 @@ export default function Courses() {
                 className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col group"
               >
                 <div className={cn("h-32 bg-gradient-to-br relative p-4 flex items-end", gradient)}>
-                  <div className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white text-xs px-2 py-1 rounded font-bold">
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/50 backdrop-blur text-white text-xs px-2 py-1 rounded font-bold">
+                    {(() => { const CatIcon = getCourseCategoryIcon(course.category); return <CatIcon className="w-3 h-3" />; })()}
                     {course.category}
                   </div>
                   <h3 className="text-xl font-bold text-white drop-shadow-md leading-tight">{course.title}</h3>

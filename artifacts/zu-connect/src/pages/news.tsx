@@ -1,11 +1,30 @@
 import { useListNews } from "@workspace/api-client-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
+import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
 import { Eye, Calendar, ArrowUpLeft } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const CATEGORIES = ["الكل", "أخبار الكليات", "إعلانات عامة", "أنشطة طلابية", "منح دراسية"];
 
 export default function News() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState("الكل");
   const { data: news, isLoading } = useListNews(
     activeCategory !== "الكل" ? { category: activeCategory } : {}
@@ -38,54 +57,67 @@ export default function News() {
       {isLoading ? (
         <div className="flex flex-col gap-4">
           {[1,2,3].map(i => (
-            <div key={i} className="bg-card border border-border rounded-2xl h-40 animate-pulse" />
+            <Skeleton key={i} variant="card" className="h-40" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {news?.map((item, i) => (
-            <div key={item.id} className={cn(
-              "bg-card border border-border rounded-2xl overflow-hidden flex flex-col group cursor-pointer hover:border-primary/50 transition-colors",
-              i === 0 ? "md:col-span-2 lg:col-span-2 md:flex-row" : "flex-col"
-            )}>
-              <div className={cn(
-                "bg-muted/50 relative overflow-hidden",
-                i === 0 ? "md:w-1/2 min-h-[200px]" : "h-48"
+        <motion.div
+          variants={containerVariants}
+          initial={prefersReducedMotion ? undefined : "hidden"}
+          whileInView={prefersReducedMotion ? undefined : "visible"}
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {news?.map((item, i) => {
+            const CategoryIcon = getNewsCategoryIcon(item.category);
+            const categoryColor = getNewsCategoryColor(item.category);
+            return (
+              <motion.div key={item.id} variants={itemVariants} whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }} className={cn(
+                "bg-card border border-border rounded-2xl overflow-hidden flex flex-col group cursor-pointer hover:border-primary/50 transition-colors",
+                i === 0 ? "md:col-span-2 lg:col-span-2 md:flex-row" : "flex-col"
               )}>
-                {/* Fallback image placeholder since we don't have images in the schema */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1F2125] to-[#0a0b0c] flex items-center justify-center opacity-80 group-hover:scale-105 transition-transform duration-500">
-                  <span className="text-4xl opacity-20 font-black text-white">ZU</span>
-                </div>
-                <div className="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-2 py-1 rounded">
-                  {item.category}
-                </div>
-              </div>
-              
-              <div className={cn(
-                "p-6 flex flex-col gap-4 flex-1",
-                i === 0 ? "md:w-1/2 justify-center" : ""
-              )}>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {item.date}</span>
-                  <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {item.viewCount}</span>
+                <div className={cn(
+                  "bg-muted/50 relative overflow-hidden",
+                  i === 0 ? "md:w-1/2 min-h-[200px]" : "h-48"
+                )}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#1F2125] to-[#0a0b0c] flex items-center justify-center opacity-80 group-hover:scale-105 transition-transform duration-500">
+                    <span className="text-4xl opacity-20 font-black text-white">ZU</span>
+                  </div>
+                  <div
+                    className="absolute top-4 right-4 flex items-center gap-1.5 text-white text-xs font-bold px-2 py-1 rounded"
+                    style={categoryColor ? { backgroundColor: `${categoryColor}20`, color: categoryColor } : { backgroundColor: 'var(--color-primary)', color: 'white' }}
+                  >
+                    <CategoryIcon className="w-3 h-3" />
+                    {item.category}
+                  </div>
                 </div>
                 
-                <div className="flex flex-col gap-2">
-                  <h3 className={cn("font-bold text-white group-hover:text-primary transition-colors leading-snug", i === 0 ? "text-2xl" : "text-xl line-clamp-2")}>
-                    {item.title}
-                  </h3>
-                  <p className={cn("text-sm text-muted-foreground leading-relaxed", i === 0 ? "line-clamp-4" : "line-clamp-2")}>
-                    {item.body}
-                  </p>
+                <div className={cn(
+                  "p-6 flex flex-col gap-4 flex-1",
+                  i === 0 ? "md:w-1/2 justify-center" : ""
+                )}>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {item.date}</span>
+                    <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {item.viewCount}</span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <h3 className={cn("font-bold text-white group-hover:text-primary transition-colors leading-snug", i === 0 ? "text-2xl" : "text-xl line-clamp-2")}>
+                      {item.title}
+                    </h3>
+                    <p className={cn("text-sm text-muted-foreground leading-relaxed", i === 0 ? "line-clamp-4" : "line-clamp-2")}>
+                      {item.body}
+                    </p>
+                  </div>
+                  
+                  <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[-4px] transition-transform w-fit">
+                    اقرأ المزيد <ArrowUpLeft className="w-4 h-4 ml-1" />
+                  </div>
                 </div>
-                
-                <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[-4px] transition-transform w-fit">
-                  اقرأ المزيد <ArrowUpLeft className="w-4 h-4 ml-1" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       )}
     </div>
   );

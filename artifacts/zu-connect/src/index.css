@@ -74,6 +74,10 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-destructive-border: var(--destructive-border);
 
+  --color-accent-gold: #d4af37;
+  --color-navy-deep: #0b1f3f;
+  --color-navy-card: #152a4f;
+
   --font-sans: var(--app-font-sans);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

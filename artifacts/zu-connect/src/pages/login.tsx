@@ -1,9 +1,25 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { z } from "zod";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { User, Users, ShieldAlert, KeyRound, Mail } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 import logoPath from "@assets/IMG_0792_1781443006842.jpeg";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +35,7 @@ const ROLES = [
 ];
 
 export default function Login() {
+  const prefersReducedMotion = useReducedMotion();
   const [role, setRole] = useState("student");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -81,7 +98,13 @@ export default function Login() {
 
   return (
     <div className="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4">
-      <div className="bg-card border border-border rounded-3xl p-8 w-full max-w-[400px] flex flex-col gap-8 shadow-2xl relative overflow-hidden">
+      <motion.div
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        viewport={{ once: true }}
+        className="bg-card border border-border rounded-3xl p-8 w-full max-w-[400px] flex flex-col gap-8 shadow-2xl relative overflow-hidden"
+      >
         <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
         
         <div className="flex flex-col items-center text-center gap-3">
@@ -166,7 +189,7 @@ export default function Login() {
             {loading ? "جاري تسجيل الدخول..." : "دخول"}
           </Button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

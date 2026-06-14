@@ -1,10 +1,11 @@
 import { useGetStats, useListNews, useListPlanner } from "@workspace/api-client-react";
 import campusPath from "@assets/IMG_0793_1781443006842.jpeg";
 import { Link } from "wouter";
-import { Send } from "lucide-react";
-import { useState } from "react";
+import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -29,8 +30,65 @@ interface LeadershipMember {
   role: string;
 }
 
+function useCountUp(target: number, duration = 2000) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const start = performance.now();
+          const animate = (now: number) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            setCount(Math.floor(progress * target));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
+
+  return { count, ref };
+}
+
+function StatCard({ label, value, icon: Icon }: { label: string; value: string; icon: React.ElementType }) {
+  const prefersReducedMotion = useReducedMotion();
+  const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
+  const { count, ref } = useCountUp(numericValue);
+  const displayValue = value.includes("+") ? `${count.toLocaleString()}+` : count.toLocaleString();
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+      className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform shadow-2xl"
+    >
+      <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary">
+        <Icon className="w-6 h-6" />
+      </div>
+      <span ref={ref} className="text-4xl font-black text-white">{prefersReducedMotion ? value : displayValue}</span>
+      <span className="text-muted-foreground font-semibold">{label}</span>
+    </motion.div>
+  );
+}
+
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 500], [0, 100]);
+
   const { data: stats } = useGetStats();
   const { data: news } = useListNews();
   const { data: planner } = useListPlanner();
@@ -78,13 +136,49 @@ export default function Home() {
     <div className="flex flex-col gap-16 pb-16">
       <section className="relative w-full h-[60vh] rounded-3xl overflow-hidden bg-black flex items-center mt-4">
         <div className="absolute inset-0 z-0">
-          <img src={campusPath} alt="Campus" className="w-full h-full object-cover opacity-40 mix-blend-overlay" />
+          <motion.img
+            src={campusPath}
+            alt="Campus"
+            style={prefersReducedMotion ? undefined : { y: parallaxY }}
+            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
           <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/30 rounded-full blur-[120px]" />
         </div>
+
+        {!prefersReducedMotion && (
+          <>
+            <motion.div
+              className="absolute top-20 left-[15%] z-[5] text-primary/20"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, ease: "easeInOut", repeat: Infinity }}
+            >
+              <GraduationCap className="w-12 h-12" />
+            </motion.div>
+            <motion.div
+              className="absolute top-32 right-[20%] z-[5] text-primary/15"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
+            >
+              <Book className="w-10 h-10" />
+            </motion.div>
+            <motion.div
+              className="absolute bottom-20 left-[30%] z-[5] text-primary/20"
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
+            >
+              <Atom className="w-14 h-14" />
+            </motion.div>
+          </>
+        )}
         
-        <div className="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6">
+        <motion.div
+          initial={prefersReducedMotion ? undefined : { opacity: 0, y: 30 }}
+          animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6"
+        >
           <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">مرحباً بك في <br/> ZU Connect</h1>
           <p className="text-xl text-muted-foreground font-medium max-w-xl">
             المنصة الرقمية الرسمية للاتحاد العام لطلبة جامعة الزاوية. تواصل، تعلم، وشارك في بناء مجتمع طلابي أقوى.
@@ -97,7 +191,7 @@ export default function Home() {
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full font-bold bg-transparent text-white border-white/20 hover:bg-white hover:text-black">من نحن</Button>
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <motion.section
@@ -107,22 +201,10 @@ export default function Home() {
         viewport={{ once: true, amount: 0.1 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 -mt-24 relative z-20 px-4"
       >
-        {[
-          { label: "طالب", value: stats?.totalStudents?.toLocaleString() || "5,240" },
-          { label: "كلية", value: stats?.totalColleges || "14" },
-          { label: "نشاط", value: stats?.totalActivities || "48" },
-          { label: "ملف", value: stats?.totalLibraryFiles || "320" },
-        ].map((stat, i) => (
-          <motion.div
-            key={i}
-            variants={itemVariants}
-            whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-            className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform shadow-2xl"
-          >
-            <span className="text-4xl font-black text-white">{stat.value}</span>
-            <span className="text-muted-foreground font-semibold">{stat.label}</span>
-          </motion.div>
-        ))}
+        <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
+        <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
+        <StatCard label="نشاط" value={String(stats?.totalActivities ?? "48")} icon={Calendar} />
+        <StatCard label="ملف" value={String(stats?.totalLibraryFiles ?? "320")} icon={FileText} />
       </motion.section>
 
       <section className="flex flex-col gap-8 bg-[#0b1f3f] -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-16 rounded-3xl border border-[#d4af37]/20 relative overflow-hidden">
@@ -194,7 +276,16 @@ export default function Home() {
               >
                 <Link href={`/news/${item.id}`} className="bg-card border border-border p-6 rounded-2xl hover:bg-card/80 transition-colors flex flex-col gap-3 group block">
                   <div className="flex justify-between items-start gap-4">
-                    <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">{item.category}</span>
+                    <span
+                      className="text-xs font-bold px-2 py-1 rounded flex items-center gap-1"
+                      style={(() => {
+                        const color = getNewsCategoryColor(item.category);
+                        return color ? { backgroundColor: `${color}20`, color } : {};
+                      })()}
+                    >
+                      {(() => { const CatIcon = getNewsCategoryIcon(item.category); return <CatIcon className="w-3 h-3" />; })()}
+                      {item.category}
+                    </span>
                     <span className="text-xs text-muted-foreground">{item.date}</span>
                   </div>
                   <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
@@ -245,15 +336,20 @@ export default function Home() {
           </div>
 
           <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-[400px]">
-            <div className="bg-primary p-4">
+            <div className="bg-[#0b1f3f] border-b border-[#d4af37]/20 p-4">
               <h3 className="font-bold text-white">المرشد الأكاديمي (AI)</h3>
-              <p className="text-xs text-white/80 mt-1">اسأل عن أي شيء يخص الجامعة</p>
+              <p className="text-xs text-[#d4af37] mt-1">اسأل عن أي شيء يخص الجامعة</p>
             </div>
             <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3">
               {messages.map((msg, i) => (
-                <div key={i} className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-primary text-white self-end rounded-tl-sm' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}>
+                <motion.div
+                  key={i}
+                  initial={false}
+                  animate={{ scale: 1 }}
+                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-[#152a4f] text-white self-end rounded-tl-sm border border-[#d4af37]/30' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
+                >
                   {msg.text}
-                </div>
+                </motion.div>
               ))}
             </div>
             <form onSubmit={handleChat} className="p-3 border-t border-border flex gap-2 bg-background">
@@ -262,11 +358,17 @@ export default function Home() {
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 placeholder="اكتب سؤالك هنا..." 
-                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-primary"
+                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#d4af37]"
               />
-              <button type="submit" className="bg-primary text-white p-2 rounded-xl hover:bg-primary/90 flex-shrink-0">
+              <motion.button
+                type="submit"
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(212, 175, 55, 0.4)", "0 0 0 8px rgba(212, 175, 55, 0)", "0 0 0 0 rgba(212, 175, 55, 0)"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="bg-[#d4af37] text-black p-2 rounded-xl hover:bg-[#d4af37]/90 flex-shrink-0"
+              >
                 <Send className="w-5 h-5 rtl:-scale-x-100" />
-              </button>
+              </motion.button>
             </form>
           </div>
         </div>

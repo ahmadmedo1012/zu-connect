@@ -3,10 +3,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Empty } from "@/components/ui/empty";
 import { useToast } from "@/hooks/use-toast";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
-import { FileText, Download, Star, Filter } from "lucide-react";
+import { getLibraryTypeIcon } from "@/lib/icons/icon-maps";
+import { Download, Star, Filter, BookOpen } from "lucide-react";
 
 const containerVariants = {
   hidden: {},
@@ -84,21 +86,25 @@ export default function Library() {
           viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          {resources?.map(resource => (
+          {resources?.length === 0 ? (
+            <div className="col-span-full">
+              <Empty icon={BookOpen} title="لا توجد نتائج" description="لم نجد أي ملفات تطابق بحثك. حاول تغيير نوع الملف أو البحث بكلمة مختلفة." />
+            </div>
+          ) : resources?.map(resource => (
             <motion.div
               key={resource.id}
               variants={itemVariants}
               whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
               className="bg-card border border-border p-5 rounded-2xl flex flex-col gap-4 hover:border-primary/50 transition-colors group"
             >
-              <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <FileText className="w-6 h-6" />
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    {(() => { const TypeIcon = getLibraryTypeIcon(resource.type); return <TypeIcon className="w-6 h-6" />; })()}
+                  </div>
+                  <span className="text-[10px] font-bold bg-white/5 text-white/80 px-2 py-1 rounded">
+                    {resource.type}
+                  </span>
                 </div>
-                <span className="text-[10px] font-bold bg-white/5 text-white/80 px-2 py-1 rounded">
-                  {resource.type}
-                </span>
-              </div>
               
               <div className="flex flex-col gap-1">
                 <h3 className="font-bold text-lg text-white line-clamp-1" title={resource.title}>{resource.title}</h3>

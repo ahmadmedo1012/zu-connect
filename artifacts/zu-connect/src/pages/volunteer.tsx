@@ -1,9 +1,25 @@
 import { useCreateVolunteer } from "@workspace/api-client-react";
 import { useState } from "react";
 import { z } from "zod";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { Leaf, Droplet, PartyPopper, Flag, Users, Radio } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const volunteerSchema = z.object({
   name: z.string().min(1, "الرجاء إدخال الاسم الرباعي").min(10, "الرجاء إدخال الاسم الرباعي كاملاً"),
@@ -22,6 +38,7 @@ const CATEGORIES = [
 ];
 
 export default function Volunteer() {
+  const prefersReducedMotion = useReducedMotion();
   const { toast } = useToast();
   const createVolunteer = useCreateVolunteer();
   
@@ -82,12 +99,20 @@ export default function Volunteer() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <motion.div
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        viewport={{ once: true, amount: 0.1 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
         {CATEGORIES.map(cat => {
           const Icon = cat.icon;
           return (
-            <div 
-              key={cat.id} 
+            <motion.div
+              key={cat.id}
+              variants={itemVariants}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
               className={`bg-card border p-6 rounded-2xl flex flex-col gap-3 cursor-pointer transition-all ${formData.area === cat.id ? 'border-primary shadow-[0_0_15px_rgba(227,38,82,0.1)] scale-[1.02]' : 'border-border hover:border-primary/50'}`}
               onClick={() => setFormData({...formData, area: cat.id})}
             >
@@ -96,12 +121,18 @@ export default function Volunteer() {
               </div>
               <h3 className="text-xl font-bold text-white">{cat.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{cat.desc}</p>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
-      <div className="bg-card border border-border rounded-3xl p-8 max-w-2xl mx-auto w-full">
+      <motion.div
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        viewport={{ once: true, amount: 0.1 }}
+        className="bg-card border border-border rounded-3xl p-8 max-w-2xl mx-auto w-full"
+      >
         <div className="flex flex-col gap-2 mb-8 text-center">
           <h2 className="text-2xl font-bold text-white">استمارة التطوع</h2>
           <p className="text-sm text-muted-foreground">أكمل البيانات التالية وسنقوم بالتواصل معك</p>
@@ -172,7 +203,7 @@ export default function Volunteer() {
             تأكيد التسجيل للتطوع
           </Button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

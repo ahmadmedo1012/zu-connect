@@ -1,5 +1,21 @@
 import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { MessageSquare, BookOpen, Library, GraduationCap, CalendarDays, HeartHandshake, Lightbulb, Users, Globe, Flag, ShieldQuestion, Briefcase } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const SERVICES = [
   { id: 1, title: "صندوق الاقتراحات", icon: Lightbulb, href: "/suggestions", desc: "أرسل أفكارك ومقترحاتك لتطوير الجامعة" },
@@ -17,6 +33,7 @@ const SERVICES = [
 ];
 
 export default function Services() {
+  const prefersReducedMotion = useReducedMotion();
   return (
     <div className="flex flex-col gap-8 py-8">
       <div className="flex flex-col gap-4 text-center items-center max-w-3xl mx-auto mb-4">
@@ -24,26 +41,33 @@ export default function Services() {
         <p className="text-muted-foreground text-lg">بوابة موحدة لجميع الخدمات الأكاديمية والأنشطة الطلابية التي يقدمها الاتحاد لطلبة جامعة الزاوية.</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <motion.div
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        viewport={{ once: true, amount: 0.1 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
         {SERVICES.map(service => {
           const Icon = service.icon;
           return (
-            <Link 
-              key={service.id} 
-              href={service.href}
-              className="bg-card border border-border p-6 rounded-3xl flex flex-col gap-4 hover:bg-primary/5 hover:border-primary/50 transition-all group"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center text-white group-hover:bg-primary group-hover:border-primary transition-colors">
-                <Icon className="w-7 h-7" />
-              </div>
-              <div className="flex flex-col gap-2 mt-2">
-                <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{service.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
-              </div>
-            </Link>
+            <motion.div key={service.id} variants={itemVariants} whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}>
+              <Link
+                href={service.href}
+                className="bg-card border border-border p-6 rounded-3xl flex flex-col gap-4 hover:bg-primary/5 hover:border-primary/50 transition-all group block"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center text-white group-hover:bg-primary group-hover:border-primary transition-colors">
+                  <Icon className="w-7 h-7" />
+                </div>
+                <div className="flex flex-col gap-2 mt-2">
+                  <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{service.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
+                </div>
+              </Link>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 }

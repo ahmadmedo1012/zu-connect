@@ -1,21 +1,53 @@
+import { motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 
-export default function NotFound() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
-          </div>
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
 
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+export default function NotFound() {
+  const prefersReducedMotion = useReducedMotion();
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center bg-background">
+      <motion.div
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        animate={prefersReducedMotion ? undefined : "visible"}
+        className="w-full max-w-md mx-4"
+      >
+        <Card>
+          <CardContent className="pt-6 flex flex-col items-center text-center gap-4">
+            <motion.div variants={itemVariants} className="flex gap-2 items-center">
+              <AlertCircle className="h-8 w-8 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">الصفحة غير موجودة</h1>
+            </motion.div>
+
+            <motion.p variants={itemVariants} className="text-sm text-muted-foreground">
+              الصفحة التي تبحث عنها غير موجودة. قد يكون الرابط غير صحيح أو تم حذف الصفحة.
+            </motion.p>
+
+            <motion.a
+              variants={itemVariants}
+              href="/"
+              className="text-primary font-bold hover:underline"
+            >
+              العودة إلى الرئيسية
+            </motion.a>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
