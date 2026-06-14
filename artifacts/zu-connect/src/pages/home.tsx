@@ -1,14 +1,23 @@
 import { useGetStats, useListNews, useListPlanner } from "@workspace/api-client-react";
-import campusPath from "@assets/IMG_0793_1781443006842.jpeg";
+
 import { Link } from "wouter";
-import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock } from "lucide-react";
+import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock, ChevronDown, BookOpen, Headphones, HeartPulse, Users, Library, Star } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { LottieAnimation } from "@/components/ui/lottie";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 const containerVariants = {
@@ -85,11 +94,32 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: string; 
   );
 }
 
+const HERO_PHRASES = [
+  "تواصل، تعلم، وشارك في بناء مجتمع طلابي أقوى",
+  "انضم إلى آلاف الطلاب في رحلتهم الجامعية",
+  "كل ما تحتاجه في مكان واحد",
+];
+
+const TESTIMONIALS = [
+  { name: "أحمد محمد", role: "كلية الهندسة", quote: "منصة رائعة! ساعدتني في متابعة فعاليات الاتحاد والتسجيل في الدورات.", rating: 5 },
+  { name: "سارة علي", role: "كلية الطب", quote: "المكتبة الرقمية كنز حقيقي. المحاضرات المسجلة والملخصات وفرت علي وقتاً وجهداً كبيرين.", rating: 5 },
+  { name: "خالد عمر", role: "كلية الحاسوب", quote: "المرشد الأكاديمي الذكي ميزة رائعة. يجيب على كل أسئلتي بسرعة ودقة.", rating: 5 },
+  { name: "فاطمة حسن", role: "كلية الآداب", quote: "غرف النقاش ساعدتني في التواصل مع زملائي ومناقشة المواد الدراسية بسهولة.", rating: 5 },
+  { name: "مصطفى عبدالله", role: "كلية الاقتصاد", quote: "جدول الأنشطة والتقويم الجامعي من أهم الميزات التي أستخدمها يومياً.", rating: 5 },
+];
+
+const SERVICE_CARDS = [
+  { icon: Building2, title: "الكليات والأقسام", desc: "استعرض كليات جامعة الزاوية وأقسامها المختلفة" },
+  { icon: Library, title: "المكتبة الرقمية", desc: "ملخصات، كتب PDF، بحوث ومحاضرات مسجلة" },
+  { icon: Calendar, title: "الفعاليات القادمة", desc: "تابع فعاليات وأنشطة الاتحاد والكليات" },
+  { icon: BookOpen, title: "النشرة البريدية", desc: "آخر الأخبار والتحديثات تصلك مباشرة" },
+  { icon: Headphones, title: "الدعم الفني", desc: "فريق الدعم جاهز لمساعدتك في أي استفسار" },
+  { icon: HeartPulse, title: "الأندية الطلابية", desc: "انضم للأندية الطلابية وطور مهاراتك" },
+];
+
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
   const { user } = useAuth();
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 500], [0, 100]);
 
   const { data: stats } = useGetStats();
   const { data: news } = useListNews();
@@ -134,46 +164,42 @@ export default function Home() {
     setChatInput("");
   };
 
+  // Typewriter state
+  const [typedText, setTypedText] = useState("");
+  const [phraseIdx, setPhraseIdx] = useState(0);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setTypedText(HERO_PHRASES[0]);
+      return;
+    }
+    const full = HERO_PHRASES[phraseIdx];
+    if (typedText.length < full.length) {
+      const t = setTimeout(() => {
+        setTypedText(full.slice(0, typedText.length + 1));
+      }, 40);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => {
+        setPhraseIdx((p) => (p + 1) % HERO_PHRASES.length);
+        setTypedText("");
+      }, 3000);
+      return () => clearTimeout(t);
+    }
+  }, [typedText, phraseIdx, prefersReducedMotion]);
+
   return (
-    <div className="flex flex-col gap-16 pb-16">
-      <section className="relative w-full h-[60vh] rounded-3xl overflow-hidden bg-black flex items-center mt-4">
-        <div className="absolute inset-0 z-0">
-          <motion.img
-            src={campusPath}
-            alt="Campus"
-            style={prefersReducedMotion ? undefined : { y: parallaxY }}
-            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-          <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/30 rounded-full blur-[120px]" />
+    <div className="flex flex-col gap-16 pb-16 max-w-5xl mx-auto">
+      <section className="relative w-full min-h-[65vh] rounded-3xl overflow-hidden flex items-center mt-4 bg-gradient-to-br from-background via-background to-muted/30 border border-border">
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute -top-1/2 -right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[200px]" />
+          <div className="absolute -bottom-1/2 -left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[200px]" />
+          <div className="absolute top-0 left-0 right-0 bottom-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23E32652%22 fill-opacity=%220.03%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 36v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 6V0H4v4H0v2h4v4h2V6h4V4H6z/%22%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]" />
         </div>
 
-        {!prefersReducedMotion && (
-          <>
-            <motion.div
-              className="absolute top-20 left-[15%] z-[5] text-primary/20"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 3, ease: "easeInOut", repeat: Infinity }}
-            >
-              <GraduationCap className="w-12 h-12" />
-            </motion.div>
-            <motion.div
-              className="absolute top-32 right-[20%] z-[5] text-primary/15"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
-            >
-              <Book className="w-10 h-10" />
-            </motion.div>
-            <motion.div
-              className="absolute bottom-20 left-[30%] z-[5] text-primary/20"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
-            >
-              <Atom className="w-14 h-14" />
-            </motion.div>
-          </>
-        )}
+        <div className="absolute left-auto right-4 md:right-16 top-1/2 -translate-y-1/2 z-[5] w-72 h-72 opacity-30 hidden lg:block pointer-events-none">
+          <LottieAnimation src="/animations/illustration/study-discussion.json" />
+        </div>
         
         <motion.div
           initial={prefersReducedMotion ? undefined : { opacity: 0, y: 30 }}
@@ -181,18 +207,42 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6"
         >
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">مرحباً بك في <br/> ZU Connect</h1>
-          <p className="text-xl text-muted-foreground font-medium max-w-xl">
-            المنصة الرقمية الرسمية للاتحاد العام لطلبة جامعة الزاوية. تواصل، تعلم، وشارك في بناء مجتمع طلابي أقوى.
-          </p>
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-bold text-primary tracking-widest">ZU Connect</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-foreground leading-tight">
+            مرحباً بك في <br/> جامعتك الرقمية
+          </h1>
+          <div className="h-14">
+            <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-xl">
+              {prefersReducedMotion ? HERO_PHRASES[0] : typedText}
+              {!prefersReducedMotion && (
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                  className="inline-block w-0.5 h-6 bg-primary mr-1 -mb-0.5"
+                />
+              )}
+            </p>
+          </div>
           <div className="flex flex-wrap items-center gap-4 mt-4">
             <Link href="/services">
-              <Button size="lg" className="text-lg px-8 py-6 rounded-full font-bold">تصفح الخدمات</Button>
+              <Button size="lg" className="text-lg px-8 py-6 rounded-full font-bold shadow-lg shadow-primary/20">تصفح الخدمات</Button>
             </Link>
             <Link href="/about">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full font-bold bg-transparent text-white border-white/20 hover:bg-white hover:text-black">من نحن</Button>
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full font-bold bg-transparent border-border hover:bg-accent hover:text-foreground">من نحن</Button>
             </Link>
           </div>
+        </motion.div>
+
+        <motion.div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
+          initial={prefersReducedMotion ? undefined : { opacity: 0 }}
+          animate={prefersReducedMotion ? undefined : { opacity: 1, y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronDown className="w-8 h-8 text-muted-foreground/50" />
         </motion.div>
       </section>
 
@@ -201,7 +251,7 @@ export default function Home() {
         initial={prefersReducedMotion ? undefined : "hidden"}
         whileInView={prefersReducedMotion ? undefined : "visible"}
         viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 -mt-24 relative z-20 px-4"
+        className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 md:gap-6 -mt-24 relative z-20 px-4"
       >
         <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
@@ -209,28 +259,57 @@ export default function Home() {
         {user && <StatCard label="ملف" value={String(stats?.totalLibraryFiles ?? "320")} icon={FileText} />}
       </motion.section>
 
-      <section className="flex flex-col gap-8 bg-[#0b1f3f] -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-16 rounded-3xl border border-[#d4af37]/20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#d4af37]/10 via-transparent to-transparent pointer-events-none" />
+      <section className="flex flex-col gap-8">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <span className="text-xs font-bold text-primary tracking-widest">خدمات سريعة</span>
+          <h2 className="text-3xl font-black text-foreground">كل ما تحتاجه في مكان واحد</h2>
+          <p className="text-muted-foreground max-w-xl">خدمات طلابية متكاملة صممت لتسهيل حياتك الجامعية</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {SERVICE_CARDS.map((card, i) => (
+            <motion.div
+              key={card.title}
+              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }}
+              whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              whileHover={prefersReducedMotion ? undefined : { y: -4, scale: 1.01 }}
+              className="bg-card border border-border p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                <card.icon className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg text-foreground">{card.title}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{card.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-8 py-16 rounded-3xl border border-primary/20 relative overflow-hidden bg-gradient-to-br from-background via-muted/30 to-background">
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
         <div className="text-center flex flex-col gap-2 relative z-10">
-          <h2 className="text-3xl font-black text-white">الهيكل الإداري للاتحاد العام</h2>
-          <p className="text-[#d4af37]">قيادة طلابية تعمل من أجلكم</p>
+          <h2 className="text-3xl font-black text-foreground">الهيكل الإداري للاتحاد العام</h2>
+          <p className="text-primary">قيادة طلابية تعمل من أجلكم</p>
         </div>
         
         <div className="flex flex-col items-center gap-8 relative z-10">
-          <div className="bg-[#152a4f] border-2 border-[#d4af37] p-8 rounded-2xl text-center flex flex-col items-center w-full max-w-sm">
-            <div className="w-20 h-20 bg-[#d4af37]/20 text-[#d4af37] rounded-full flex items-center justify-center text-2xl font-bold mb-4">م</div>
-            <h3 className="text-2xl font-bold text-white mb-1">محمد وسام الفراح</h3>
-            <p className="text-[#d4af37] font-semibold">رئيس الاتحاد العام</p>
+          <div className="bg-card border-2 border-primary p-8 rounded-2xl text-center flex flex-col items-center w-full max-w-sm">
+            <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-4">م</div>
+            <h3 className="text-2xl font-bold text-foreground mb-1">محمد وسام الفراح</h3>
+            <p className="text-primary font-semibold">رئيس الاتحاد العام</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-            <div className="bg-[#152a4f] border border-[#d4af37]/50 p-6 rounded-2xl text-center flex flex-col items-center">
-              <h3 className="text-xl font-bold text-white mb-1">مالك علي كشلاف</h3>
-              <p className="text-[#d4af37] font-semibold">النائب الأول</p>
+            <div className="bg-card border border-primary/30 p-6 rounded-2xl text-center flex flex-col items-center">
+              <h3 className="text-xl font-bold text-foreground mb-1">مالك علي كشلاف</h3>
+              <p className="text-primary font-semibold">النائب الأول</p>
             </div>
-            <div className="bg-[#152a4f] border border-[#d4af37]/50 p-6 rounded-2xl text-center flex flex-col items-center">
-              <h3 className="text-xl font-bold text-white mb-1">عبد المجيد محمد الحمري</h3>
-              <p className="text-[#d4af37] font-semibold">النائب الثاني</p>
+            <div className="bg-card border border-primary/30 p-6 rounded-2xl text-center flex flex-col items-center">
+              <h3 className="text-xl font-bold text-foreground mb-1">عبد المجيد محمد الحمري</h3>
+              <p className="text-primary font-semibold">النائب الثاني</p>
             </div>
           </div>
 
@@ -246,10 +325,10 @@ export default function Home() {
                 key={member.id}
                 variants={itemVariants}
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-                className="bg-[#152a4f] border border-border p-5 rounded-2xl flex flex-col gap-2 hover:bg-[#1a3360] transition-colors"
+                className="bg-card border border-border p-5 rounded-2xl flex flex-col gap-2 hover:bg-accent hover:border-primary/30 transition-colors"
               >
-                <h4 className="font-bold text-white">{member.name}</h4>
-                <p className="text-sm text-[#d4af37]">{member.role}</p>
+                <h4 className="font-bold text-foreground">{member.name}</h4>
+                <p className="text-sm text-primary">{member.role}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -276,7 +355,7 @@ export default function Home() {
                 variants={itemVariants}
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
               >
-                <Link href={`/news/${item.id}`} className="bg-card border border-border p-6 rounded-2xl hover:bg-card/80 transition-colors flex flex-col gap-3 group block">
+                <div className="bg-card border border-border p-6 rounded-2xl transition-colors flex flex-col gap-3 group">
                   <div className="flex justify-between items-start gap-4">
                     <span
                       className="text-xs font-bold px-2 py-1 rounded flex items-center gap-1"
@@ -290,9 +369,9 @@ export default function Home() {
                     </span>
                     <span className="text-xs text-muted-foreground">{item.date}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground leading-snug">{item.title}</h3>
                   {user && <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>}
-                </Link>
+                </div>
               </motion.div>
             ))}
             {!news && (
@@ -338,9 +417,9 @@ export default function Home() {
           </div>
 
           <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-[400px]">
-            <div className="bg-[#0b1f3f] border-b border-[#d4af37]/20 p-4">
-              <h3 className="font-bold text-white">المرشد الأكاديمي (AI)</h3>
-              <p className="text-xs text-[#d4af37] mt-1">اسأل عن أي شيء يخص الجامعة</p>
+            <div className="bg-primary/5 border-b border-primary/20 p-4">
+              <h3 className="font-bold text-foreground">المرشد الأكاديمي (AI)</h3>
+              <p className="text-xs text-primary mt-1">اسأل عن أي شيء يخص الجامعة</p>
             </div>
             <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3">
               {messages.map((msg, i) => (
@@ -348,7 +427,7 @@ export default function Home() {
                   key={i}
                   initial={false}
                   animate={{ scale: 1 }}
-                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-[#152a4f] text-white self-end rounded-tl-sm border border-[#d4af37]/30' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
+                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-primary text-primary-foreground self-end rounded-tl-sm border border-primary/30' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
                 >
                   {msg.text}
                 </motion.div>
@@ -360,14 +439,14 @@ export default function Home() {
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 placeholder="اكتب سؤالك هنا..." 
-                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#d4af37]"
+                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-primary"
               />
               <motion.button
                 type="submit"
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
-                animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(212, 175, 55, 0.4)", "0 0 0 8px rgba(212, 175, 55, 0)", "0 0 0 0 rgba(212, 175, 55, 0)"] }}
+                animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(227, 38, 82, 0.4)", "0 0 0 8px rgba(227, 38, 82, 0)", "0 0 0 0 rgba(227, 38, 82, 0)"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="bg-[#d4af37] text-black p-2 rounded-xl hover:bg-[#d4af37]/90 flex-shrink-0"
+                className="bg-primary text-primary-foreground p-2 rounded-xl hover:bg-primary/90 flex-shrink-0"
               >
                 <Send className="w-5 h-5 rtl:-scale-x-100" />
               </motion.button>
@@ -375,6 +454,45 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <section className="flex flex-col gap-8 py-16">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <span className="text-xs font-bold text-primary tracking-widest">طلابنا</span>
+          <h2 className="text-3xl font-black text-foreground">ماذا يقول عنا الطلاب</h2>
+          <p className="text-muted-foreground max-w-xl">آراء طلاب جامعة الزاوية حول تجربتهم مع المنصة</p>
+        </div>
+        <div className="w-full max-w-4xl mx-auto">
+          <Carousel opts={{ loop: true, align: "start" }}>
+            <CarouselContent className="items-stretch">
+              {TESTIMONIALS.map((t, i) => (
+                <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3 h-full">
+                  <div className="bg-card border border-border p-6 rounded-2xl h-full flex flex-col gap-4">
+                    <div className="flex gap-1">
+                      {Array.from({ length: t.rating }).map((_, j) => (
+                        <Star key={j} className="w-4 h-4 fill-primary text-primary" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
+                    <div className="flex items-center gap-3 pt-2 border-t border-border">
+                      <Avatar>
+                        <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+                          {t.name.slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-bold text-sm text-foreground">{t.name}</p>
+                        <p className="text-xs text-muted-foreground">{t.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+      </section>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export default function FAQ() {
   const categories = Array.from(new Set(faqs?.map(faq => faq.category) || []));
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-3xl mx-auto">
+    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto">
       <div className="flex flex-col gap-4 text-center items-center">
         <LottieAnimation src="/animations/illustration/faq-help.json" className="w-[100px] h-[100px]" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground">الأسئلة الشائعة</h1>

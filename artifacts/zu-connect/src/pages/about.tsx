@@ -19,7 +19,7 @@ const itemVariants = {
 export default function About() {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="flex flex-col gap-12 max-w-4xl mx-auto py-8">
+    <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto">
       <div className="flex flex-col items-center gap-4 text-center">
         <LottieAnimation src="/animations/illustration/teacher.json" className="w-[120px] h-[120px] md:w-[150px] md:h-[150px]" />
         <h1 className="text-4xl md:text-5xl font-black text-foreground">عن الاتحاد</h1>

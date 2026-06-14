@@ -72,7 +72,7 @@ export default function Courses() {
   };
 
   return (
-    <div className="flex flex-col gap-8 py-8">
+    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto">
       <div className="flex flex-col gap-4">
         <LottieAnimation src="/animations/illustration/graduation.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الدورات التدريبية</h1>
