@@ -1,8 +1,10 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { AnimatePresence, motion } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/home";
@@ -22,26 +24,49 @@ import Login from "@/pages/login";
 
 const queryClient = new QueryClient();
 
+function AnimatedPage({ children }: { children: React.ReactNode }) {
+  const prefersReducedMotion = useReducedMotion()
+
+  if (prefersReducedMotion) {
+    return <>{children}</>
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 function Router() {
+  const [location] = useLocation()
+
   return (
     <AppLayout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/about" component={About} />
-        <Route path="/members" component={Members} />
-        <Route path="/colleges" component={Colleges} />
-        <Route path="/news" component={News} />
-        <Route path="/courses" component={Courses} />
-        <Route path="/planner" component={Planner} />
-        <Route path="/chat" component={Chat} />
-        <Route path="/services" component={Services} />
-        <Route path="/suggestions" component={Suggestions} />
-        <Route path="/volunteer" component={Volunteer} />
-        <Route path="/faq" component={Faq} />
-        <Route path="/library" component={Library} />
-        <Route path="/login" component={Login} />
-        <Route component={NotFound} />
-      </Switch>
+      <AnimatePresence mode="wait">
+        <Switch key={location}>
+          <Route path="/"><AnimatedPage><Home /></AnimatedPage></Route>
+          <Route path="/about"><AnimatedPage><About /></AnimatedPage></Route>
+          <Route path="/members"><AnimatedPage><Members /></AnimatedPage></Route>
+          <Route path="/colleges"><AnimatedPage><Colleges /></AnimatedPage></Route>
+          <Route path="/news"><AnimatedPage><News /></AnimatedPage></Route>
+          <Route path="/courses"><AnimatedPage><Courses /></AnimatedPage></Route>
+          <Route path="/planner"><AnimatedPage><Planner /></AnimatedPage></Route>
+          <Route path="/chat"><AnimatedPage><Chat /></AnimatedPage></Route>
+          <Route path="/services"><AnimatedPage><Services /></AnimatedPage></Route>
+          <Route path="/suggestions"><AnimatedPage><Suggestions /></AnimatedPage></Route>
+          <Route path="/volunteer"><AnimatedPage><Volunteer /></AnimatedPage></Route>
+          <Route path="/faq"><AnimatedPage><Faq /></AnimatedPage></Route>
+          <Route path="/library"><AnimatedPage><Library /></AnimatedPage></Route>
+          <Route path="/login"><AnimatedPage><Login /></AnimatedPage></Route>
+          <Route><AnimatedPage><NotFound /></AnimatedPage></Route>
+        </Switch>
+      </AnimatePresence>
     </AppLayout>
   );
 }

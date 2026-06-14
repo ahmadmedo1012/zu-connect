@@ -1,14 +1,32 @@
 import { useListCourses, useEnrollCourse, useUnenrollCourse, getListCoursesQueryKey } from "@workspace/api-client-react";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { User, Clock, BarChart, Users } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const CATEGORIES = ["الكل", "لغات", "تقنية", "مهارات شخصية", "علمي"];
 
 export default function Courses() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState("الكل");
   const { data: courses, isLoading } = useListCourses(
     activeCategory !== "الكل" ? { category: activeCategory } : {}
@@ -76,16 +94,21 @@ export default function Courses() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1,2,3].map(i => (
-            <div key={i} className="bg-card border border-border rounded-2xl h-[400px] animate-pulse" />
+            <Skeleton key={i} variant="card" className="h-[400px]" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial={prefersReducedMotion ? undefined : "hidden"}
+          whileInView={prefersReducedMotion ? undefined : "visible"}
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {courses?.map(course => {
             const isEnrolled = enrolledIds.includes(course.id);
             const percentFull = Math.round((course.enrolledCount / course.totalSeats) * 100);
             
-            // Generate a color based on colorScheme integer
             const colors = [
               "from-blue-600 to-blue-900",
               "from-emerald-500 to-teal-900",
@@ -96,7 +119,12 @@ export default function Courses() {
             const gradient = colors[course.colorScheme % colors.length];
 
             return (
-              <div key={course.id} className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col group">
+              <motion.div
+                key={course.id}
+                variants={itemVariants}
+                whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+                className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col group"
+              >
                 <div className={cn("h-32 bg-gradient-to-br relative p-4 flex items-end", gradient)}>
                   <div className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white text-xs px-2 py-1 rounded font-bold">
                     {course.category}
@@ -160,10 +188,10 @@ export default function Courses() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
     </div>
   );

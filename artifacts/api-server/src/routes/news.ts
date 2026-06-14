@@ -29,7 +29,7 @@ router.post("/news", async (req, res) => {
 router.get("/news/:id", async (req, res) => {
   const { id } = GetNewsParams.parse({ id: Number(req.params.id) });
   const [item] = await db.select().from(newsTable).where(eq(newsTable.id, id));
-  if (!item) return res.status(404).json({ error: "Not found" });
+  if (!item) { res.status(404).json({ error: "Not found" }); return; }
   res.json(item);
 });
 

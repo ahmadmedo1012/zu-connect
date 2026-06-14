@@ -1,13 +1,31 @@
 import { useListLibrary } from "@workspace/api-client-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { FileText, Download, Star, Filter } from "lucide-react";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const TYPES = ["الكل", "ملخصات", "بحوث", "كتب PDF", "محاضرات مسجلة"];
 
 export default function Library() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeType, setActiveType] = useState("الكل");
   const { data: resources, isLoading } = useListLibrary(
     activeType !== "الكل" ? { type: activeType } : {}
@@ -35,9 +53,10 @@ export default function Library() {
         </div>
         <div className="flex flex-wrap gap-2">
           {TYPES.map(type => (
-            <button
+            <motion.button
               key={type}
               onClick={() => setActiveType(type)}
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
               className={cn(
                 "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
                 activeType === type 
@@ -46,7 +65,7 @@ export default function Library() {
               )}
             >
               {type}
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
@@ -54,13 +73,24 @@ export default function Library() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1,2,3,4,5,6,7,8].map(i => (
-            <div key={i} className="bg-card border border-border rounded-2xl h-48 animate-pulse" />
+            <Skeleton key={i} variant="card" className="h-48" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial={prefersReducedMotion ? undefined : "hidden"}
+          whileInView={prefersReducedMotion ? undefined : "visible"}
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
           {resources?.map(resource => (
-            <div key={resource.id} className="bg-card border border-border p-5 rounded-2xl flex flex-col gap-4 hover:border-primary/50 transition-colors group">
+            <motion.div
+              key={resource.id}
+              variants={itemVariants}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+              className="bg-card border border-border p-5 rounded-2xl flex flex-col gap-4 hover:border-primary/50 transition-colors group"
+            >
               <div className="flex items-start justify-between">
                 <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                   <FileText className="w-6 h-6" />
@@ -86,16 +116,18 @@ export default function Library() {
                   </span>
                 </div>
                 
-                <button 
+                <motion.button
                   onClick={handleDownload}
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                  whileHover={prefersReducedMotion ? undefined : { scale: 1.1, boxShadow: "0 0 20px rgba(212, 175, 55, 0.3)" }}
                   className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-white flex items-center justify-center transition-colors"
                 >
                   <Download className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

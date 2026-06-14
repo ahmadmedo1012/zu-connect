@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { User, Users, ShieldAlert, KeyRound, Mail } from "lucide-react";
 import logoPath from "@assets/IMG_0792_1781443006842.jpeg";
 import { cn } from "@/lib/utils";
+
+const loginSchema = z.object({
+  identifier: z.string().min(1, "الرجاء إدخال رقم القيد أو البريد الإلكتروني"),
+  password: z.string().min(1, "الرجاء إدخال كلمة المرور").min(4, "كلمة المرور قصيرة جداً")
+});
 
 const ROLES = [
   { id: "student", label: "طالب", icon: User },
@@ -16,20 +22,61 @@ export default function Login() {
   const [role, setRole] = useState("student");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!identifier || !password) return;
+  const validate = () => {
+    const result = loginSchema.safeParse({ identifier, password });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach(issue => {
+        const path = issue.path[0] as string;
+        if (!fieldErrors[path]) fieldErrors[path] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
 
-    // Simulate login
-    localStorage.setItem("username", identifier);
-    toast({
-      title: "تم تسجيل الدخول بنجاح",
-      description: "مرحباً بك في منصة ZU Connect (نسخة تجريبية)"
-    });
-    setLocation("/");
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier, password, role }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "فشل تسجيل الدخول");
+      }
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.name);
+      toast({
+        title: "تم تسجيل الدخول بنجاح",
+        description: `مرحباً، ${data.name}`
+      });
+      setLocation("/");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "فشل تسجيل الدخول");
+      toast({
+        title: "خطأ في تسجيل الدخول",
+        description: err instanceof Error ? err.message : "فشل تسجيل الدخول",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,11 +127,12 @@ export default function Login() {
               <input
                 type="text"
                 value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
+                onChange={(e) => { setIdentifier(e.target.value); setErrors(prev => { const n = {...prev}; delete n.identifier; return n; }); }}
                 className="w-full bg-background border border-border rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-primary text-white text-left"
                 dir="ltr"
                 required
               />
+              {errors.identifier && <span className="text-red-400 text-xs">{errors.identifier}</span>}
             </div>
           </div>
 
@@ -100,16 +148,22 @@ export default function Login() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setErrors(prev => { const n = {...prev}; delete n.password; return n; }); }}
                 className="w-full bg-background border border-border rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-primary text-white text-left"
                 dir="ltr"
                 required
               />
+              {errors.password && <span className="text-red-400 text-xs">{errors.password}</span>}
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="w-full rounded-xl font-bold mt-2">
-            دخول
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-xl text-center">
+              {error}
+            </div>
+          )}
+          <Button type="submit" size="lg" className="w-full rounded-xl font-bold mt-2" disabled={loading}>
+            {loading ? "جاري تسجيل الدخول..." : "دخول"}
           </Button>
         </form>
       </div>

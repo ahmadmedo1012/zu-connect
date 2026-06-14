@@ -1,29 +1,43 @@
 import { useGetStats, useListNews, useListPlanner } from "@workspace/api-client-react";
 import campusPath from "@assets/IMG_0793_1781443006842.jpeg";
 import { Link } from "wouter";
-import { ArrowLeft, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
-const leadership = [
-  { id: 1, name: "عبد الإله عبد الرؤوف راشد", role: "مكتب شؤون الطلبة" },
-  { id: 2, name: "أنور المقطوف", role: "مكتب العلاقات العامة" },
-  { id: 3, name: "محمد هشام البشكار", role: "مكتب الشؤون الإدارية" },
-  { id: 4, name: "عبد العزيز دخيل", role: "مكتب العضوية" },
-  { id: 5, name: "إسلام غريبي", role: "مكتب الإعلام" },
-  { id: 6, name: "أيهم نصرات", role: "مكتب البرامج والأنشطة" },
-  { id: 7, name: "عبد الكريم يحي", role: "مكتب الشؤون القانونية" },
-  { id: 8, name: "أبرار علي سعيد", role: "مكتب شؤون الطالبات" },
-  { id: 9, name: "عبد الرؤوف الطاهر", role: "مكتب المنظومة والتحول الرقمي" },
-  { id: 10, name: "إبراهيم يوسف ساسي", role: "مكتب الأنشطة الرياضية" },
-  { id: 11, name: "قاسم عبد السلام النمروش", role: "مكتب شؤون الخريجين" },
-  { id: 12, name: "أبوبكر بكير", role: "مكتب المتابعة والتطوير" },
-];
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+interface LeadershipMember {
+  id: number;
+  name: string;
+  role: string;
+}
 
 export default function Home() {
+  const prefersReducedMotion = useReducedMotion();
   const { data: stats } = useGetStats();
   const { data: news } = useListNews();
   const { data: planner } = useListPlanner();
+  const { data: leadership } = useQuery<LeadershipMember[]>({
+    queryKey: ["leadership"],
+    queryFn: () => fetch("/api/leadership").then(r => r.json()),
+  });
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([
     { role: 'ai', text: 'مرحباً، أنا المساعد الذكي الخاص بالاتحاد. كيف يمكنني مساعدتك؟ (جرب: امتحانات، تسجيل، مكتبة)' }
@@ -31,21 +45,31 @@ export default function Home() {
 
   const handleChat = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
+    const input = chatInput;
+    if (!input.trim()) return;
     
-    setMessages(prev => [...prev, { role: 'user', text: chatInput }]);
+    setMessages(prev => [...prev, { role: 'user', text: input }]);
     
+    let aiResponded = false;
+
     setTimeout(() => {
       let reply = "عذراً، لم أفهم طلبك. يمكنك سؤالنا عبر صفحة اقترح/تواصل.";
-      if (chatInput.includes('امتحانات')) reply = "تبدأ الامتحانات النهائية عادة في نهاية الفصل الدراسي. يرجى مراجعة كليتك لمعرفة الجدول المحدد.";
-      if (chatInput.includes('تسجيل')) reply = "يمكنك التسجيل في الدورات عبر صفحة الدورات التدريبية في القائمة.";
-      if (chatInput.includes('مكتبة')) reply = "المكتبة الرقمية متاحة عبر صفحة المكتبة في القائمة العلوية.";
-      if (chatInput.includes('منح')) reply = "سيتم الإعلان عن المنح والفرص الجديدة عبر قسم الأخبار.";
-      if (chatInput.includes('محادثات')) reply = "غرف النقاش متاحة في صفحة 'غرف النقاش' للتواصل مع زملائك.";
-      if (chatInput.includes('تاريخ')) reply = "تأسس الاتحاد العام لطلبة جامعة الزاوية لخدمة آلاف الطلاب وتسهيل مسيرتهم.";
+      if (input.includes('امتحانات')) reply = "تبدأ الامتحانات النهائية عادة في نهاية الفصل الدراسي. يرجى مراجعة كليتك لمعرفة الجدول المحدد.";
+      if (input.includes('تسجيل')) reply = "يمكنك التسجيل في الدورات عبر صفحة الدورات التدريبية في القائمة.";
+      if (input.includes('مكتبة')) reply = "المكتبة الرقمية متاحة عبر صفحة المكتبة في القائمة العلوية.";
+      if (input.includes('منح')) reply = "سيتم الإعلان عن المنح والفرص الجديدة عبر قسم الأخبار.";
+      if (input.includes('محادثات')) reply = "غرف النقاش متاحة في صفحة 'غرف النقاش' للتواصل مع زملائك.";
+      if (input.includes('تاريخ')) reply = "تأسس الاتحاد العام لطلبة جامعة الزاوية لخدمة آلاف الطلاب وتسهيل مسيرتهم.";
 
       setMessages(prev => [...prev, { role: 'ai', text: reply }]);
+      aiResponded = true;
     }, 500);
+
+    setTimeout(() => {
+      if (!aiResponded) {
+        setMessages(prev => [...prev, { role: 'ai', text: "عذراً، لم أتمكن من معالجة طلبك في الوقت المحدد. يرجى المحاولة مرة أخرى أو التواصل عبر صفحة اقترح/تواصل." }]);
+      }
+    }, 3000);
     
     setChatInput("");
   };
@@ -76,19 +100,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 -mt-24 relative z-20 px-4">
+      <motion.section
+        variants={containerVariants}
+        initial={prefersReducedMotion ? undefined : "hidden"}
+        whileInView={prefersReducedMotion ? undefined : "visible"}
+        viewport={{ once: true, amount: 0.1 }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 -mt-24 relative z-20 px-4"
+      >
         {[
           { label: "طالب", value: stats?.totalStudents?.toLocaleString() || "5,240" },
           { label: "كلية", value: stats?.totalColleges || "14" },
           { label: "نشاط", value: stats?.totalActivities || "48" },
           { label: "ملف", value: stats?.totalLibraryFiles || "320" },
         ].map((stat, i) => (
-          <div key={i} className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform shadow-2xl">
+          <motion.div
+            key={i}
+            variants={itemVariants}
+            whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+            className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform shadow-2xl"
+          >
             <span className="text-4xl font-black text-white">{stat.value}</span>
             <span className="text-muted-foreground font-semibold">{stat.label}</span>
-          </div>
+          </motion.div>
         ))}
-      </section>
+      </motion.section>
 
       <section className="flex flex-col gap-8 bg-[#0b1f3f] -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 py-16 rounded-3xl border border-[#d4af37]/20 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#d4af37]/10 via-transparent to-transparent pointer-events-none" />
@@ -115,14 +150,25 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mt-4">
-            {leadership.map(member => (
-              <div key={member.id} className="bg-[#152a4f] border border-border p-5 rounded-2xl flex flex-col gap-2 hover:bg-[#1a3360] transition-colors">
+          <motion.div
+            variants={containerVariants}
+            initial={prefersReducedMotion ? undefined : "hidden"}
+            whileInView={prefersReducedMotion ? undefined : "visible"}
+            viewport={{ once: true, amount: 0.1 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mt-4"
+          >
+            {leadership?.map(member => (
+              <motion.div
+                key={member.id}
+                variants={itemVariants}
+                whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+                className="bg-[#152a4f] border border-border p-5 rounded-2xl flex flex-col gap-2 hover:bg-[#1a3360] transition-colors"
+              >
                 <h4 className="font-bold text-white">{member.name}</h4>
                 <p className="text-sm text-[#d4af37]">{member.role}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -133,21 +179,33 @@ export default function Home() {
             <Link href="/news" className="text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
           </div>
           
-          <div className="flex flex-col gap-4">
+          <motion.div
+            variants={containerVariants}
+            initial={prefersReducedMotion ? undefined : "hidden"}
+            whileInView={prefersReducedMotion ? undefined : "visible"}
+            viewport={{ once: true, amount: 0.1 }}
+            className="flex flex-col gap-4"
+          >
             {news?.slice(0, 3).map((item) => (
-              <Link key={item.id} href={`/news/${item.id}`} className="bg-card border border-border p-6 rounded-2xl hover:bg-card/80 transition-colors flex flex-col gap-3 group">
-                <div className="flex justify-between items-start gap-4">
-                  <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">{item.category}</span>
-                  <span className="text-xs text-muted-foreground">{item.date}</span>
-                </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>
-              </Link>
+              <motion.div
+                key={item.id}
+                variants={itemVariants}
+                whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+              >
+                <Link href={`/news/${item.id}`} className="bg-card border border-border p-6 rounded-2xl hover:bg-card/80 transition-colors flex flex-col gap-3 group block">
+                  <div className="flex justify-between items-start gap-4">
+                    <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">{item.category}</span>
+                    <span className="text-xs text-muted-foreground">{item.date}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors leading-snug">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>
+                </Link>
+              </motion.div>
             ))}
             {!news && (
-              <div className="h-40 bg-card rounded-2xl animate-pulse"></div>
+              <Skeleton variant="card" className="h-40" />
             )}
-          </div>
+          </motion.div>
         </div>
         
         <div className="flex flex-col gap-8">
@@ -156,9 +214,20 @@ export default function Home() {
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               الأنشطة القادمة
             </h3>
-            <div className="flex flex-col gap-4">
+            <motion.div
+              variants={containerVariants}
+              initial={prefersReducedMotion ? undefined : "hidden"}
+              whileInView={prefersReducedMotion ? undefined : "visible"}
+              viewport={{ once: true, amount: 0.1 }}
+              className="flex flex-col gap-4"
+            >
               {planner?.slice(0, 4).map(event => (
-                <div key={event.id} className="flex gap-4 items-start pb-4 border-b border-border/50 last:border-0 last:pb-0">
+                <motion.div
+                  key={event.id}
+                  variants={itemVariants}
+                  whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+                  className="flex gap-4 items-start pb-4 border-b border-border/50 last:border-0 last:pb-0"
+                >
                   <div className="flex flex-col items-center justify-center bg-background rounded-lg p-2 min-w-14">
                     <span className="text-xs text-muted-foreground">{event.month}</span>
                     <span className="text-lg font-bold text-white">{event.date.split(' ')[0]}</span>
@@ -167,9 +236,9 @@ export default function Home() {
                     <h4 className="font-bold text-sm text-white line-clamp-1">{event.title}</h4>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
             <Link href="/planner">
               <Button variant="outline" className="w-full mt-2 rounded-xl">جدول الأنشطة كامل</Button>
             </Link>

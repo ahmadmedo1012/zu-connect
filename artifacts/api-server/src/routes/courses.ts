@@ -27,8 +27,8 @@ router.post("/courses/:id/enroll", async (req, res) => {
   const { id } = EnrollCourseParams.parse({ id: Number(req.params.id) });
   EnrollCourseBody.parse(req.body);
   const [course] = await db.select().from(coursesTable).where(eq(coursesTable.id, id));
-  if (!course) return res.status(404).json({ error: "Not found" });
-  if (course.enrolledCount >= course.totalSeats) return res.status(400).json({ error: "Course is full" });
+  if (!course) { res.status(404).json({ error: "Not found" }); return; }
+  if (course.enrolledCount >= course.totalSeats) { res.status(400).json({ error: "Course is full" }); return; }
   const [updated] = await db
     .update(coursesTable)
     .set({ enrolledCount: sql`${coursesTable.enrolledCount} + 1` })
@@ -41,7 +41,7 @@ router.post("/courses/:id/unenroll", async (req, res) => {
   const { id } = UnenrollCourseParams.parse({ id: Number(req.params.id) });
   UnenrollCourseBody.parse(req.body);
   const [course] = await db.select().from(coursesTable).where(eq(coursesTable.id, id));
-  if (!course) return res.status(404).json({ error: "Not found" });
+  if (!course) { res.status(404).json({ error: "Not found" }); return; }
   const [updated] = await db
     .update(coursesTable)
     .set({ enrolledCount: sql`GREATEST(0, ${coursesTable.enrolledCount} - 1)` })

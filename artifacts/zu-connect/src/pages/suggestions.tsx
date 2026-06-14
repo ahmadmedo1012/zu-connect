@@ -1,8 +1,16 @@
 import { useCreateSuggestion } from "@workspace/api-client-react";
 import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Building2 } from "lucide-react";
+
+const suggestionSchema = z.object({
+  name: z.string().optional(),
+  college: z.string().optional(),
+  type: z.enum(["اقتراح", "شكوى", "فكرة نشاط", "أخرى"]),
+  message: z.string().min(1, "الرجاء كتابة الرسالة").min(5, "الرسالة قصيرة جداً")
+});
 
 export default function Suggestions() {
   const { toast } = useToast();
@@ -14,9 +22,26 @@ export default function Suggestions() {
     type: "اقتراح",
     message: ""
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const result = suggestionSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach(issue => {
+        const path = issue.path[0] as string;
+        if (!fieldErrors[path]) fieldErrors[path] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     createSuggestion.mutate(
       { data: formData },
       {
@@ -26,6 +51,14 @@ export default function Suggestions() {
             description: "شكراً لتواصلك معنا، سيتم مراجعة طلبك بأقرب وقت."
           });
           setFormData({ name: "", college: "", type: "اقتراح", message: "" });
+          setErrors({});
+        },
+        onError: () => {
+          toast({
+            title: "خطأ في الإرسال",
+            description: "حدث خطأ أثناء إرسال رسالتك. الرجاء المحاولة لاحقاً.",
+            variant: "destructive"
+          });
         }
       }
     );
@@ -70,7 +103,7 @@ export default function Suggestions() {
               <label className="text-sm font-semibold text-white">نوع الرسالة *</label>
               <select 
                 value={formData.type}
-                onChange={e => setFormData({...formData, type: e.target.value})}
+                onChange={e => { setFormData({...formData, type: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.type; return n; }); }}
                 className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white appearance-none cursor-pointer"
                 required
               >
@@ -79,17 +112,19 @@ export default function Suggestions() {
                 <option value="فكرة نشاط">فكرة نشاط</option>
                 <option value="أخرى">أخرى</option>
               </select>
+              {errors.type && <span className="text-red-400 text-xs">{errors.type}</span>}
             </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-white">الرسالة أو المقترح *</label>
               <textarea 
                 value={formData.message}
-                onChange={e => setFormData({...formData, message: e.target.value})}
+                onChange={e => { setFormData({...formData, message: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.message; return n; }); }}
                 className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white min-h-[150px] resize-none"
                 placeholder="اكتب رسالتك هنا بالتفصيل..."
                 required
               />
+              {errors.message && <span className="text-red-400 text-xs">{errors.message}</span>}
             </div>
 
             <Button 

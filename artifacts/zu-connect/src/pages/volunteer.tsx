@@ -1,8 +1,16 @@
 import { useCreateVolunteer } from "@workspace/api-client-react";
 import { useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Leaf, Droplet, PartyPopper, Flag, Users, Radio } from "lucide-react";
+
+const volunteerSchema = z.object({
+  name: z.string().min(1, "الرجاء إدخال الاسم الرباعي").min(10, "الرجاء إدخال الاسم الرباعي كاملاً"),
+  college: z.string().min(1, "الرجاء إدخال الكلية والسنة الدراسية"),
+  phone: z.string().min(1, "الرجاء إدخال رقم الهاتف").regex(/^0\d{9}$/, "رقم هاتف غير صالح (يجب أن يبدأ بـ 0 ويتكون من 10 أرقام)"),
+  area: z.string().min(1, "الرجاء اختيار مجال التطوع")
+});
 
 const CATEGORIES = [
   { id: "بيئي", title: "العمل البيئي", icon: Leaf, desc: "المشاركة في حملات التشجير والنظافة في الحرم الجامعي" },
@@ -23,9 +31,26 @@ export default function Volunteer() {
     phone: "",
     area: "فعاليات"
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const result = volunteerSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach(issue => {
+        const path = issue.path[0] as string;
+        if (!fieldErrors[path]) fieldErrors[path] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     createVolunteer.mutate(
       { data: formData },
       {
@@ -35,6 +60,14 @@ export default function Volunteer() {
             description: "سعيدون بانضمامك لفريق التطوع، سنتواصل معك قريباً."
           });
           setFormData({ name: "", college: "", phone: "", area: "فعاليات" });
+          setErrors({});
+        },
+        onError: () => {
+          toast({
+            title: "خطأ في التسجيل",
+            description: "حدث خطأ أثناء إرسال طلبك. الرجاء المحاولة لاحقاً.",
+            variant: "destructive"
+          });
         }
       }
     );
@@ -80,10 +113,11 @@ export default function Volunteer() {
             <input 
               type="text" 
               value={formData.name}
-              onChange={e => setFormData({...formData, name: e.target.value})}
+              onChange={e => { setFormData({...formData, name: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.name; return n; }); }}
               className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
               required
             />
+            {errors.name && <span className="text-red-400 text-xs">{errors.name}</span>}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -92,23 +126,25 @@ export default function Volunteer() {
               <input 
                 type="text" 
                 value={formData.college}
-                onChange={e => setFormData({...formData, college: e.target.value})}
+                onChange={e => { setFormData({...formData, college: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.college; return n; }); }}
                 className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white"
                 placeholder="مثال: الهندسة - السنة الثالثة"
                 required
               />
+              {errors.college && <span className="text-red-400 text-xs">{errors.college}</span>}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-white">رقم الهاتف *</label>
               <input 
                 type="tel" 
                 value={formData.phone}
-                onChange={e => setFormData({...formData, phone: e.target.value})}
+                onChange={e => { setFormData({...formData, phone: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.phone; return n; }); }}
                 className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white text-left"
                 placeholder="09X XXX XXXX"
                 dir="ltr"
                 required
               />
+              {errors.phone && <span className="text-red-400 text-xs">{errors.phone}</span>}
             </div>
           </div>
 
@@ -116,7 +152,7 @@ export default function Volunteer() {
             <label className="text-sm font-semibold text-white">المجال المفضل للتطوع *</label>
             <select 
               value={formData.area}
-              onChange={e => setFormData({...formData, area: e.target.value})}
+              onChange={e => { setFormData({...formData, area: e.target.value}); setErrors(prev => { const n = {...prev}; delete n.area; return n; }); }}
               className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-white appearance-none cursor-pointer"
               required
             >
@@ -124,6 +160,7 @@ export default function Volunteer() {
                 <option key={cat.id} value={cat.id}>{cat.title}</option>
               ))}
             </select>
+            {errors.area && <span className="text-red-400 text-xs">{errors.area}</span>}
           </div>
 
           <Button 

@@ -1,11 +1,29 @@
 import { useListMembers } from "@workspace/api-client-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Mail, Phone, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const CATEGORIES = ["الكل", "القيادة التنفيذية", "رؤساء اللجان", "ممثلو الكليات"];
 
 export default function Members() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState("الكل");
   const { data: members, isLoading } = useListMembers(
     activeCategory !== "الكل" ? { category: activeCategory } : {}
@@ -20,9 +38,10 @@ export default function Members() {
 
       <div className="flex flex-wrap gap-2">
         {CATEGORIES.map(cat => (
-          <button
+          <motion.button
             key={cat}
             onClick={() => setActiveCategory(cat)}
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
             className={cn(
               "px-4 py-2 rounded-full text-sm font-semibold transition-all border",
               activeCategory === cat 
@@ -31,20 +50,31 @@ export default function Members() {
             )}
           >
             {cat}
-          </button>
+          </motion.button>
         ))}
       </div>
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1,2,3,4,5,6,7,8].map(i => (
-            <div key={i} className="bg-card border border-border rounded-2xl h-[300px] animate-pulse" />
+            <Skeleton key={i} variant="card" className="h-[300px]" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial={prefersReducedMotion ? undefined : "hidden"}
+          whileInView={prefersReducedMotion ? undefined : "visible"}
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
           {members?.map(member => (
-            <div key={member.id} className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center text-center gap-4 hover:-translate-y-1 transition-transform group">
+            <motion.div
+              key={member.id}
+              variants={itemVariants}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+              className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center text-center gap-4 hover:-translate-y-1 transition-transform group"
+            >
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/80 to-[#0b1f3f] p-1 shadow-lg">
                 <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-3xl font-black text-white">
                   {member.initials}
@@ -61,19 +91,28 @@ export default function Members() {
               </div>
               
               <div className="flex items-center justify-center gap-2 mt-2 w-full pt-4 border-t border-border/50">
-                <button className="p-2 rounded-full bg-background hover:bg-white/10 text-muted-foreground hover:text-white transition-colors">
+                <motion.button
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                  className="p-2 rounded-full bg-background hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
+                >
                   <Mail className="w-4 h-4" />
-                </button>
-                <button className="p-2 rounded-full bg-background hover:bg-white/10 text-muted-foreground hover:text-white transition-colors">
+                </motion.button>
+                <motion.button
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                  className="p-2 rounded-full bg-background hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
+                >
                   <Phone className="w-4 h-4" />
-                </button>
-                <button className="p-2 rounded-full bg-background hover:bg-white/10 text-muted-foreground hover:text-white transition-colors">
+                </motion.button>
+                <motion.button
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                  className="p-2 rounded-full bg-background hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
+                >
                   <MessageCircle className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

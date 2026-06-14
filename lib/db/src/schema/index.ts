@@ -8,3 +8,5 @@ export * from "./chat";
 export * from "./suggestions";
 export * from "./volunteers";
 export * from "./faq";
+export * from "./leadership";
+export * from "./users";

@@ -11,6 +11,8 @@ import chatRouter from "./chat";
 import suggestionsRouter from "./suggestions";
 import volunteersRouter from "./volunteers";
 import faqRouter from "./faq";
+import leadershipRouter from "./leadership";
+import authRouter from "./auth";
 
 const router: IRouter = Router();
 
@@ -26,5 +28,7 @@ router.use(chatRouter);
 router.use(suggestionsRouter);
 router.use(volunteersRouter);
 router.use(faqRouter);
+router.use(leadershipRouter);
+router.use(authRouter);
 
 export default router;

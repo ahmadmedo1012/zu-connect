@@ -44,6 +44,28 @@ Thumbs.db
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 
+# environment
+.env
+.env.local
+.env.production
+
 # Replit
 .cache/
 .local/
+.replit
+
+# Agent configs
+.opencode/
+.specify/
+AGENTS.md
+PROJECT UNDERSTANDING.md
+
+# Legacy standalone files
+zu_connect.html
+masterclass.com-design.md
+attached_assets/
+
+# Reference docs & images
+*.pdf
+photo_*.jpg
+photo_*.jpeg
