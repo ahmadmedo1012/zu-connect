@@ -60,8 +60,8 @@ export default function Chat() {
 
   if (!user) {
     return (
-      <div className="flex flex-col h-[calc(100vh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-center h-full gap-8">
+      <div className="flex flex-col min-h-[calc(100dvh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-center min-h-full gap-8">
           <Lock className="w-20 h-20 text-muted-foreground" />
           <div className="text-center max-w-md flex flex-col gap-4">
             <h2 className="text-2xl font-black text-foreground">غرف النقاش</h2>
@@ -78,7 +78,7 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+    <div className="flex flex-col min-h-[calc(100dvh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex items-center gap-4 mb-2">
           <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[80px] h-[80px] md:w-[130px] md:h-[130px]" />
@@ -125,7 +125,7 @@ export default function Chat() {
                     </span>
                   </div>
                   <span className={cn(
-                    "text-xs line-clamp-1",
+                    "text-xs line-clamp-1 block",
                     activeRoomId === room.id ? "text-white/80" : "text-muted-foreground/70"
                   )}>{room.description}</span>
                 </button>
@@ -156,7 +156,7 @@ export default function Chat() {
                 viewport={{ once: true }}
                 role="log"
                 aria-live="polite"
-                className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-background"
+                className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-background min-h-0"
               >
                 {isLoadingMessages ? (
                   <div className="flex items-center justify-center h-full">

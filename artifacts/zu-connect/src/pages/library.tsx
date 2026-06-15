@@ -125,7 +125,7 @@ export default function Library() {
               <div className="mt-auto pt-4 border-t border-border/50 flex items-center justify-between">
                 <div className="flex items-center gap-3 text-xs text-muted-foreground font-bold">
                   <span className="flex items-center gap-1">
-                    <Star className="w-3 h-3 text-[#d4af37] fill-[#d4af37]" /> {resource.rating}
+                    <Star className="w-3 h-3 text-accent-gold fill-accent-gold" /> {resource.rating}
                   </span>
                   {user && (
                     <span className="flex items-center gap-1">
@@ -139,7 +139,7 @@ export default function Library() {
                     onClick={handleDownload}
                     aria-label="تحميل"
                     whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
-                    whileHover={prefersReducedMotion ? undefined : { scale: 1.1, boxShadow: "0 0 20px rgba(212, 175, 55, 0.3)" }}
+                    whileHover={prefersReducedMotion ? undefined : { scale: 1.1 }}
                     className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-primary-foreground flex items-center justify-center transition-colors"
                   >
                     <Download className="w-4 h-4" />

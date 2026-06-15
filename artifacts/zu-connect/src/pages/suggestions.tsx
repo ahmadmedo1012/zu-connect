@@ -174,10 +174,10 @@ export default function Suggestions() {
             </div>
           </div>
           
-          <div className="bg-[#152a4f] border border-[#d4af37]/30 rounded-3xl p-6 text-center flex flex-col gap-3">
+          <div className="bg-navy-card border border-accent-gold/30 rounded-3xl p-6 text-center flex flex-col gap-3">
             <h3 className="text-white font-bold">بوابة الشكاوى العاجلة</h3>
-            <p className="text-xs text-[#d4af37]/80">في حال وجود شكوى طارئة تتعلق بالامتحانات أو الخدمات الأساسية، يمكنك التواصل مباشرة مع الخط الساخن للاتحاد.</p>
-            <Button variant="outline" className="mt-2 bg-transparent text-[#d4af37] border-[#d4af37] hover:bg-[#d4af37] hover:text-black">
+            <p className="text-xs text-accent-gold/80">في حال وجود شكوى طارئة تتعلق بالامتحانات أو الخدمات الأساسية، يمكنك التواصل مباشرة مع الخط الساخن للاتحاد.</p>
+            <Button variant="outline" className="mt-2 bg-transparent text-accent-gold border-accent-gold hover:bg-accent-gold hover:text-black">
               الخط الساخن: 1442
             </Button>
           </div>

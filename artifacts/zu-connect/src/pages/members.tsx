@@ -86,7 +86,7 @@ export default function Members() {
             >
               {user ? (
                 <>
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/80 to-[#0b1f3f] p-1 shadow-lg">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary/80 to-navy-deep p-1 shadow-lg">
                     <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-3xl font-black text-white">
                       {member.initials}
                     </div>

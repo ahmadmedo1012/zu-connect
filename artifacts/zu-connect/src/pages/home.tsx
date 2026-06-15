@@ -248,7 +248,7 @@ export default function Home() {
         initial={prefersReducedMotion ? undefined : "hidden"}
         whileInView={prefersReducedMotion ? undefined : "visible"}
         viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 md:gap-6 -mt-24 relative z-20 px-4"
+        className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 md:gap-6 -mt-12 md:-mt-24 relative z-20"
       >
         <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
@@ -420,10 +420,10 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-[400px]">
-            <div className="bg-gradient-to-l from-[#152a4f] to-[#0b1f3f] border-b border-[#d4af37]/20 p-4">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-80 md:h-[400px]">
+            <div className="bg-gradient-to-l from-navy-card to-navy-deep border-b border-accent-gold/20 p-4">
               <h3 className="font-bold text-white">المرشد الأكاديمي (AI)</h3>
-              <p className="text-xs text-[#d4af37] mt-1">اسأل عن أي شيء يخص الجامعة</p>
+              <p className="text-xs text-accent-gold mt-1">اسأل عن أي شيء يخص الجامعة</p>
             </div>
             <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3" role="log" aria-live="polite">
               {messages.map((msg, i) => (
@@ -431,7 +431,7 @@ export default function Home() {
                   key={i}
                   initial={false}
                   animate={{ scale: 1 }}
-                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-[#152a4f] text-white self-end rounded-tl-sm border border-[#d4af37]/20' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
+                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-navy-card text-white self-end rounded-tl-sm border border-accent-gold/20' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
                 >
                   {msg.text}
                 </motion.div>
@@ -443,7 +443,7 @@ export default function Home() {
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 placeholder="اكتب سؤالك هنا..." 
-                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#d4af37]"
+                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-accent-gold"
               />
               <motion.button
                 type="submit"
@@ -451,7 +451,7 @@ export default function Home() {
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
                 animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(212, 175, 55, 0.4)", "0 0 0 8px rgba(212, 175, 55, 0)", "0 0 0 0 rgba(212, 175, 55, 0)"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="bg-[#d4af37] text-black p-2 rounded-xl hover:bg-[#d4af37]/90 flex-shrink-0 font-bold"
+                className="bg-accent-gold text-black p-2 rounded-xl hover:bg-accent-gold/90 flex-shrink-0 font-bold"
               >
                 <Send className="w-5 h-5" />
               </motion.button>

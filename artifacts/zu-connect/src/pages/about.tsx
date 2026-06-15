@@ -8,7 +8,7 @@ import { containerVariants, itemVariants } from "@/lib/animations/variants";
 export default function About() {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <div className="relative w-full h-[200px] md:h-[280px] rounded-3xl overflow-hidden mb-4">
         <img
           src="/images/university-photo.jpg"
@@ -19,7 +19,7 @@ export default function About() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </div>
 
-      <div className="flex flex-col items-center gap-4 text-center -mt-20 relative z-10">
+      <div className="flex flex-col items-center gap-4 text-center -mt-12 md:-mt-20 relative z-10">
         <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-primary/30 p-1.5 bg-background shadow-xl shadow-primary/10">
           <img
             src="/images/union-logo.jpg"

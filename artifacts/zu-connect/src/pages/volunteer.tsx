@@ -79,7 +79,7 @@ export default function Volunteer() {
   };
 
   return (
-    <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <div className="flex flex-col gap-4 text-center items-center">
         <LottieAnimation src="/animations/illustration/volunteer.json" className="w-[120px] h-[120px]" />
         <h1 className="text-4xl md:text-5xl font-black text-foreground">تطوع معنا</h1>
