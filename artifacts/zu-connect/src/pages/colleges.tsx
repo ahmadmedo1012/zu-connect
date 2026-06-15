@@ -16,7 +16,7 @@ export default function Colleges() {
   const { data: colleges, isLoading } = useListColleges();
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto">
+    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <div className="flex flex-col gap-4">
         <LottieAnimation src="/animations/illustration/features-illustration.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الكليات المعتمدة</h1>

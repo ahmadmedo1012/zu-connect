@@ -178,7 +178,7 @@ export default function Home() {
   }, [typedText, phraseIdx, prefersReducedMotion]);
 
   return (
-    <div className="flex flex-col gap-16 pb-16 max-w-5xl mx-auto">
+    <div className="flex flex-col gap-16 pb-16 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <section className="relative w-full min-h-[65vh] rounded-3xl overflow-hidden flex items-center mt-4 bg-gradient-to-br from-background via-background to-muted/30 border border-border">
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div

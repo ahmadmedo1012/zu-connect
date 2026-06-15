@@ -8,7 +8,7 @@ import { containerVariants, itemVariants } from "@/lib/animations/variants";
 export default function About() {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto">
+    <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <div className="relative w-full h-[200px] md:h-[280px] rounded-3xl overflow-hidden mb-4">
         <img
           src="/images/university-photo.jpg"

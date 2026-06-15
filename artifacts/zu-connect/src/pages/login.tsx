@@ -86,7 +86,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12 px-4 gap-8">
+    <div className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12 px-4 md:px-6 lg:px-8 gap-8 max-w-5xl mx-auto">
       <LottieAnimation src="/animations/empty/student-illustration.json" className="w-[200px] h-[200px] md:w-[260px] md:h-[260px]" />
       <motion.div
         variants={containerVariants}

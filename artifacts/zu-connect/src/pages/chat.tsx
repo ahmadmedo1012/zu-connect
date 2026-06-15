@@ -60,7 +60,7 @@ export default function Chat() {
 
   if (!user) {
     return (
-      <div className="flex flex-col h-[calc(100vh-8rem)] py-4">
+      <div className="flex flex-col h-[calc(100vh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center h-full gap-8">
           <Lock className="w-20 h-20 text-muted-foreground" />
           <div className="text-center max-w-md flex flex-col gap-4">
@@ -78,7 +78,7 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] py-4">
+    <div className="flex flex-col h-[calc(100vh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex items-center gap-4 mb-2">
           <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[80px] h-[80px] md:w-[130px] md:h-[130px]" />
