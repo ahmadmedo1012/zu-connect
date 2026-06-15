@@ -4,25 +4,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { getCollegeIcon } from "@/lib/icons/icon-maps";
-import { Users, FileText, Calendar, Activity, GraduationCap, Lock } from "lucide-react";
+import { Users, FileText, Calendar, Activity, GraduationCap, Lock, Building2 } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 export default function Colleges() {
   const prefersReducedMotion = useReducedMotion();
@@ -52,7 +38,7 @@ export default function Colleges() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1,2,3,4,5,6].map(i => (
-            <Skeleton key={i} variant="card" className="h-[200px]" />
+            <Skeleton key={i} variant="card" className="h-[200px]" icon={Building2} />
           ))}
         </div>
       ) : (

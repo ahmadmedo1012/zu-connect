@@ -7,20 +7,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Building2 } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 const suggestionSchema = z.object({
   name: z.string().optional(),

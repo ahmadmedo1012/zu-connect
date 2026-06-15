@@ -9,23 +9,11 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { cn } from "@/lib/utils";
 import { getCourseCategoryIcon } from "@/lib/icons/icon-maps";
-import { User, Clock, BarChart, Users, Lock } from "lucide-react";
+import { User, Clock, BarChart, Users, Lock, BookOpen } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
+import { Empty } from "@/components/ui/empty";
 
 const CATEGORIES = ["الكل", "لغات", "تقنية", "مهارات شخصية", "علمي"];
 
@@ -109,8 +97,10 @@ export default function Courses() {
       )}
 
       {isLoading ? (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <LottieAnimation src="/animations/loading/loading-books.json" className="w-[180px] h-[180px]" speed={1.2} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1,2,3,4,5,6].map(i => (
+            <Skeleton key={i} variant="card" className="h-[340px]" icon={BookOpen} />
+          ))}
         </div>
       ) : (
         <motion.div
@@ -120,7 +110,11 @@ export default function Courses() {
           viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {courses?.map(course => {
+          {courses?.length === 0 ? (
+            <div className="col-span-full">
+              <Empty icon={BookOpen} title="لا توجد دورات" description="لا توجد دورات في هذا التصنيف حالياً. الرجاء المحاولة لاحقاً." />
+            </div>
+          ) : courses?.map(course => {
             const isEnrolled = enrolledIds.includes(course.id);
             const colors = [
               "from-blue-600 to-blue-900",

@@ -3,22 +3,9 @@ import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, ShieldQuestion } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 export default function FAQ() {
   const prefersReducedMotion = useReducedMotion();
@@ -38,7 +25,7 @@ export default function FAQ() {
       {isLoading ? (
         <div className="flex flex-col gap-4">
           {[1,2,3,4,5].map(i => (
-            <Skeleton key={i} variant="card" className="h-16" />
+            <Skeleton key={i} variant="card" className="h-16" icon={ShieldQuestion} />
           ))}
         </div>
       ) : (

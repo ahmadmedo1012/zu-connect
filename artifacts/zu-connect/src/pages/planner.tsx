@@ -9,20 +9,7 @@ import { LottieAnimation } from "@/components/ui/lottie";
 import { Calendar, CalendarX, Lock } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 const MONTHS = ["مايو 2026", "يونيو 2026", "يوليو 2026", "أغسطس 2026", "عرض الكل"];
 

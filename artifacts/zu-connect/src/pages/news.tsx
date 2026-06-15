@@ -5,24 +5,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
-import { Eye, Calendar, ArrowUpLeft, Lock } from "lucide-react";
+import { Eye, Calendar, ArrowUpLeft, Lock, Newspaper, Megaphone } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
+import { Empty } from "@/components/ui/empty";
 
 const CATEGORIES = ["الكل", "أخبار الكليات", "إعلانات عامة", "أنشطة طلابية", "منح دراسية"];
 
@@ -74,7 +62,7 @@ export default function News() {
       {isLoading ? (
         <div className="flex flex-col gap-4">
           {[1,2,3].map(i => (
-            <Skeleton key={i} variant="card" className="h-40" />
+            <Skeleton key={i} variant="card" className="h-40" icon={Megaphone} />
           ))}
         </div>
       ) : (
@@ -85,7 +73,11 @@ export default function News() {
           viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {news?.map((item, i) => {
+          {news?.length === 0 ? (
+            <div className="col-span-full">
+              <Empty icon={Newspaper} title="لا توجد أخبار" description="لا توجد أخبار في هذا التصنيف حالياً. تابعنا لاحقاً." />
+            </div>
+          ) : news?.map((item, i) => {
             const CategoryIcon = getNewsCategoryIcon(item.category);
             const categoryColor = getNewsCategoryColor(item.category);
             return (

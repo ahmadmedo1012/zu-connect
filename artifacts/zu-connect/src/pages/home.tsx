@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock, ChevronDown, BookOpen, Headphones, HeartPulse, Users, Library, Star } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,21 +19,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useAuth } from "@/lib/auth/AuthContext";
-
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 interface LeadershipMember {
   id: number;
@@ -121,6 +107,8 @@ const SERVICE_CARDS = [
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
   const { user } = useAuth();
+  const { scrollY } = useScroll();
+  const bgY = useTransform(scrollY, [0, 500], [0, 80]);
 
   const { data: stats } = useGetStats();
   const { data: news } = useListNews();
@@ -193,12 +181,13 @@ export default function Home() {
     <div className="flex flex-col gap-16 pb-16 max-w-5xl mx-auto">
       <section className="relative w-full min-h-[65vh] rounded-3xl overflow-hidden flex items-center mt-4 bg-gradient-to-br from-background via-background to-muted/30 border border-border">
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <div
+          <motion.div
             className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
             style={{
               backgroundImage: `url(/images/university-photo.jpg)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
+              y: prefersReducedMotion ? 0 : bgY,
             }}
           />
           <div className="absolute -top-1/2 -right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[200px]" />
@@ -263,8 +252,8 @@ export default function Home() {
       >
         <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
-        {user && <StatCard label="نشاط" value={String(stats?.totalActivities ?? "48")} icon={Calendar} />}
-        {user && <StatCard label="ملف" value={String(stats?.totalLibraryFiles ?? "320")} icon={FileText} />}
+        <StatCard label="نشاط" value={user ? String(stats?.totalActivities ?? "48") : "•••"} icon={Calendar} />
+        <StatCard label="ملف" value={user ? String(stats?.totalLibraryFiles ?? "320") : "•••"} icon={FileText} />
       </motion.section>
 
       <section className="flex flex-col gap-8">
@@ -390,7 +379,7 @@ export default function Home() {
               </motion.div>
             ))}
             {!news && (
-              <Skeleton variant="card" className="h-40" />
+              <Skeleton variant="card" className="h-40" icon={Globe} />
             )}
           </motion.div>
         </div>
@@ -432,9 +421,9 @@ export default function Home() {
           </div>
 
           <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-[400px]">
-            <div className="bg-primary/5 border-b border-primary/20 p-4">
-              <h3 className="font-bold text-foreground">المرشد الأكاديمي (AI)</h3>
-              <p className="text-xs text-primary mt-1">اسأل عن أي شيء يخص الجامعة</p>
+            <div className="bg-gradient-to-l from-[#152a4f] to-[#0b1f3f] border-b border-[#d4af37]/20 p-4">
+              <h3 className="font-bold text-white">المرشد الأكاديمي (AI)</h3>
+              <p className="text-xs text-[#d4af37] mt-1">اسأل عن أي شيء يخص الجامعة</p>
             </div>
             <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3">
               {messages.map((msg, i) => (
@@ -442,7 +431,7 @@ export default function Home() {
                   key={i}
                   initial={false}
                   animate={{ scale: 1 }}
-                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-primary text-primary-foreground self-end rounded-tl-sm border border-primary/30' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
+                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-[#152a4f] text-white self-end rounded-tl-sm border border-[#d4af37]/20' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
                 >
                   {msg.text}
                 </motion.div>
@@ -454,14 +443,14 @@ export default function Home() {
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
                 placeholder="اكتب سؤالك هنا..." 
-                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-primary"
+                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[#d4af37]"
               />
               <motion.button
                 type="submit"
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
-                animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(227, 38, 82, 0.4)", "0 0 0 8px rgba(227, 38, 82, 0)", "0 0 0 0 rgba(227, 38, 82, 0)"] }}
+                animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(212, 175, 55, 0.4)", "0 0 0 8px rgba(212, 175, 55, 0)", "0 0 0 0 rgba(212, 175, 55, 0)"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="bg-primary text-primary-foreground p-2 rounded-xl hover:bg-primary/90 flex-shrink-0"
+                className="bg-[#d4af37] text-black p-2 rounded-xl hover:bg-[#d4af37]/90 flex-shrink-0 font-bold"
               >
                 <Send className="w-5 h-5 rtl:-scale-x-100" />
               </motion.button>

@@ -8,22 +8,9 @@ import { useToast } from "@/hooks/use-toast";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { User, Users, ShieldAlert, KeyRound, Mail } from "lucide-react";
 import { useAuth, type Role } from "@/lib/auth/AuthContext";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
 import logoPath from "@assets/IMG_0792_1781443006842.jpeg";
 import { cn } from "@/lib/utils";
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 const loginSchema = z.object({
   identifier: z.string().min(1, "الرجاء إدخال رقم القيد أو البريد الإلكتروني"),

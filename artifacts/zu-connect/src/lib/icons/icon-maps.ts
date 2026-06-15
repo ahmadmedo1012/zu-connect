@@ -3,7 +3,7 @@ import {
   Settings, HeartPulse, FlaskConical, Scale, BarChart, Monitor, Atom, BookOpen, Radio, Sprout, Wrench,
   FileText, Book, Search, Headphones,
   Star, BarChart3, Trophy,
-  Languages, Code, Brain, Beaker,
+  Languages, Code, Brain, Beaker, Megaphone,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
@@ -15,6 +15,10 @@ export const newsCategoryIcons: IconMap<string> = {
   "دورات": { icon: GraduationCap, label: "دورات" },
   "فعاليات": { icon: Calendar, label: "فعاليات" },
   "أنشطة منجزة": { icon: CheckCircle, label: "أنشطة منجزة" },
+  "أخبار الكليات": { icon: Globe, label: "أخبار الكليات" },
+  "إعلانات عامة": { icon: Megaphone, label: "إعلانات عامة" },
+  "أنشطة طلابية": { icon: Calendar, label: "أنشطة طلابية" },
+  "منح دراسية": { icon: GraduationCap, label: "منح دراسية" },
 }
 
 export const newsCategoryColors: Record<string, string> = {
@@ -23,6 +27,10 @@ export const newsCategoryColors: Record<string, string> = {
   "دورات": "#22c55e",
   "فعاليات": "#3b82f6",
   "أنشطة منجزة": "#a855f7",
+  "أخبار الكليات": "",
+  "إعلانات عامة": "#E32652",
+  "أنشطة طلابية": "#3b82f6",
+  "منح دراسية": "#22c55e",
 }
 
 export const collegeIcons: IconMap<string> = {

@@ -4,24 +4,12 @@ import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { LottieAnimation } from "@/components/ui/lottie";
-import { Mail, Phone, MessageCircle, Lock as LockIcon } from "lucide-react";
+import { Mail, Phone, MessageCircle, Lock as LockIcon, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
+import { Empty } from "@/components/ui/empty";
 
 const CATEGORIES = ["الكل", "القيادة التنفيذية", "رؤساء اللجان", "ممثلو الكليات"];
 
@@ -74,7 +62,7 @@ export default function Members() {
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1,2,3,4,5,6,7,8].map(i => (
-            <Skeleton key={i} variant="card" className="h-[300px]" />
+            <Skeleton key={i} variant="card" className="h-[300px]" icon={Users} />
           ))}
         </div>
       ) : (
@@ -85,7 +73,11 @@ export default function Members() {
           viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
-          {members?.map(member => (
+          {members?.length === 0 ? (
+            <div className="col-span-full">
+              <Empty icon={Users} title="لا يوجد أعضاء" description="لا يوجد أعضاء في هذا التصنيف حالياً." />
+            </div>
+          ) : members?.map(member => (
             <motion.div
               key={member.id}
               variants={itemVariants}

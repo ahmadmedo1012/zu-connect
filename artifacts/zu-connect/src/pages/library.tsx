@@ -7,24 +7,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getLibraryTypeIcon } from "@/lib/icons/icon-maps";
-import { Download, Star, Filter, Lock } from "lucide-react";
+import { Download, Star, Filter, Lock, Book } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
+import { Empty } from "@/components/ui/empty";
 
 const TYPES = ["الكل", "ملخصات", "بحوث", "كتب PDF", "محاضرات مسجلة"];
 
@@ -91,7 +79,7 @@ export default function Library() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1,2,3,4,5,6,7,8].map(i => (
-            <Skeleton key={i} variant="card" className="h-48" />
+            <Skeleton key={i} variant="card" className="h-48" icon={Book} />
           ))}
         </div>
       ) : (
@@ -103,12 +91,10 @@ export default function Library() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {resources?.length === 0 ? (
-            <div className="col-span-full flex flex-col items-center justify-center gap-6 py-16">
-              <LottieAnimation src="/animations/empty/book-flip.json" className="w-[180px] h-[180px]" />
-              <div className="flex flex-col items-center gap-2 text-center max-w-sm">
-                <h3 className="text-lg font-medium text-foreground">لا توجد نتائج</h3>
-                <p className="text-sm text-muted-foreground">لم نجد أي ملفات تطابق بحثك. حاول تغيير نوع الملف أو البحث بكلمة مختلفة.</p>
-              </div>
+            <div className="col-span-full">
+              <Empty icon={Book} title="لا توجد ملفات" description="لم نجد أي ملفات تطابق بحثك. حاول تغيير نوع الملف أو البحث بكلمة مختلفة.">
+                <LottieAnimation src="/animations/empty/book-flip.json" className="w-[140px] h-[140px]" />
+              </Empty>
             </div>
           ) : resources?.map(resource => (
             <motion.div

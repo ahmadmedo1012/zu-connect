@@ -11,20 +11,7 @@ import { LottieAnimation } from "@/components/ui/lottie";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
-
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+import { containerVariants, itemVariants } from "@/lib/animations/variants";
 
 export default function Chat() {
   const prefersReducedMotion = useReducedMotion();
@@ -114,7 +101,7 @@ export default function Chat() {
           
           <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-1">
             {isLoadingRooms ? (
-              [1,2,3,4].map(i => <Skeleton key={i} variant="card" className="h-16" />)
+              [1,2,3,4].map(i => <Skeleton key={i} variant="card" className="h-16" icon={MessageCircle} />)
             ) : (
               rooms?.map(room => (
                 <button
