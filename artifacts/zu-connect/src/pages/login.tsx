@@ -99,7 +99,7 @@ export default function Login() {
         title: "تم تسجيل الدخول بنجاح",
         description: `مرحباً، ${data.name}`
       });
-      setLocation("/");
+      setLocation(data.role === "admin" ? "/admin" : "/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "فشل تسجيل الدخول");
       toast({
