@@ -11,3 +11,4 @@ export * from "./faq";
 export * from "./leadership";
 export * from "./users";
 export * from "./referrals";
+export * from "./admin";

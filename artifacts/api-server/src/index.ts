@@ -1,5 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { initAdminSocket } from "./services/admin-socket";
+import { telegramService } from "./services/telegram";
 
 const rawPort = process.env["PORT"];
 
@@ -15,11 +17,19 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-app.listen(port, (err) => {
+const httpServer = app.listen(port, async (err) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
   }
 
-  logger.info({ port }, "Server listening");
+  // Initialize socket.io for admin realtime
+  initAdminSocket(httpServer);
+
+  // Initialize Telegram service
+  await telegramService.initialize();
+
+  logger.info({ port }, "Server listening — admin socket & telegram initialized");
 });
+
+export default httpServer;

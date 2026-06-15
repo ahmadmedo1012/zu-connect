@@ -14,6 +14,7 @@ import faqRouter from "./faq";
 import leadershipRouter from "./leadership";
 import authRouter from "./auth";
 import referralsRouter from "./referrals";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -32,5 +33,6 @@ router.use(faqRouter);
 router.use(leadershipRouter);
 router.use(authRouter);
 router.use(referralsRouter);
+router.use(adminRouter);
 
 export default router;

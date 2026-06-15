@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
+import { emitAdminEvent } from "../services/admin-socket";
+import { telegramService } from "../services/telegram";
+import { db as adminDb, activityLogsTable, telegramEventMappingsTable } from "@workspace/db";
 
 const router = Router();
 
@@ -28,6 +31,38 @@ router.post("/auth/login", async (req, res) => {
     role: user.role,
     identifier: user.identifier,
   })).toString("base64url");
+
+  // Log login activity
+  try {
+    await adminDb.insert(activityLogsTable).values({
+      userId: user.id,
+      userName: user.name,
+      action: "login",
+      entity: "user",
+      ipAddress: req.ip || req.socket.remoteAddress || "unknown",
+    });
+  } catch { /* non-blocking */ }
+
+  // Emit real-time event for admin
+  emitAdminEvent("admin:new_login", {
+    userId: user.id,
+    name: user.name,
+    role: user.role,
+    identifier: user.identifier,
+    ipAddress: req.ip || req.socket.remoteAddress || "unknown",
+    timestamp: new Date().toISOString(),
+  });
+
+  // Send Telegram notification
+  telegramService.notifyEvent("new_registration", {
+    name: user.name,
+    identifier: user.identifier,
+    role: user.role,
+    timestamp: new Date().toISOString(),
+  }, async (type: string) => {
+    const [mapping] = await adminDb.select().from(telegramEventMappingsTable).where(eq(telegramEventMappingsTable.eventType, type)).limit(1);
+    return mapping ? { enabled: mapping.enabled, chatId: mapping.chatId ?? undefined, template: mapping.template ?? undefined } : null;
+  });
 
   res.json({ token, name: user.name, role: user.role });
 });

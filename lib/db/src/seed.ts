@@ -1,4 +1,5 @@
 import { db, pool } from "./index";
+import { eq } from "drizzle-orm";
 import {
   newsTable,
   coursesTable,
@@ -10,6 +11,10 @@ import {
   faqTable,
   leadershipTable,
   usersTable,
+  adminRolesTable,
+  adminUsersTable,
+  telegramEventMappingsTable,
+  systemSettingsTable,
 } from "./schema";
 
 async function seed() {
@@ -127,6 +132,83 @@ async function seed() {
     { identifier: "2021001", password: "student123", name: "أحمد الطالب", role: "student" },
     { identifier: "teacher@zu.edu.ly", password: "teacher123", name: "د. محمد المدرس", role: "teacher" },
     { identifier: "admin@zu.edu.ly", password: "admin123", name: "إبراهيم المدير", role: "admin" },
+  ]);
+
+  // Seed admin roles
+  await db.insert(adminRolesTable).values([
+    {
+      name: "super_admin",
+      label: "مدير عام",
+      level: 100,
+      permissions: [
+        "admin.view", "admin.users", "admin.roles", "admin.live",
+        "admin.moderation", "admin.complaints", "admin.referrals",
+        "admin.gamification", "admin.announcements", "admin.files",
+        "admin.activity", "admin.analytics", "admin.integrations",
+        "admin.telegram", "admin.settings", "admin.audit", "admin.content",
+        "admin.content.create", "admin.content.edit", "admin.content.delete",
+        "admin.users.ban", "admin.users.edit_role",
+        "admin.moderation.resolve", "admin.moderation.escalate",
+        "admin.announcements.publish", "admin.settings.system",
+        "admin.settings.integrations", "*",
+      ],
+    },
+    {
+      name: "admin",
+      label: "مدير",
+      level: 50,
+      permissions: [
+        "admin.view", "admin.users", "admin.live",
+        "admin.moderation", "admin.complaints", "admin.referrals",
+        "admin.gamification", "admin.announcements",
+        "admin.activity", "admin.analytics", "admin.content",
+        "admin.content.create", "admin.content.edit", "admin.content.delete",
+        "admin.users.ban", "admin.moderation.resolve", "admin.moderation.escalate",
+        "admin.announcements.publish",
+      ],
+    },
+    {
+      name: "moderator",
+      label: "مشرف",
+      level: 20,
+      permissions: [
+        "admin.view", "admin.live", "admin.moderation", "admin.complaints",
+        "admin.announcements", "admin.activity", "admin.analytics",
+        "admin.moderation.resolve", "admin.moderation.escalate",
+        "admin.announcements.publish",
+      ],
+    },
+  ]);
+
+  // Link admin user to super_admin role
+  const [adminUser] = await db.select().from(usersTable).where(eq(usersTable.identifier, "admin@zu.edu.ly")).limit(1);
+  if (adminUser) {
+    const [superAdminRole] = await db.select().from(adminRolesTable).where(eq(adminRolesTable.name, "super_admin")).limit(1);
+    if (superAdminRole) {
+      await db.insert(adminUsersTable).values({
+        userId: adminUser.id,
+        roleId: superAdminRole.id,
+        isActive: true,
+      });
+    }
+  }
+
+  // Seed telegram event mappings
+  await db.insert(telegramEventMappingsTable).values([
+    { eventType: "new_registration", enabled: true, priority: "normal" },
+    { eventType: "new_referral", enabled: true, priority: "normal" },
+    { eventType: "referral_rewarded", enabled: true, priority: "high" },
+    { eventType: "new_complaint", enabled: false, priority: "normal" },
+    { eventType: "new_suggestion", enabled: false, priority: "normal" },
+    { eventType: "system_alert", enabled: true, priority: "urgent" },
+    { eventType: "announcement_published", enabled: true, priority: "normal" },
+  ]);
+
+  // Seed system settings
+  await db.insert(systemSettingsTable).values([
+    { key: "site_name", value: JSON.parse('"ZU Connect"'), type: "string", category: "general", description: "اسم المنصة" },
+    { key: "maintenance_mode", value: JSON.parse("false"), type: "boolean", category: "general", description: "وضع الصيانة" },
+    { key: "max_upload_size", value: JSON.parse("10"), type: "number", category: "features", description: "الحد الأقصى لحجم الرفع (MB)" },
   ]);
 
   console.log("Seed complete!");

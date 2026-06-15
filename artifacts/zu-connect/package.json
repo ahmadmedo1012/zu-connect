@@ -75,6 +75,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
-    "lottie-react": "^2.4.1"
+    "lottie-react": "^2.4.1",
+    "socket.io-client": "^4.8.1"
   }
 }

@@ -26,6 +26,26 @@ import Library from "@/pages/library";
 import Login from "@/pages/login";
 import Profile from "@/pages/profile";
 
+// Admin imports
+import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminUsers from "@/pages/admin/Users";
+import AdminRoles from "@/pages/admin/Roles";
+import AdminLiveEvents from "@/pages/admin/LiveEvents";
+import AdminModeration from "@/pages/admin/Moderation";
+import AdminComplaints from "@/pages/admin/Complaints";
+import AdminReferrals from "@/pages/admin/Referrals";
+import AdminGamification from "@/pages/admin/Gamification";
+import AdminAnnouncements from "@/pages/admin/Announcements";
+import AdminFiles from "@/pages/admin/Files";
+import AdminActivity from "@/pages/admin/Activity";
+import AdminAnalytics from "@/pages/admin/Analytics";
+import AdminIntegrations from "@/pages/admin/Integrations";
+import AdminTelegram from "@/pages/admin/Telegram";
+import AdminSettings from "@/pages/admin/Settings";
+import AdminAudit from "@/pages/admin/Audit";
+
 const queryClient = new QueryClient();
 
 setupAuthTokenGetter();
@@ -49,9 +69,52 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
   )
 }
 
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  return (
+    <AdminGuard>
+      <AdminLayout>
+        {children}
+      </AdminLayout>
+    </AdminGuard>
+  );
+}
+
+function AdminRouter() {
+  return (
+    <Switch>
+      <Route path="/admin">{() => <AdminDashboard />}</Route>
+      <Route path="/admin/users">{() => <AdminUsers />}</Route>
+      <Route path="/admin/roles">{() => <AdminRoles />}</Route>
+      <Route path="/admin/live">{() => <AdminLiveEvents />}</Route>
+      <Route path="/admin/moderation">{() => <AdminModeration />}</Route>
+      <Route path="/admin/complaints">{() => <AdminComplaints />}</Route>
+      <Route path="/admin/referrals">{() => <AdminReferrals />}</Route>
+      <Route path="/admin/gamification">{() => <AdminGamification />}</Route>
+      <Route path="/admin/announcements">{() => <AdminAnnouncements />}</Route>
+      <Route path="/admin/files">{() => <AdminFiles />}</Route>
+      <Route path="/admin/activity">{() => <AdminActivity />}</Route>
+      <Route path="/admin/analytics">{() => <AdminAnalytics />}</Route>
+      <Route path="/admin/integrations">{() => <AdminIntegrations />}</Route>
+      <Route path="/admin/telegram">{() => <AdminTelegram />}</Route>
+      <Route path="/admin/settings">{() => <AdminSettings />}</Route>
+      <Route path="/admin/audit">{() => <AdminAudit />}</Route>
+    </Switch>
+  );
+}
+
 function Router() {
   const [location] = useLocation()
 
+  // Admin routes use completely separate layout (no public navbar/footer)
+  if (location.startsWith("/admin")) {
+    return (
+      <AdminRoute>
+        <AdminRouter />
+      </AdminRoute>
+    );
+  }
+
+  // Public routes use AppLayout with Topbar + Navbar + Footer
   return (
     <AppLayout>
       <AnimatePresence mode="wait">
