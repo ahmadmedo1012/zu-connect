@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="flex flex-col gap-8 py-20 max-w-5xl mx-auto px-4 md:px-6 lg:px-8 items-center justify-center min-h-[70vh]">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6 items-center justify-center min-h-[calc(100dvh-8rem)]">
       <motion.div
         variants={containerVariants}
         initial={prefersReducedMotion ? undefined : "hidden"}

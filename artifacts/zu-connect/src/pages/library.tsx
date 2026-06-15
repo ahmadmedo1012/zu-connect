@@ -33,7 +33,7 @@ export default function Library() {
   };
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
       <div className="flex flex-col gap-4">
         <LottieAnimation src="/animations/illustration/book-sparkle.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">المكتبة الرقمية</h1>
@@ -41,7 +41,7 @@ export default function Library() {
       </div>
 
       <div className="flex flex-wrap items-center gap-4 border-b border-border pb-4">
-        <div className="flex items-center gap-2 text-foreground font-bold ml-4">
+          <div className="flex items-center gap-2 text-foreground font-bold">
           <Filter className="w-5 h-5" />
           تصفية حسب:
         </div>
@@ -77,7 +77,7 @@ export default function Library() {
       )}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1,2,3,4,5,6,7,8].map(i => (
             <Skeleton key={i} variant="card" className="h-48" icon={Book} />
           ))}
@@ -88,7 +88,7 @@ export default function Library() {
           initial={prefersReducedMotion ? undefined : "hidden"}
           whileInView={prefersReducedMotion ? undefined : "visible"}
           viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {resources?.length === 0 ? (
             <div className="col-span-full">

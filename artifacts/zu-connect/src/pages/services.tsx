@@ -23,11 +23,11 @@ const SERVICES = [
 export default function Services() {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 text-center items-center max-w-3xl mx-auto mb-4">
-        <LottieAnimation src="/animations/illustration/services-desk.json" className="w-[120px] h-[120px]" />
-        <h1 className="text-3xl md:text-4xl font-black text-foreground">الخدمات الطلابية</h1>
-        <p className="text-muted-foreground text-lg">بوابة موحدة لجميع الخدمات الأكاديمية والأنشطة الطلابية التي يقدمها الاتحاد لطلبة جامعة الزاوية.</p>
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+      <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/services-desk.json" className="w-[120px] h-[120px] self-start" />
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الخدمات الطلابية</h1>
+        <p className="text-muted-foreground">بوابة موحدة لجميع الخدمات الأكاديمية والأنشطة الطلابية التي يقدمها الاتحاد لطلبة جامعة الزاوية.</p>
       </div>
 
       <motion.div
@@ -43,7 +43,7 @@ export default function Services() {
             <motion.div key={service.id} variants={itemVariants} whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}>
               <Link
                 href={service.href}
-                className="bg-card border border-border p-6 rounded-3xl flex flex-col gap-4 hover:bg-primary/5 hover:border-primary/50 transition-all group block"
+                className="bg-card border border-border p-6 rounded-2xl flex flex-col gap-4 hover:bg-primary/5 hover:border-primary/50 transition-all group block"
               >
                 <div className="w-14 h-14 rounded-2xl bg-background border border-border flex items-center justify-center text-foreground group-hover:bg-primary group-hover:border-primary group-hover:text-primary-foreground transition-colors">
                   <Icon className="w-7 h-7" />

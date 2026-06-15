@@ -41,7 +41,7 @@ export function Navbar() {
 
   return (
     <div className="sticky top-16 z-40 w-full border-b border-border bg-card">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
         <ScrollArea className="w-full whitespace-nowrap" dir="rtl">
           <div className="flex w-max space-x-1 space-x-reverse p-2 px-4 md:px-6">
             {NAV_LINKS.map((link) => {

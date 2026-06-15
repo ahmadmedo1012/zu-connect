@@ -79,11 +79,11 @@ export default function Volunteer() {
   };
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 text-center items-center">
-        <LottieAnimation src="/animations/illustration/volunteer.json" className="w-[120px] h-[120px]" />
-        <h1 className="text-4xl md:text-5xl font-black text-foreground">تطوع معنا</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+      <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/volunteer.json" className="w-[120px] h-[120px] self-start" />
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">تطوع معنا</h1>
+        <p className="text-muted-foreground max-w-2xl">
           التطوع هو جوهر العمل الطلابي. كن جزءاً من صناعة التغيير، اكتسب مهارات جديدة، ووسع دائرة معارفك بالانضمام للجان التطوعية في الاتحاد.
         </p>
       </div>

@@ -178,8 +178,8 @@ export default function Home() {
   }, [typedText, phraseIdx, prefersReducedMotion]);
 
   return (
-    <div className="flex flex-col gap-16 pb-16 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-      <section className="relative w-full min-h-[65vh] rounded-3xl overflow-hidden flex items-center mt-4 bg-gradient-to-br from-background via-background to-muted/30 border border-border">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+      <section className="relative w-full min-h-[50vh] md:min-h-[60vh] rounded-3xl overflow-hidden flex items-center bg-gradient-to-br from-background via-background to-muted/30 border border-border">
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
             className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
@@ -194,21 +194,12 @@ export default function Home() {
           <div className="absolute -bottom-1/2 -left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[200px]" />
         </div>
 
-        <div className="absolute left-auto right-4 md:right-16 top-1/2 -translate-y-1/2 z-[5] w-72 h-72 opacity-30 hidden lg:block pointer-events-none">
-          <LottieAnimation src="/animations/illustration/study-discussion.json" />
-        </div>
-        
-        <motion.div
-          initial={prefersReducedMotion ? undefined : { opacity: 0, y: 30 }}
-          animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 p-8 md:p-16 max-w-3xl flex flex-col gap-6"
-        >
+        <div className="relative z-10 w-full px-4 md:px-6 py-12 md:py-16 flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             <span className="text-sm font-bold text-primary tracking-widest">ZU Connect</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-foreground leading-tight">
+          <h1 className="text-5xl md:text-7xl font-black text-foreground leading-tight max-w-3xl">
             مرحباً بك في <br/> جامعتك الرقمية
           </h1>
           <div className="h-14">
@@ -231,15 +222,15 @@ export default function Home() {
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full font-bold bg-transparent border-border hover:bg-accent hover:text-foreground">من نحن</Button>
             </Link>
           </div>
-        </motion.div>
+        </div>
 
         <motion.div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
           initial={prefersReducedMotion ? undefined : { opacity: 0 }}
           animate={prefersReducedMotion ? undefined : { opacity: 1, y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ChevronDown className="w-8 h-8 text-muted-foreground/50" />
+          <ChevronDown className="w-6 h-6 text-muted-foreground/50" />
         </motion.div>
       </section>
 
@@ -248,7 +239,7 @@ export default function Home() {
         initial={prefersReducedMotion ? undefined : "hidden"}
         whileInView={prefersReducedMotion ? undefined : "visible"}
         viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 md:gap-6 -mt-12 md:-mt-24 relative z-20"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 -mt-12 md:-mt-16 relative z-20"
       >
         <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
@@ -257,12 +248,12 @@ export default function Home() {
       </motion.section>
 
       <section className="flex flex-col gap-8">
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col gap-2">
           <span className="text-xs font-bold text-primary tracking-widest">خدمات سريعة</span>
-          <h2 className="text-3xl font-black text-foreground">كل ما تحتاجه في مكان واحد</h2>
+          <h2 className="text-3xl font-black text-foreground border-r-4 border-primary pr-4">كل ما تحتاجه في مكان واحد</h2>
           <p className="text-muted-foreground max-w-xl">خدمات طلابية متكاملة صممت لتسهيل حياتك الجامعية</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {SERVICE_CARDS.map((card, i) => (
             <motion.div
               key={card.title}
@@ -285,9 +276,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-8 py-16 rounded-3xl border border-primary/20 relative overflow-hidden bg-gradient-to-br from-background via-muted/30 to-background">
+      <section className="flex flex-col gap-8 rounded-3xl border border-primary/20 relative overflow-hidden bg-gradient-to-br from-background via-muted/30 to-background p-8">
         <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
-        <div className="text-center flex flex-col items-center gap-3 relative z-10">
+        <div className="flex flex-col items-start gap-3 relative z-10">
           <div className="w-20 h-20 rounded-full border-2 border-primary/30 p-1 shadow-lg shadow-primary/10">
             <img
               src="/images/union-logo.jpg"
@@ -295,8 +286,10 @@ export default function Home() {
               className="w-full h-full rounded-full object-cover"
             />
           </div>
-          <h2 className="text-3xl font-black text-foreground">الهيكل الإداري للاتحاد العام</h2>
-          <p className="text-primary">قيادة طلابية تعمل من أجلكم</p>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-3xl font-black text-foreground border-r-4 border-primary pr-4">الهيكل الإداري للاتحاد العام</h2>
+            <p className="text-primary">قيادة طلابية تعمل من أجلكم</p>
+          </div>
         </div>
         
         <div className="flex flex-col items-center gap-8 relative z-10">
@@ -322,7 +315,7 @@ export default function Home() {
             initial={prefersReducedMotion ? undefined : "hidden"}
             whileInView={prefersReducedMotion ? undefined : "visible"}
             viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mt-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full"
           >
             {leadership?.map(member => (
               <motion.div
@@ -460,17 +453,17 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="flex flex-col gap-8 py-16">
-        <div className="flex flex-col items-center gap-2 text-center">
+      <section className="flex flex-col gap-8">
+        <div className="flex flex-col gap-2">
           <span className="text-xs font-bold text-primary tracking-widest">طلابنا</span>
-          <h2 className="text-3xl font-black text-foreground">ماذا يقول عنا الطلاب</h2>
+          <h2 className="text-3xl font-black text-foreground border-r-4 border-primary pr-4">ماذا يقول عنا الطلاب</h2>
           <p className="text-muted-foreground max-w-xl">آراء طلاب جامعة الزاوية حول تجربتهم مع المنصة</p>
         </div>
-        <div className="w-full max-w-4xl mx-auto">
+        <div className="w-full">
           <Carousel opts={{ loop: true, align: "start" }}>
             <CarouselContent className="items-stretch">
               {TESTIMONIALS.map((t, i) => (
-                <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3 h-full">
+                <CarouselItem key={i} className="sm:basis-1/2 lg:basis-1/3 h-full">
                   <div className="bg-card border border-border p-6 rounded-2xl h-full flex flex-col gap-4">
                     <div className="flex gap-1">
                       {Array.from({ length: t.rating }).map((_, j) => (

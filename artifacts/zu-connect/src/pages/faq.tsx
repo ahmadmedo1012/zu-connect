@@ -15,10 +15,10 @@ export default function FAQ() {
   const categories = Array.from(new Set(faqs?.map(faq => faq.category) || []));
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 text-center items-center">
-        <LottieAnimation src="/animations/illustration/faq-help.json" className="w-[100px] h-[100px]" />
-        <h1 className="text-3xl md:text-4xl font-black text-foreground">الأسئلة الشائعة</h1>
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+      <div className="flex flex-col gap-4">
+        <LottieAnimation src="/animations/illustration/faq-help.json" className="w-[120px] h-[120px] self-start" />
+        <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الأسئلة الشائعة</h1>
         <p className="text-muted-foreground">إجابات لأكثر الأسئلة تداولاً بين طلاب جامعة الزاوية.</p>
       </div>
 

@@ -22,7 +22,7 @@ export default function Planner() {
   );
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
       <div className="flex flex-col gap-4">
         <LottieAnimation src="/animations/illustration/calendar-planning.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الأنشطة القادمة</h1>
@@ -59,11 +59,11 @@ export default function Planner() {
       )}
 
       {isLoading ? (
-        <div className="flex flex-col gap-6 relative pl-4 md:pl-0 pr-4 md:pr-12">
-          <div className="absolute right-8 md:right-16 top-2 bottom-2 w-0.5 bg-border rounded-full" />
+        <div className="flex flex-col gap-6 relative pr-8 md:pr-16">
+          <div className="absolute right-4 md:right-8 top-2 bottom-2 w-0.5 bg-border rounded-full" />
           {[1,2,3,4].map(i => (
             <div key={i} className="relative flex items-start gap-6">
-               <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-background border-4 border-border z-10" />
+               <div className="absolute right-4 md:right-8 top-1 w-6 h-6 -translate-x-1/2 rounded-full bg-background border-4 border-border z-10" />
                <Skeleton variant="card" className="w-full h-24" />
             </div>
           ))}
@@ -74,9 +74,9 @@ export default function Planner() {
           initial={prefersReducedMotion ? undefined : "hidden"}
           whileInView={prefersReducedMotion ? undefined : "visible"}
           viewport={{ once: true, amount: 0.1 }}
-          className="flex flex-col gap-6 relative pl-4 md:pl-0 pr-4 md:pr-12"
+          className="flex flex-col gap-6 relative pr-8 md:pr-16"
         >
-          <div className="absolute right-8 md:right-16 top-2 bottom-2 w-0.5 bg-border rounded-full" />
+          <div className="absolute right-4 md:right-8 top-2 bottom-2 w-0.5 bg-border rounded-full" />
           
           {plannerEvents?.length === 0 ? (
             <motion.div variants={itemVariants}>
@@ -85,7 +85,7 @@ export default function Planner() {
           ) : (
             plannerEvents?.map((event) => (
               <motion.div key={event.id} variants={itemVariants} whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }} className="relative flex items-start gap-6 group">
-                <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-background border-4 border-primary z-10 group-hover:bg-primary transition-colors" />
+                <div className="absolute right-4 md:right-8 top-1 w-6 h-6 -translate-x-1/2 rounded-full bg-background border-4 border-primary z-10 group-hover:bg-primary transition-colors" />
                 <div className="flex flex-col md:flex-row gap-4 w-full bg-card border border-border p-5 rounded-2xl group-hover:border-primary/50 transition-colors">
                   <div className="flex flex-col items-center justify-center bg-background rounded-xl p-3 min-w-24 text-center shrink-0 border border-border">
                     <span className="text-xs text-muted-foreground font-bold">{event.month}</span>

@@ -16,7 +16,7 @@ export default function Colleges() {
   const { data: colleges, isLoading } = useListColleges();
 
   return (
-    <div className="flex flex-col gap-8 py-8 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
       <div className="flex flex-col gap-4">
         <LottieAnimation src="/animations/illustration/features-illustration.json" className="w-[120px] h-[120px] self-start" />
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الكليات المعتمدة</h1>
@@ -36,7 +36,7 @@ export default function Colleges() {
       )}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1,2,3,4,5,6].map(i => (
             <Skeleton key={i} variant="card" className="h-[200px]" icon={Building2} />
           ))}
@@ -47,7 +47,7 @@ export default function Colleges() {
           initial={prefersReducedMotion ? undefined : "hidden"}
           whileInView={prefersReducedMotion ? undefined : "visible"}
           viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {colleges?.length === 0 ? (
             <div className="col-span-full">

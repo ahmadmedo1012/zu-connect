@@ -86,13 +86,11 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[calc(100dvh-16rem)] flex flex-col items-center justify-center py-8 md:py-12 px-4 md:px-6 lg:px-8 gap-8 max-w-5xl mx-auto">
-      <LottieAnimation src="/animations/empty/student-illustration.json" className="w-[200px] h-[200px] md:w-[260px] md:h-[260px]" />
+    <div className="flex flex-col gap-6 py-8 max-w-6xl mx-auto px-4 md:px-6 items-center justify-center min-h-[calc(100dvh-8rem)]">
       <motion.div
         variants={containerVariants}
         initial={prefersReducedMotion ? undefined : "hidden"}
-        whileInView={prefersReducedMotion ? undefined : "visible"}
-        viewport={{ once: true }}
+        animate={prefersReducedMotion ? undefined : "visible"}
         className="bg-card border border-border rounded-3xl p-8 w-full max-w-[400px] flex flex-col gap-8 shadow-2xl relative overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />

@@ -60,8 +60,8 @@ export default function Chat() {
 
   if (!user) {
     return (
-      <div className="flex flex-col min-h-[calc(100dvh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-center min-h-full gap-8">
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100dvh-16rem)] gap-8">
           <Lock className="w-20 h-20 text-muted-foreground" />
           <div className="text-center max-w-md flex flex-col gap-4">
             <h2 className="text-2xl font-black text-foreground">غرف النقاش</h2>
@@ -78,13 +78,13 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col min-h-[calc(100dvh-8rem)] py-4 max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
-      <div className="flex flex-col gap-2 mb-4">
-        <div className="flex items-center gap-4 mb-2">
-          <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[80px] h-[80px] md:w-[130px] md:h-[130px]" />
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black text-foreground border-r-4 border-primary pr-4">غرف النقاش</h1>
-            <p className="text-muted-foreground text-sm mt-1">تواصل مع زملائك، شارك أفكارك، وناقش المواضيع الأكاديمية.</p>
+    <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <LottieAnimation src="/animations/illustration/study-discussion.json" className="w-[120px] h-[120px]" />
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">غرف النقاش</h1>
+            <p className="text-muted-foreground">تواصل مع زملائك، شارك أفكارك، وناقش المواضيع الأكاديمية.</p>
           </div>
         </div>
       </div>

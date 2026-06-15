@@ -19,7 +19,7 @@ export function Topbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center px-4 md:px-6 w-full max-w-7xl mx-auto justify-between">
+      <div className="flex h-16 items-center px-4 md:px-6 w-full max-w-6xl mx-auto justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3">
             <LottieAnimation src="/animations/illustration/logo-animation.json" className="w-10 h-10" />
@@ -56,7 +56,7 @@ export function Topbar() {
               {menuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-48 bg-card border border-border rounded-xl shadow-2xl z-50 py-2">
+                  <div className="absolute left-0 md:left-auto md:right-0 top-full mt-2 w-48 bg-card border border-border rounded-xl shadow-2xl z-50 py-2">
                     <div className="px-4 py-2 border-b border-border">
                       <p className="text-sm font-bold text-foreground truncate">{user.name}</p>
                       <p className="text-xs text-muted-foreground">
