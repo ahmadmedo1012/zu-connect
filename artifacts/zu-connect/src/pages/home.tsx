@@ -1,7 +1,7 @@
 import { useGetStats, useListNews, useListPlanner } from "@workspace/api-client-react";
 
-import { Link } from "wouter";
-import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock, ChevronDown, BookOpen, Headphones, HeartPulse, Users, Library, Star } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock, ChevronDown, BookOpen, Headphones, HeartPulse, Users, Library, Star, UserPlus } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -102,11 +102,13 @@ const SERVICE_CARDS = [
   { icon: BookOpen, title: "النشرة البريدية", desc: "آخر الأخبار والتحديثات تصلك مباشرة" },
   { icon: Headphones, title: "الدعم الفني", desc: "فريق الدعم جاهز لمساعدتك في أي استفسار" },
   { icon: HeartPulse, title: "الأندية الطلابية", desc: "انضم للأندية الطلابية وطور مهاراتك" },
+  { icon: UserPlus, title: "دعوة صديق", desc: "ادعُ أصدقاءك للانضمام للمنصة واحصل على المكافآت" },
 ];
 
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
   const { scrollY } = useScroll();
   const bgY = useTransform(scrollY, [0, 500], [0, 80]);
 
@@ -261,6 +263,11 @@ export default function Home() {
               whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
+              onClick={() => {
+                if (card.title === "دعوة صديق") {
+                  setLocation(user ? "/profile" : "/login");
+                }
+              }}
               whileHover={prefersReducedMotion ? undefined : { y: -4, scale: 1.01 }}
               className="bg-card border border-border p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer"
             >

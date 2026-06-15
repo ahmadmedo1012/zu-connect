@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Bell, Search, User, LogOut } from "lucide-react";
+import { Bell, Search, User, LogOut, UserPlus } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -63,6 +63,13 @@ export function Topbar() {
                         {user.role === "student" ? "طالب" : user.role === "teacher" ? "أستاذ" : "إدارة"}
                       </p>
                     </div>
+                    <button
+                      onClick={() => { setMenuOpen(false); setLocation('/profile'); }}
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-accent transition-colors"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      دعوة صديق
+                    </button>
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-accent transition-colors"

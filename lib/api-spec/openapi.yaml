@@ -31,6 +31,8 @@ tags:
     description: Frequently asked questions
   - name: stats
     description: Platform statistics
+  - name: referrals
+    description: Referral system
 
 paths:
   /healthz:
@@ -388,6 +390,80 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/FaqItem"
+
+  /referrals/generate:
+    post:
+      operationId: generateReferralCode
+      tags: [referrals]
+      summary: Generate a referral code
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Referral code generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReferralCodeResponse"
+        "401":
+          description: Unauthorized
+
+  /referrals/regenerate:
+    post:
+      operationId: regenerateReferralCode
+      tags: [referrals]
+      summary: Regenerate referral code (invalidates old)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: New referral code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReferralCodeResponse"
+        "401":
+          description: Unauthorized
+
+  /referrals/claim:
+    post:
+      operationId: claimReferral
+      tags: [referrals]
+      summary: Apply a referral code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClaimReferralBody"
+      responses:
+        "200":
+          description: Referral claimed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClaimReferralResponse"
+        "400":
+          description: Invalid claim
+        "404":
+          description: Code not found
+
+  /referrals/stats:
+    get:
+      operationId: getReferralStats
+      tags: [referrals]
+      summary: Get referral stats for authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Referral stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReferralStatsResponse"
+        "401":
+          description: Unauthorized
 
 components:
   schemas:
@@ -784,3 +860,106 @@ components:
         - question
         - answer
         - category
+
+    ReferralCodeResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        shareUrl:
+          type: string
+      required:
+        - code
+        - shareUrl
+
+    ClaimReferralBody:
+      type: object
+      properties:
+        code:
+          type: string
+        refereeIdentifier:
+          type: string
+      required:
+        - code
+        - refereeIdentifier
+
+    ClaimReferralResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        pointsAwarded:
+          type: integer
+        referrerNewTotal:
+          type: integer
+      required:
+        - success
+        - pointsAwarded
+        - referrerNewTotal
+
+    ReferralStats:
+      type: object
+      properties:
+        totalReferrals:
+          type: integer
+        completedReferrals:
+          type: integer
+        totalPointsEarned:
+          type: integer
+        monthlyPointsEarned:
+          type: integer
+        rank:
+          type: integer
+      required:
+        - totalReferrals
+        - completedReferrals
+        - totalPointsEarned
+        - monthlyPointsEarned
+
+    ReferralRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        refereeName:
+          type: string
+          nullable: true
+        refereeIdentifier:
+          type: string
+          nullable: true
+        status:
+          type: string
+        pointsAwarded:
+          type: integer
+        firstContactAt:
+          type: string
+          nullable: true
+        completedAt:
+          type: string
+          nullable: true
+        rewardedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - status
+        - pointsAwarded
+
+    ReferralStatsResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        shareUrl:
+          type: string
+          nullable: true
+        stats:
+          $ref: "#/components/schemas/ReferralStats"
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReferralRecord"
+      required:
+        - stats
+        - history

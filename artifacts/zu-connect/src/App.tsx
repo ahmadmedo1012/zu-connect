@@ -24,6 +24,7 @@ import Volunteer from "@/pages/volunteer";
 import Faq from "@/pages/faq";
 import Library from "@/pages/library";
 import Login from "@/pages/login";
+import Profile from "@/pages/profile";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,7 @@ function Router() {
           <Route path="/faq"><AnimatedPage><Faq /></AnimatedPage></Route>
           <Route path="/library"><AnimatedPage><Library /></AnimatedPage></Route>
           <Route path="/login"><AnimatedPage><Login /></AnimatedPage></Route>
+          <Route path="/profile"><AnimatedPage><Profile /></AnimatedPage></Route>
           <Route><AnimatedPage><NotFound /></AnimatedPage></Route>
         </Switch>
       </AnimatePresence>

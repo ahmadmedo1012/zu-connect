@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { z } from "zod";
 import { motion } from "framer-motion";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useToast } from "@/hooks/use-toast";
 import { LottieAnimation } from "@/components/ui/lottie";
-import { User, Users, ShieldAlert, KeyRound, Mail } from "lucide-react";
+import { User, Users, ShieldAlert, KeyRound, Mail, Gift } from "lucide-react";
 import { useAuth, type Role } from "@/lib/auth/AuthContext";
 import logoPath from "@assets/IMG_0792_1781443006842.jpeg";
 import { cn } from "@/lib/utils";
@@ -31,9 +31,16 @@ export default function Login() {
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [referralCode, setReferralCode] = useState("");
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { login } = useAuth();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref) setReferralCode(ref);
+  }, []);
 
   const validate = () => {
     const result = loginSchema.safeParse({ identifier, password });
@@ -68,6 +75,26 @@ export default function Login() {
       }
       const data = await res.json();
       login(data.token, data.name, data.role as Role);
+
+      if (referralCode) {
+        try {
+          const claimRes = await fetch("/api/referrals/claim", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: referralCode, refereeIdentifier: data.identifier || identifier }),
+          });
+          if (claimRes.ok) {
+            const claimData = await claimRes.json();
+            toast({
+              title: "تم تسجيل الدعوة!",
+              description: `تم تفعيل رمز الدعوة بنجاح. أضفت +${claimData.pointsAwarded} نقطة لصديقك!`,
+            });
+          }
+        } catch {
+          /* silent — referral claim is optional */
+        }
+      }
+
       toast({
         title: "تم تسجيل الدخول بنجاح",
         description: `مرحباً، ${data.name}`
@@ -126,6 +153,22 @@ export default function Login() {
           })}
         </div>
 
+        <details className="text-sm">
+          <summary className="text-primary font-bold cursor-pointer select-none hover:opacity-80 transition-opacity flex items-center gap-2">
+            <Gift className="w-4 h-4" />
+            لديك رمز دعوة؟
+          </summary>
+          <div className="mt-3">
+            <input
+              type="text"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
+              placeholder="أدخل رمز الدعوة (مثال: ZU-A1B2C3)"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground text-left"
+              dir="ltr"
+            />
+          </div>
+        </details>
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
             <label className="text-sm font-bold text-foreground">
