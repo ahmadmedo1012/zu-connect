@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps";
-import { Eye, Calendar, ArrowUpLeft, Lock, Newspaper, Megaphone } from "lucide-react";
+import { Eye, Calendar, ArrowUpRight, Lock, Newspaper, Megaphone } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
@@ -123,7 +123,7 @@ export default function News() {
                   
                   {user && (
                     <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[4px] transition-transform w-fit">
-                      اقرأ المزيد <ArrowUpLeft className="w-4 h-4 mr-1" />
+                       اقرأ المزيد <ArrowUpRight className="w-4 h-4 mr-1" />
                     </div>
                   )}
                 </div>

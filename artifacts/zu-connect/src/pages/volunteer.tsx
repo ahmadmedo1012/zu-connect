@@ -102,7 +102,7 @@ export default function Volunteer() {
               key={cat.id}
               variants={itemVariants}
               whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-               className={`bg-card border p-6 rounded-2xl flex flex-col gap-3 cursor-pointer transition-all ${formData.area === cat.id ? 'border-primary shadow-[0_0_15px_rgba(24,119,242,0.15)] scale-[1.02]' : 'border-border hover:border-primary/50'}`}
+               className={`bg-card border p-6 rounded-2xl flex flex-col gap-3 cursor-pointer transition-all ${formData.area === cat.id ? 'border-primary shadow-lg shadow-primary/20 scale-[1.02]' : 'border-border hover:border-primary/50'}`}
               onClick={() => setFormData({...formData, area: cat.id})}
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${formData.area === cat.id ? 'bg-primary text-white' : 'bg-background text-primary'}`}>

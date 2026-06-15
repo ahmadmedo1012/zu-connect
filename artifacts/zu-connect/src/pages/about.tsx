@@ -68,7 +68,7 @@ export default function About() {
           { label: "طالب وطالبة", value: "+5,240" },
           { label: "نشاط منجز", value: "+120" }
         ].map((stat, i) => (
-          <motion.div key={i} variants={itemVariants} className="flex flex-col items-center justify-center gap-2 p-6 border-t-2 border-primary/30">
+          <motion.div key={i} variants={itemVariants} className="bg-card border border-border rounded-2xl p-6 flex flex-col items-center justify-center gap-2">
             <span className="text-5xl font-black text-foreground">{stat.value}</span>
             <span className="text-lg text-muted-foreground font-semibold">{stat.label}</span>
           </motion.div>

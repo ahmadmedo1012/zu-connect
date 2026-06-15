@@ -170,7 +170,7 @@ export default function Courses() {
                   
                   {user && (
                     <div className="flex flex-col gap-1 mt-auto pt-4 border-t border-border/50">
-                      <div className="flex gap-2 mt-4">
+                      <div className="flex gap-2">
                         {isEnrolled ? (
                           <Button 
                             variant="outline" 

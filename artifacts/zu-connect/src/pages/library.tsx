@@ -113,10 +113,10 @@ export default function Library() {
                 </div>
               
               <div className="flex flex-col gap-1">
-                <h3 className="font-bold text-lg text-foreground line-clamp-1" title={resource.title}>{resource.title}</h3>
+                <h3 className="font-bold text-lg text-foreground line-clamp-1 break-words" title={resource.title}>{resource.title}</h3>
                 {user && (
                   <>
-                    <p className="text-sm text-muted-foreground line-clamp-1">{resource.subtitle}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-1 break-words">{resource.subtitle}</p>
                     <p className="text-xs text-primary font-semibold mt-1">{resource.college}</p>
                   </>
                 )}

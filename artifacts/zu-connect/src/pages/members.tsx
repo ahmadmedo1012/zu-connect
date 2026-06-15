@@ -92,7 +92,7 @@ export default function Members() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 w-full">
-                    <h3 className="font-bold text-lg text-foreground leading-tight">{member.name}</h3>
+                    <h3 className="font-bold text-lg text-foreground leading-tight break-words">{member.name}</h3>
                     <p className="text-sm font-semibold text-primary">{member.role}</p>
                     <div className="text-xs text-muted-foreground mt-1 flex flex-col">
                       <span>{member.department}</span>

@@ -70,7 +70,7 @@ function StatCard({ label, value, icon: Icon }: { label: string; value: string; 
     <motion.div
       variants={itemVariants}
       whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-      className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform shadow-2xl"
+      className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform"
     >
       <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary">
         <Icon className="w-6 h-6" />
@@ -366,7 +366,7 @@ export default function Home() {
                     </span>
                     <span className="text-xs text-muted-foreground">{item.date}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-foreground leading-snug">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground leading-snug break-words">{item.title}</h3>
                   {user && <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>}
                 </div>
               </motion.div>
