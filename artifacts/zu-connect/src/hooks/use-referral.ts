@@ -38,6 +38,18 @@ const CACHE_KEY_CODE = "referral_code";
 const CACHE_KEY_STATS = "referral_stats";
 const CACHE_KEY_TOASTED = "referral_claimed_toast";
 
+async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const token = localStorage.getItem("token");
+  const headers = new Headers(options.headers);
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  if (!headers.has("Content-Type") && options.body) {
+    headers.set("Content-Type", "application/json");
+  }
+  return fetch(url, { ...options, headers });
+}
+
 const TIERS = [
   { name: "المبتدئ", threshold: 0, icon: "🌱" },
   { name: "المروج", threshold: 100, icon: "📢" },
@@ -116,7 +128,7 @@ export function useReferral() {
   const statsQuery = useQuery<StatsResponse>({
     queryKey: ["referral-stats"],
     queryFn: async () => {
-      const res = await fetch("/api/referrals/stats");
+      const res = await authFetch("/api/referrals/stats");
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "فشل تحميل الإحصائيات" }));
         throw new Error(err.error);
@@ -153,7 +165,7 @@ export function useReferral() {
 
   const generateMutation = useMutation<CodeResponse, Error, void>({
     mutationFn: async () => {
-      const res = await fetch("/api/referrals/generate", { method: "POST" });
+      const res = await authFetch("/api/referrals/generate", { method: "POST" });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "فشل إنشاء الرمز" }));
         throw new Error(err.error);
@@ -169,7 +181,7 @@ export function useReferral() {
 
   const regenerateMutation = useMutation<CodeResponse, Error, void>({
     mutationFn: async () => {
-      const res = await fetch("/api/referrals/regenerate", { method: "POST" });
+      const res = await authFetch("/api/referrals/regenerate", { method: "POST" });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: "فشل تغيير الرمز" }));
         throw new Error(err.error);

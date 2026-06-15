@@ -13,7 +13,8 @@ import {
   HeartHandshake, 
   HelpCircle, 
   Library,
-  Lock
+  Lock,
+  UserPlus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -33,6 +34,7 @@ const NAV_LINKS = [
   { href: "/volunteer", label: "تطوع", icon: HeartHandshake, requiresAuth: false },
   { href: "/faq", label: "الأسئلة", icon: HelpCircle, requiresAuth: false },
   { href: "/library", label: "المكتبة", icon: Library, requiresAuth: false },
+  { href: "/profile", label: "برنامج الدعوات", icon: UserPlus, requiresAuth: true },
 ];
 
 export function Navbar() {

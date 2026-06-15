@@ -11,13 +11,13 @@ import { ReferralHistoryTable } from "@/components/referral/ReferralHistoryTable
 import { ReferralRewardsProgress } from "@/components/referral/ReferralRewardsProgress";
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [, setLocation] = useLocation();
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!user) setLocation("/login");
-  }, [user]);
+    if (!authLoading && !user) setLocation("/login");
+  }, [user, authLoading]);
 
   const {
     code,
@@ -28,12 +28,17 @@ export default function Profile() {
     error,
     copyCode,
     copyLink,
+    generateCode,
     regenerateCode,
+    isGenerating,
     isRegenerating,
     progress,
     tiers,
   } = useReferral();
 
+  const isInitialLoading = isLoading && !code && !error;
+
+  if (authLoading) return <div className="min-h-[50vh]" />;
   if (!user) return null;
 
   return (
@@ -54,10 +59,11 @@ export default function Profile() {
             احصل على رمز فريد لمشاركته مع أصدقائك. كل صديق ينضم عبر رمزك يمنحك نقاطاً إضافية!
           </p>
           <button
-            onClick={() => window.location.reload()}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-bold transition-colors"
+            onClick={() => generateCode()}
+            disabled={isGenerating}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-bold transition-colors disabled:opacity-50"
           >
-            إنشاء رمز الدعوة
+            {isGenerating ? "جاري إنشاء الرمز..." : "إنشاء رمز الدعوة"}
           </button>
         </div>
       )}
