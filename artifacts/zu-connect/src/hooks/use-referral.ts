@@ -177,6 +177,9 @@ export function useReferral() {
       setCachedCode(data.code);
       queryClient.invalidateQueries({ queryKey: ["referral-stats"] });
     },
+    onError: (err) => {
+      toast({ title: "خطأ", description: err.message, variant: "destructive" });
+    },
   });
 
   const regenerateMutation = useMutation<CodeResponse, Error, void>({

@@ -1,4 +1,4 @@
-import { Gift, TrendingUp } from "lucide-react";
+import { Gift, TrendingUp, Award } from "lucide-react";
 
 interface Tier {
   name: string;
@@ -71,8 +71,8 @@ export function ReferralRewardsProgress({ currentPoints, progress, tiers }: Refe
       ) : currentPoints > 0 ? (
         <div className="flex flex-col gap-2 mt-2">
           <div className="flex items-center gap-2 text-primary font-bold">
-            <TrendingUp className="w-5 h-5" />
-            <span>لقد وصلت إلى أعلى مستوى! 🎉</span>
+            <Award className="w-5 h-5" />
+            <span>لقد وصلت إلى أعلى مستوى! تهانينا</span>
           </div>
           <div className="w-full h-3 bg-background rounded-full overflow-hidden border border-border">
             <div className="h-full bg-gradient-to-l from-primary to-primary/60 rounded-full w-full" />

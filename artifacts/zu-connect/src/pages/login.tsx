@@ -81,7 +81,7 @@ export default function Login() {
           const claimRes = await fetch("/api/referrals/claim", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code: referralCode, refereeIdentifier: data.identifier || identifier }),
+            body: JSON.stringify({ code: referralCode, refereeIdentifier: identifier }),
           });
           if (claimRes.ok) {
             const claimData = await claimRes.json();
