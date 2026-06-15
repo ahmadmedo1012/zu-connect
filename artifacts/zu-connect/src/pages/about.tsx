@@ -16,12 +16,30 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
+
+
 export default function About() {
   const prefersReducedMotion = useReducedMotion();
   return (
     <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto">
-      <div className="flex flex-col items-center gap-4 text-center">
-        <LottieAnimation src="/animations/illustration/teacher.json" className="w-[120px] h-[120px] md:w-[150px] md:h-[150px]" />
+      <div className="relative w-full h-[200px] md:h-[280px] rounded-3xl overflow-hidden mb-4">
+        <img
+          src="/images/university-photo.jpg"
+          alt="جامعة الزاوية"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+      </div>
+
+      <div className="flex flex-col items-center gap-4 text-center -mt-20 relative z-10">
+        <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-primary/30 p-1.5 bg-background shadow-xl shadow-primary/10">
+          <img
+            src="/images/union-logo.jpg"
+            alt="شعار الاتحاد"
+            className="w-full h-full rounded-full object-cover"
+          />
+        </div>
+        <LottieAnimation src="/animations/illustration/teacher.json" className="w-[100px] h-[100px] md:w-[120px] md:h-[120px] opacity-0 absolute pointer-events-none" />
         <h1 className="text-4xl md:text-5xl font-black text-foreground">عن الاتحاد</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           الممثل الشرعي والوحيد لطلبة جامعة الزاوية، نسعى لبناء بيئة جامعية متكاملة تدعم التفوق والإبداع.

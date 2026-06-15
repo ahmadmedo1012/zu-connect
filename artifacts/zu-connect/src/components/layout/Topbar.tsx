@@ -5,6 +5,7 @@ import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useState } from "react";
 
+
 export function Topbar() {
   const [, setLocation] = useLocation();
   const { user, logout } = useAuth();
@@ -22,6 +23,11 @@ export function Topbar() {
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3">
             <LottieAnimation src="/animations/illustration/logo-animation.json" className="w-10 h-10" />
+            <img
+              src="/images/union-logo.jpg"
+              alt="شعار الاتحاد"
+              className="w-9 h-9 rounded-full object-cover border-2 border-primary/30 ring-2 ring-background"
+            />
             <div className="flex flex-col">
               <span className="font-bold text-lg leading-tight text-foreground tracking-tight">ZU Connect</span>
               <span className="text-xs text-muted-foreground font-medium">اتحاد طلبة جامعة الزاوية</span>

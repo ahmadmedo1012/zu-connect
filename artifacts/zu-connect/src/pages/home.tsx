@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/carousel";
 import { useAuth } from "@/lib/auth/AuthContext";
 
+
 const containerVariants = {
   hidden: {},
   visible: {
@@ -192,9 +193,16 @@ export default function Home() {
     <div className="flex flex-col gap-16 pb-16 max-w-5xl mx-auto">
       <section className="relative w-full min-h-[65vh] rounded-3xl overflow-hidden flex items-center mt-4 bg-gradient-to-br from-background via-background to-muted/30 border border-border">
         <div className="absolute inset-0 z-0 overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
+            style={{
+              backgroundImage: `url(/images/university-photo.jpg)`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
           <div className="absolute -top-1/2 -right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[200px]" />
           <div className="absolute -bottom-1/2 -left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[200px]" />
-          <div className="absolute top-0 left-0 right-0 bottom-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23E32652%22 fill-opacity=%220.03%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 36v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 6V0H4v4H0v2h4v4h2V6h4V4H6z/%22%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]" />
         </div>
 
         <div className="absolute left-auto right-4 md:right-16 top-1/2 -translate-y-1/2 z-[5] w-72 h-72 opacity-30 hidden lg:block pointer-events-none">
@@ -290,7 +298,14 @@ export default function Home() {
 
       <section className="flex flex-col gap-8 py-16 rounded-3xl border border-primary/20 relative overflow-hidden bg-gradient-to-br from-background via-muted/30 to-background">
         <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
-        <div className="text-center flex flex-col gap-2 relative z-10">
+        <div className="text-center flex flex-col items-center gap-3 relative z-10">
+          <div className="w-20 h-20 rounded-full border-2 border-primary/30 p-1 shadow-lg shadow-primary/10">
+            <img
+              src="/images/union-logo.jpg"
+              alt="شعار الاتحاد"
+              className="w-full h-full rounded-full object-cover"
+            />
+          </div>
           <h2 className="text-3xl font-black text-foreground">الهيكل الإداري للاتحاد العام</h2>
           <p className="text-primary">قيادة طلابية تعمل من أجلكم</p>
         </div>
