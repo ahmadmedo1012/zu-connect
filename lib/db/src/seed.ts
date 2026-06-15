@@ -1,5 +1,5 @@
 import { db, pool } from "./index";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import {
   newsTable,
   coursesTable,
@@ -132,7 +132,7 @@ async function seed() {
     { identifier: "2021001", password: "student123", name: "أحمد الطالب", role: "student" },
     { identifier: "teacher@zu.edu.ly", password: "teacher123", name: "د. محمد المدرس", role: "teacher" },
     { identifier: "admin@zu.edu.ly", password: "admin123", name: "إبراهيم المدير", role: "admin" },
-  ]);
+  ]).onConflictDoNothing();
 
   // Seed admin roles
   await db.insert(adminRolesTable).values([
@@ -178,18 +178,22 @@ async function seed() {
         "admin.announcements.publish",
       ],
     },
-  ]);
+  ]).onConflictDoNothing();
 
-  // Link admin user to super_admin role
+  // Link admin user to super_admin role (upsert: skip if already linked)
   const [adminUser] = await db.select().from(usersTable).where(eq(usersTable.identifier, "admin@zu.edu.ly")).limit(1);
   if (adminUser) {
     const [superAdminRole] = await db.select().from(adminRolesTable).where(eq(adminRolesTable.name, "super_admin")).limit(1);
     if (superAdminRole) {
-      await db.insert(adminUsersTable).values({
-        userId: adminUser.id,
-        roleId: superAdminRole.id,
-        isActive: true,
-      });
+      const [existingLink] = await db.select().from(adminUsersTable)
+        .where(eq(adminUsersTable.userId, adminUser.id)).limit(1);
+      if (!existingLink) {
+        await db.insert(adminUsersTable).values({
+          userId: adminUser.id,
+          roleId: superAdminRole.id,
+          isActive: true,
+        });
+      }
     }
   }
 
@@ -202,14 +206,13 @@ async function seed() {
     { eventType: "new_suggestion", enabled: false, priority: "normal" },
     { eventType: "system_alert", enabled: true, priority: "urgent" },
     { eventType: "announcement_published", enabled: true, priority: "normal" },
-  ]);
-
+  ]).onConflictDoNothing();
   // Seed system settings
   await db.insert(systemSettingsTable).values([
     { key: "site_name", value: JSON.parse('"ZU Connect"'), type: "string", category: "general", description: "اسم المنصة" },
     { key: "maintenance_mode", value: JSON.parse("false"), type: "boolean", category: "general", description: "وضع الصيانة" },
     { key: "max_upload_size", value: JSON.parse("10"), type: "number", category: "features", description: "الحد الأقصى لحجم الرفع (MB)" },
-  ]);
+  ]).onConflictDoNothing();
 
   console.log("Seed complete!");
   await pool.end();
