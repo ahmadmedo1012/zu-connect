@@ -425,7 +425,7 @@ export default function Home() {
               <h3 className="font-bold text-white">المرشد الأكاديمي (AI)</h3>
               <p className="text-xs text-[#d4af37] mt-1">اسأل عن أي شيء يخص الجامعة</p>
             </div>
-            <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3">
+            <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3" role="log" aria-live="polite">
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
@@ -447,12 +447,13 @@ export default function Home() {
               />
               <motion.button
                 type="submit"
+                aria-label="إرسال"
                 whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
                 animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(212, 175, 55, 0.4)", "0 0 0 8px rgba(212, 175, 55, 0)", "0 0 0 0 rgba(212, 175, 55, 0)"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 className="bg-[#d4af37] text-black p-2 rounded-xl hover:bg-[#d4af37]/90 flex-shrink-0 font-bold"
               >
-                <Send className="w-5 h-5 rtl:-scale-x-100" />
+                <Send className="w-5 h-5" />
               </motion.button>
             </form>
           </div>

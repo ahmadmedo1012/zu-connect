@@ -26,6 +26,7 @@ export function Topbar() {
             <img
               src="/images/union-logo.jpg"
               alt="شعار الاتحاد"
+              loading="lazy"
               className="w-9 h-9 rounded-full object-cover border-2 border-primary/30 ring-2 ring-background"
             />
             <div className="flex flex-col">
@@ -36,10 +37,10 @@ export function Topbar() {
         </div>
         
         <div className="flex items-center gap-2 md:gap-4">
-          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors" aria-label="بحث">
             <Search className="w-5 h-5" />
           </button>
-          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button className="p-2 text-muted-foreground hover:text-foreground transition-colors" aria-label="الإشعارات">
             <Bell className="w-5 h-5" />
           </button>
           <ThemeToggle />
@@ -64,7 +65,7 @@ export function Topbar() {
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-accent transition-colors"
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-accent transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       تسجيل الخروج

@@ -145,7 +145,7 @@ export default function Login() {
                 dir="ltr"
                 required
               />
-              {errors.identifier && <span className="text-red-400 text-xs">{errors.identifier}</span>}
+              {errors.identifier && <span className="text-destructive text-xs">{errors.identifier}</span>}
             </div>
           </div>
 
@@ -166,12 +166,12 @@ export default function Login() {
                 dir="ltr"
                 required
               />
-              {errors.password && <span className="text-red-400 text-xs">{errors.password}</span>}
+              {errors.password && <span className="text-destructive text-xs">{errors.password}</span>}
             </div>
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-xl text-center">
+            <div className="bg-destructive/10 border border-destructive/30 text-destructive text-sm p-3 rounded-xl text-center">
               {error}
             </div>
           )}

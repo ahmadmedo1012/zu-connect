@@ -137,6 +137,7 @@ export default function Library() {
                 {user && (
                   <motion.button
                     onClick={handleDownload}
+                    aria-label="تحميل"
                     whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
                     whileHover={prefersReducedMotion ? undefined : { scale: 1.1, boxShadow: "0 0 20px rgba(212, 175, 55, 0.3)" }}
                     className="w-8 h-8 rounded-full bg-background hover:bg-primary text-muted-foreground hover:text-primary-foreground flex items-center justify-center transition-colors"

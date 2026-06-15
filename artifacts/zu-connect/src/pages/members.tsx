@@ -100,13 +100,13 @@ export default function Members() {
                     </div>
                   </div>
                   <div className="flex items-center justify-center gap-2 mt-2 w-full pt-4 border-t border-border/50">
-                    <button className="p-2 rounded-full bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
+                    <button className="p-2 rounded-full bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" aria-label="إرسال بريد">
                       <Mail className="w-4 h-4" />
                     </button>
-                    <button className="p-2 rounded-full bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
+                    <button className="p-2 rounded-full bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" aria-label="اتصال هاتفي">
                       <Phone className="w-4 h-4" />
                     </button>
-                    <button className="p-2 rounded-full bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
+                    <button className="p-2 rounded-full bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" aria-label="إرسال رسالة">
                       <MessageCircle className="w-4 h-4" />
                     </button>
                   </div>

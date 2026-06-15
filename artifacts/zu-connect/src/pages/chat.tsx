@@ -154,6 +154,8 @@ export default function Chat() {
                 initial={prefersReducedMotion ? undefined : "hidden"}
                 whileInView={prefersReducedMotion ? undefined : "visible"}
                 viewport={{ once: true }}
+                role="log"
+                aria-live="polite"
                 className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-background"
               >
                 {isLoadingMessages ? (
@@ -204,11 +206,12 @@ export default function Chat() {
                 />
                 <Button 
                   type="submit" 
+                  aria-label="إرسال"
                   disabled={!message.trim() || sendMessage.isPending}
                   size="icon"
                   className="rounded-xl shrink-0"
                 >
-                  <Send className="w-5 h-5 rtl:-scale-x-100" />
+                  <Send className="w-5 h-5" />
                 </Button>
               </form>
             </>

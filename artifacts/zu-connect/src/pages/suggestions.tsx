@@ -124,7 +124,7 @@ export default function Suggestions() {
                 <option value="فكرة نشاط">فكرة نشاط</option>
                 <option value="أخرى">أخرى</option>
               </select>
-              {errors.type && <span className="text-red-400 text-xs">{errors.type}</span>}
+              {errors.type && <span className="text-destructive text-xs">{errors.type}</span>}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -136,7 +136,7 @@ export default function Suggestions() {
                 placeholder="اكتب رسالتك هنا بالتفصيل..."
                 required
               />
-              {errors.message && <span className="text-red-400 text-xs">{errors.message}</span>}
+              {errors.message && <span className="text-destructive text-xs">{errors.message}</span>}
             </div>
 
             <Button 

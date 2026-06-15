@@ -174,7 +174,7 @@ export default function Courses() {
                         {isEnrolled ? (
                           <Button 
                             variant="outline" 
-                            className="flex-1 text-red-500 border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                            className="flex-1 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
                             onClick={() => handleUnenroll(course.id)}
                             disabled={unenrollCourse.isPending}
                           >

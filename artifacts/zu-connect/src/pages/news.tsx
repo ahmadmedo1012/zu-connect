@@ -122,8 +122,8 @@ export default function News() {
                   </div>
                   
                   {user && (
-                    <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[-4px] transition-transform w-fit">
-                      اقرأ المزيد <ArrowUpLeft className="w-4 h-4 ml-1" />
+                    <div className="mt-auto pt-4 flex items-center text-sm font-bold text-primary group-hover:translate-x-[4px] transition-transform w-fit">
+                      اقرأ المزيد <ArrowUpLeft className="w-4 h-4 mr-1" />
                     </div>
                   )}
                 </div>

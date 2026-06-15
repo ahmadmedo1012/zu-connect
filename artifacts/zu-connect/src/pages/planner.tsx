@@ -63,7 +63,7 @@ export default function Planner() {
           <div className="absolute right-8 md:right-16 top-2 bottom-2 w-0.5 bg-border rounded-full" />
           {[1,2,3,4].map(i => (
             <div key={i} className="relative flex items-start gap-6">
-               <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-black border-4 border-border z-10" />
+               <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-background border-4 border-border z-10" />
                <Skeleton variant="card" className="w-full h-24" />
             </div>
           ))}
@@ -85,7 +85,7 @@ export default function Planner() {
           ) : (
             plannerEvents?.map((event) => (
               <motion.div key={event.id} variants={itemVariants} whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }} className="relative flex items-start gap-6 group">
-                <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-black border-4 border-primary z-10 group-hover:bg-primary transition-colors" />
+                <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-background border-4 border-primary z-10 group-hover:bg-primary transition-colors" />
                 <div className="flex flex-col md:flex-row gap-4 w-full bg-card border border-border p-5 rounded-2xl group-hover:border-primary/50 transition-colors">
                   <div className="flex flex-col items-center justify-center bg-background rounded-xl p-3 min-w-24 text-center shrink-0 border border-border">
                     <span className="text-xs text-muted-foreground font-bold">{event.month}</span>

@@ -23,12 +23,12 @@ export const newsCategoryIcons: IconMap<string> = {
 
 export const newsCategoryColors: Record<string, string> = {
   "أخبار": "",
-  "عاجل": "#E32652",
+  "عاجل": "#1877F2",
   "دورات": "#22c55e",
   "فعاليات": "#3b82f6",
   "أنشطة منجزة": "#a855f7",
   "أخبار الكليات": "",
-  "إعلانات عامة": "#E32652",
+  "إعلانات عامة": "#1877F2",
   "أنشطة طلابية": "#3b82f6",
   "منح دراسية": "#22c55e",
 }

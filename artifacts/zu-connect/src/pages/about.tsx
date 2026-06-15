@@ -13,6 +13,7 @@ export default function About() {
         <img
           src="/images/university-photo.jpg"
           alt="جامعة الزاوية"
+          loading="lazy"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
@@ -96,7 +97,7 @@ export default function About() {
             { year: "2026", title: "منصة ZU Connect", desc: "إطلاق المنصة الشاملة لتكون الرابط الرقمي لكل طالب بالجامعة." }
           ].map((item, i) => (
             <motion.div key={i} variants={itemVariants} className="relative flex items-start gap-6">
-              <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-black border-4 border-primary z-10" />
+              <div className="absolute -right-[13px] md:-right-[37px] top-1 w-6 h-6 rounded-full bg-background border-4 border-primary z-10" />
               <div className="flex flex-col gap-1 w-full bg-card border border-border p-5 rounded-2xl">
                 <span className="text-primary font-black text-xl">{item.year}</span>
                 <h3 className="text-lg font-bold text-foreground">{item.title}</h3>

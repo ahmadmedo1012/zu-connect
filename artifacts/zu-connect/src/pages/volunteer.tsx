@@ -102,7 +102,7 @@ export default function Volunteer() {
               key={cat.id}
               variants={itemVariants}
               whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-              className={`bg-card border p-6 rounded-2xl flex flex-col gap-3 cursor-pointer transition-all ${formData.area === cat.id ? 'border-primary shadow-[0_0_15px_rgba(227,38,82,0.1)] scale-[1.02]' : 'border-border hover:border-primary/50'}`}
+               className={`bg-card border p-6 rounded-2xl flex flex-col gap-3 cursor-pointer transition-all ${formData.area === cat.id ? 'border-primary shadow-[0_0_15px_rgba(24,119,242,0.15)] scale-[1.02]' : 'border-border hover:border-primary/50'}`}
               onClick={() => setFormData({...formData, area: cat.id})}
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${formData.area === cat.id ? 'bg-primary text-white' : 'bg-background text-primary'}`}>
@@ -137,7 +137,7 @@ export default function Volunteer() {
               className="bg-background border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
               required
             />
-            {errors.name && <span className="text-red-400 text-xs">{errors.name}</span>}
+            {errors.name && <span className="text-destructive text-xs">{errors.name}</span>}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -151,7 +151,7 @@ export default function Volunteer() {
                 placeholder="مثال: الهندسة - السنة الثالثة"
                 required
               />
-              {errors.college && <span className="text-red-400 text-xs">{errors.college}</span>}
+              {errors.college && <span className="text-destructive text-xs">{errors.college}</span>}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-foreground">رقم الهاتف *</label>
@@ -164,7 +164,7 @@ export default function Volunteer() {
                 dir="ltr"
                 required
               />
-              {errors.phone && <span className="text-red-400 text-xs">{errors.phone}</span>}
+              {errors.phone && <span className="text-destructive text-xs">{errors.phone}</span>}
             </div>
           </div>
 
@@ -180,7 +180,7 @@ export default function Volunteer() {
                 <option key={cat.id} value={cat.id}>{cat.title}</option>
               ))}
             </select>
-            {errors.area && <span className="text-red-400 text-xs">{errors.area}</span>}
+            {errors.area && <span className="text-destructive text-xs">{errors.area}</span>}
           </div>
 
           <Button 
