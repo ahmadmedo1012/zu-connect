@@ -14,7 +14,9 @@ import {
   HelpCircle, 
   Library,
   Lock,
-  UserPlus
+  UserPlus,
+  Award,
+  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -35,6 +37,8 @@ const NAV_LINKS = [
   { href: "/faq", label: "الأسئلة", icon: HelpCircle, requiresAuth: false },
   { href: "/library", label: "المكتبة", icon: Library, requiresAuth: false },
   { href: "/profile", label: "برنامج الدعوات", icon: UserPlus, requiresAuth: true },
+  { href: "/loyalty", label: "نقاطي", icon: Award, requiresAuth: true },
+  { href: "/leaderboard", label: "المتصدرين", icon: TrendingUp, requiresAuth: false },
 ];
 
 export function Navbar() {

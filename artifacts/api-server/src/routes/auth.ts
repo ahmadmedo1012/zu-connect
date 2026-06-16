@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { db, db as adminDb, usersTable, activityLogsTable, telegramEventMappingsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { db, db as adminDb, usersTable, activityLogsTable, telegramEventMappingsTable, pointsTransactionsTable } from "@workspace/db";
+import { eq, and, gte, sql } from "drizzle-orm";
 import { emitAdminEvent } from "../services/admin-socket";
 import { telegramService } from "../services/telegram";
+import { awardPoints } from "../services/loyalty";
 
 const router = Router();
 
@@ -42,6 +43,27 @@ router.post("/auth/login", async (req, res) => {
     });
   } catch { /* non-blocking */ }
 
+  // Award daily login points (once per day)
+  let dailyLoginPoints = 0;
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const [todayLogin] = await db
+      .select({ count: sql<number>`COUNT(*)::int` })
+      .from(pointsTransactionsTable)
+      .where(
+        and(
+          eq(pointsTransactionsTable.userId, user.id),
+          eq(pointsTransactionsTable.actionType, "daily_login"),
+          gte(pointsTransactionsTable.createdAt, today),
+        ),
+      );
+    if (!todayLogin || todayLogin.count === 0) {
+      const result = await awardPoints(user.id, "daily_login", undefined, `daily_${user.id}_${new Date().toISOString().split("T")[0]}`);
+      if (result.success) dailyLoginPoints = result.pointsAwarded;
+    }
+  } catch { /* non-blocking */ }
+
   // Emit real-time event for admin
   emitAdminEvent("admin:new_login", {
     userId: user.id,
@@ -63,7 +85,7 @@ router.post("/auth/login", async (req, res) => {
     return mapping ? { enabled: mapping.enabled, chatId: mapping.chatId ?? undefined, template: mapping.template ?? undefined } : null;
   });
 
-  res.json({ token, name: user.name, role: user.role });
+  res.json({ token, name: user.name, role: user.role, dailyLoginPoints });
 });
 
 export default router;

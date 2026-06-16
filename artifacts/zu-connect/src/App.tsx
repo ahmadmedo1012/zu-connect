@@ -26,6 +26,10 @@ import Faq from "@/pages/faq";
 import Library from "@/pages/library";
 import Login from "@/pages/login";
 import Profile from "@/pages/profile";
+import Loyalty from "@/pages/Loyalty";
+import LoyaltyHistory from "@/pages/LoyaltyHistory";
+import Rewards from "@/pages/Rewards";
+import Leaderboard from "@/pages/Leaderboard";
 
 // Admin imports
 import { AdminGuard } from "@/components/admin/AdminGuard";
@@ -47,6 +51,7 @@ import AdminIntegrations from "@/pages/admin/Integrations";
 import AdminTelegram from "@/pages/admin/Telegram";
 import AdminSettings from "@/pages/admin/Settings";
 import AdminAudit from "@/pages/admin/Audit";
+import AdminLoyalty from "@/pages/admin/Loyalty";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +105,7 @@ function AdminRouter() {
       <Route path="/admin/telegram">{() => <AdminTelegram />}</Route>
       <Route path="/admin/settings">{() => <AdminSettings />}</Route>
       <Route path="/admin/audit">{() => <AdminAudit />}</Route>
+      <Route path="/admin/loyalty">{() => <AdminLoyalty />}</Route>
       <Route>{() => <AdminNotFound />}</Route>
     </Switch>
   );
@@ -139,6 +145,10 @@ function Router() {
           <Route path="/library"><AnimatedPage><Library /></AnimatedPage></Route>
           <Route path="/login"><AnimatedPage><Login /></AnimatedPage></Route>
           <Route path="/profile"><AnimatedPage><Profile /></AnimatedPage></Route>
+          <Route path="/loyalty"><AnimatedPage><Loyalty /></AnimatedPage></Route>
+          <Route path="/loyalty/history"><AnimatedPage><LoyaltyHistory /></AnimatedPage></Route>
+          <Route path="/loyalty/rewards"><AnimatedPage><Rewards /></AnimatedPage></Route>
+          <Route path="/leaderboard"><AnimatedPage><Leaderboard /></AnimatedPage></Route>
           <Route><AnimatedPage><NotFound /></AnimatedPage></Route>
         </Switch>
       </AnimatePresence>

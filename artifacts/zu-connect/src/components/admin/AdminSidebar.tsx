@@ -3,7 +3,7 @@ import { useAdmin } from "./AdminContext";
 import {
   LayoutDashboard, Users, Shield, Radio, ClipboardCheck, MessageSquare,
   Gift, Trophy, Megaphone, File, Activity, BarChart, Puzzle, Send,
-  Settings, ScrollText, ChevronLeft, ChevronRight, X, Wrench,
+  Settings, ScrollText, ChevronLeft, ChevronRight, X, Wrench, Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
@@ -42,6 +42,7 @@ const navSections: NavSection[] = [
       { label: "الملفات", icon: File, path: "/admin/files", permission: "admin.files" },
       { label: "الإحالات", icon: Gift, path: "/admin/referrals", permission: "admin.referrals" },
       { label: "النقاط والتحديات", icon: Trophy, path: "/admin/gamification", permission: "admin.gamification" },
+      { label: "الولاء", icon: Star, path: "/admin/loyalty", permission: "admin.gamification" },
     ],
   },
   {

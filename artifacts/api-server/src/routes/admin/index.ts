@@ -15,6 +15,7 @@ import telegramRouter from "./telegram";
 import auditRouter from "./audit";
 import contentRouter from "./content";
 import filesRouter from "./files";
+import loyaltyRouter from "./loyalty";
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.use(telegramRouter);
 router.use(auditRouter);
 router.use(contentRouter);
 router.use(filesRouter);
+router.use(loyaltyRouter);
 
 export default router;

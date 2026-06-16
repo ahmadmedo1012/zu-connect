@@ -1,15 +1,28 @@
 import { Router } from "express";
-import { db, usersTable, referralsTable } from "@workspace/db";
+import { db, usersTable, referralsTable, loyaltyConfigTable } from "@workspace/db";
 import { eq, and, sql } from "drizzle-orm";
 import crypto from "crypto";
+import { awardPoints } from "../services/loyalty";
 
 const router = Router();
 
 const CODE_PREFIX = "ZU-";
 const CODE_SUFFIX_LENGTH = 6;
 const CODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const POINTS_PER_REFERRAL = 50;
 const CODE_REGEX = /^ZU-[A-Z0-9]{6}$/;
+
+async function getReferralPoints(): Promise<number> {
+  const [config] = await db
+    .select()
+    .from(loyaltyConfigTable)
+    .where(eq(loyaltyConfigTable.key, "referral_points"))
+    .limit(1);
+  if (config) {
+    const val = (config.value as Record<string, any>)?.en ?? (config.value as Record<string, any>)?.ar;
+    return val ? parseInt(val, 10) : 50;
+  }
+  return 50;
+}
 
 function generateReferralCode(): string {
   const bytes = crypto.randomBytes(CODE_SUFFIX_LENGTH);
@@ -199,21 +212,19 @@ router.post("/referrals/claim", async (req, res) => {
       firstContactAt: new Date(),
     }).returning();
 
-    const newPoints = referrer.points + POINTS_PER_REFERRAL;
-    await db
-      .update(usersTable)
-      .set({ points: newPoints })
-      .where(eq(usersTable.id, referrer.id));
+    const refPoints = await getReferralPoints();
+    const result = await awardPoints(referrer.id, "referral", referral.id, `ref_${referral.id}`, undefined);
+    const awardedPoints = result.success ? result.pointsAwarded : refPoints;
 
     await db
       .update(referralsTable)
-      .set({ status: "rewarded", pointsAwarded: POINTS_PER_REFERRAL, rewardedAt: new Date() })
+      .set({ status: "rewarded", pointsAwarded: awardedPoints, rewardedAt: new Date() })
       .where(eq(referralsTable.id, referral.id));
 
     res.json({
       success: true,
-      pointsAwarded: POINTS_PER_REFERRAL,
-      referrerNewTotal: newPoints,
+      pointsAwarded: awardedPoints,
+      referrerNewTotal: result.success ? result.newBalance : referrer.points + refPoints,
     });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "حدث خطأ في تسجيل الدعوة", code: "CLAIM_FAILED" });

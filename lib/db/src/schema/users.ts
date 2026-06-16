@@ -10,6 +10,7 @@ export const usersTable = pgTable("users", {
   role: text("role").notNull().default("student"),
   referralCode: text("referral_code").unique(),
   points: integer("points").notNull().default(0),
+  lastActivityAt: timestamp("last_activity_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

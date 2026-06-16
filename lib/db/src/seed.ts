@@ -15,6 +15,10 @@ import {
   adminUsersTable,
   telegramEventMappingsTable,
   systemSettingsTable,
+  earningActionsTable,
+  tiersTable,
+  achievementsTable,
+  loyaltyConfigTable,
 } from "./schema";
 
 async function seed() {
@@ -218,6 +222,42 @@ async function seed() {
     { key: "site_name", value: JSON.parse('"ZU Connect"'), type: "string", category: "general", description: "اسم المنصة" },
     { key: "maintenance_mode", value: JSON.parse("false"), type: "boolean", category: "general", description: "وضع الصيانة" },
     { key: "max_upload_size", value: JSON.parse("10"), type: "number", category: "features", description: "الحد الأقصى لحجم الرفع (MB)" },
+  ]).onConflictDoNothing();
+
+  // ── Loyalty System Seed Data ──────────────────────────────────────
+  await db.insert(earningActionsTable).values([
+    { actionKey: "daily_login", nameAr: "تسجيل الدخول اليومي", nameEn: "Daily Login", descriptionAr: "تسجيل الدخول إلى المنصة يومياً", pointValue: 5, dailyLimit: 1, cooldownMinutes: 1440, enabled: true, icon: "log-in" },
+    { actionKey: "complete_profile", nameAr: "إكمال الملف الشخصي", nameEn: "Complete Profile", descriptionAr: "ملء جميع حقول الملف الشخصي", pointValue: 50, dailyLimit: 1, cooldownMinutes: 0, enabled: true, icon: "user-check" },
+    { actionKey: "course_enroll", nameAr: "التسجيل في دورة", nameEn: "Enroll in Course", descriptionAr: "التسجيل في دورة تدريبية", pointValue: 10, dailyLimit: 0, cooldownMinutes: 0, enabled: true, icon: "book-open" },
+    { actionKey: "course_complete", nameAr: "إكمال دورة", nameEn: "Complete Course", descriptionAr: "إكمال دورة تدريبية بنجاح", pointValue: 100, dailyLimit: 0, cooldownMinutes: 0, enabled: true, icon: "graduation-cap" },
+    { actionKey: "event_attend", nameAr: "حضور فعالية", nameEn: "Attend Event", descriptionAr: "حضور فعالية جامعية", pointValue: 15, dailyLimit: 0, cooldownMinutes: 0, enabled: true, icon: "calendar-check" },
+    { actionKey: "referral", nameAr: "دعوة صديق", nameEn: "Refer a Friend", descriptionAr: "دعوة صديق للتسجيل في المنصة", pointValue: 25, dailyLimit: 0, cooldownMinutes: 0, enabled: true, icon: "user-plus" },
+    { actionKey: "library_download", nameAr: "تحميل مورد", nameEn: "Download Resource", descriptionAr: "تحميل مورد من المكتبة", pointValue: 2, dailyLimit: 10, cooldownMinutes: 0, enabled: true, icon: "download" },
+    { actionKey: "feedback_submit", nameAr: "تقديم اقتراح", nameEn: "Submit Feedback", descriptionAr: "تقديم اقتراح أو شكوى", pointValue: 20, dailyLimit: 1, cooldownMinutes: 1440, enabled: true, icon: "message-square" },
+  ]).onConflictDoNothing();
+
+  await db.insert(tiersTable).values([
+    { key: "bronze", nameAr: "برونزي", nameEn: "Bronze", minPoints: 0, maxPoints: 99, color: "#CD7F32", icon: "circle", benefitsAr: { ar: "وصول أساسي", en: "Basic access" } as object, sortOrder: 1 },
+    { key: "silver", nameAr: "فضي", nameEn: "Silver", minPoints: 100, maxPoints: 299, color: "#C0C0C0", icon: "circle", benefitsAr: { ar: "دعم ذو أولوية", en: "Priority support" } as object, sortOrder: 2 },
+    { key: "gold", nameAr: "ذهبي", nameEn: "Gold", minPoints: 300, maxPoints: 599, color: "#FFD700", icon: "award", benefitsAr: { ar: "دورات حصرية", en: "Exclusive courses" } as object, sortOrder: 3 },
+    { key: "platinum", nameAr: "بلاتيني", nameEn: "Platinum", minPoints: 600, maxPoints: null, color: "#E5E4E2", icon: "diamond", benefitsAr: { ar: "جميع المزايا + صلاحيات إدارية", en: "All benefits + admin access" } as object, sortOrder: 4 },
+  ]).onConflictDoNothing();
+
+  await db.insert(achievementsTable).values([
+    { key: "first_login", nameAr: "الخطوات الأولى", nameEn: "First Steps", descriptionAr: "تسجيل الدخول لأول مرة", icon: "log-in", criteria: { type: "action_count", actionKey: "daily_login", count: 1 }, pointReward: 10, isHidden: false, isActive: true },
+    { key: "dedicated", nameAr: "مخلص", nameEn: "Dedicated", descriptionAr: "تسجيل الدخول لمدة 7 أيام متتالية", icon: "flame", criteria: { type: "streak", actionKey: "daily_login", streak: 7 }, pointReward: 50, isHidden: false, isActive: true },
+    { key: "scholar", nameAr: "عالم", nameEn: "Scholar", descriptionAr: "إكمال 5 دورات تدريبية", icon: "book", criteria: { type: "action_count", actionKey: "course_complete", count: 5 }, pointReward: 200, isHidden: false, isActive: true },
+    { key: "social", nameAr: "اجتماعي", nameEn: "Social Butterfly", descriptionAr: "دعوة 3 أصدقاء للتسجيل", icon: "users", criteria: { type: "action_count", actionKey: "referral", count: 3 }, pointReward: 100, isHidden: false, isActive: true },
+    { key: "collector", nameAr: "جامع", nameEn: "Collector", descriptionAr: "تحميل 50 مورداً من المكتبة", icon: "archive", criteria: { type: "action_count", actionKey: "library_download", count: 50 }, pointReward: 75, isHidden: false, isActive: true },
+    { key: "secret_lurker", nameAr: "بوم الليل", nameEn: "Night Owl", descriptionAr: "تسجيل الدخول في الساعة 2 صباحاً", icon: "moon", criteria: { type: "login_hour", hour: 2 }, pointReward: 25, isHidden: true, isActive: true },
+  ]).onConflictDoNothing();
+
+  await db.insert(loyaltyConfigTable).values([
+    { key: "points_per_currency_unit", value: { ar: "100", en: "100" } },
+    { key: "default_tier_on_register", value: { ar: "bronze", en: "bronze" } },
+    { key: "points_expiry_days", value: { ar: "365", en: "365" } },
+    { key: "max_daily_points", value: { ar: "200", en: "200" } },
+    { key: "achievement_notification", value: { ar: "true", en: "true" } },
   ]).onConflictDoNothing();
 
   console.log("Seed complete!");

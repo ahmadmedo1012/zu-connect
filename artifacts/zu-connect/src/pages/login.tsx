@@ -95,6 +95,13 @@ export default function Login() {
         }
       }
 
+      if (data.dailyLoginPoints > 0) {
+        toast({
+          title: "نقاط تسجيل الدخول اليومي",
+          description: `+${data.dailyLoginPoints} نقطة تسجيل الدخول اليومي 🎉`,
+        });
+      }
+
       toast({
         title: "تم تسجيل الدخول بنجاح",
         description: `مرحباً، ${data.name}`

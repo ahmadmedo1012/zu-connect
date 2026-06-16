@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Award } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useReferral } from "@/hooks/use-referral";
+import { useLoyaltyStats } from "@/hooks/use-loyalty";
 import { ReferralCodeCard } from "@/components/referral/ReferralCodeCard";
 import { ReferralStatsCards } from "@/components/referral/ReferralStatsCards";
 import { ReferralHistoryTable } from "@/components/referral/ReferralHistoryTable";
 import { ReferralRewardsProgress } from "@/components/referral/ReferralRewardsProgress";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 export default function Profile() {
   const { user, isLoading: authLoading } = useAuth();
@@ -20,7 +23,7 @@ export default function Profile() {
   const {
     code,
     shareUrl,
-    stats,
+    stats: refStats,
     history,
     isLoading,
     error,
@@ -34,9 +37,12 @@ export default function Profile() {
     tiers,
   } = useReferral();
 
+  const { data: loyaltyStats } = useLoyaltyStats();
+
   if (authLoading) return <div className="min-h-[50vh]" />;
   if (!user) return null;
 
+  const stats = refStats;
   const showNoCodeCTA = !code && !isLoading && !error;
   const showCodeCard = !!code || !!error || isLoading;
 
@@ -47,6 +53,22 @@ export default function Profile() {
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">برنامج الدعوات</h1>
         <p className="text-muted-foreground">ادعُ أصدقاءك للانضمام للمنصة واربح النقاط والمكافآت.</p>
       </div>
+
+      {loyaltyStats?.recentAchievements?.length > 0 && (
+        <Card className="rounded-2xl p-6">
+          <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
+            <Award className="w-5 h-5 text-yellow-500" /> شاراتي
+          </h2>
+          <div className="flex gap-3 flex-wrap">
+            {loyaltyStats.recentAchievements.map((ua: any) => (
+              <Badge key={ua.id} variant="secondary" className="text-sm px-3 py-1.5 rounded-xl">
+                {ua.achievement.icon && <span className="ml-1">{ua.achievement.icon}</span>}
+                {ua.achievement.nameAr}
+              </Badge>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {showNoCodeCTA && (
         <div className="bg-card border border-border rounded-2xl p-8 flex flex-col items-center gap-4 text-center">
