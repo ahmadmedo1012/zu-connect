@@ -83,6 +83,8 @@ export default function AdminTelegram() {
       }),
     }).then(() => {
       setConfig({ ...config, mappings: updatedMappings });
+    }).catch((e) => {
+      toast({ title: "خطأ", description: "فشل حفظ إعدادات تلغرام", variant: "destructive" });
     });
   };
 

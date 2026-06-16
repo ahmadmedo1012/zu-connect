@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { DataTable } from "@/components/admin/DataTable";
 import { Pagination } from "@/components/admin/Pagination";
@@ -16,6 +17,7 @@ interface Announcement {
 }
 
 export default function AdminAnnouncements() {
+  const { toast } = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -42,15 +44,21 @@ export default function AdminAnnouncements() {
       method: "PUT",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" },
       body: JSON.stringify({ status: "published" }),
-    }).then(() => fetchAnnouncements());
+    }).then(() => fetchAnnouncements()).catch((e) => {
+      toast({ title: "خطأ", description: "فشل نشر الإعلان", variant: "destructive" });
+    });
   };
 
   const deleteAnnouncement = (id: number) => {
-    if (!confirm("هل أنت متأكد؟")) return;
     fetch(`/api/admin/announcements/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    }).then(() => fetchAnnouncements());
+    }).then(() => {
+      toast({ title: "تم", description: "تم حذف الإعلان بنجاح" });
+      fetchAnnouncements();
+    }).catch((e) => {
+      toast({ title: "خطأ", description: "فشل حذف الإعلان", variant: "destructive" });
+    });
   };
 
   const statusBadge = (status: string) => {

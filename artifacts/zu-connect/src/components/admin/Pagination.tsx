@@ -43,7 +43,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(1)}
           disabled={page <= 1}
-          className="hidden sm:flex"
+          className="hidden sm:flex rounded-lg border-border/50 hover:border-primary/30 transition-colors"
           title="الأولى"
         >
           <ChevronsRight className="h-4 w-4" />
@@ -53,6 +53,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
+          className="rounded-lg border-border/50 hover:border-primary/30 transition-colors"
         >
           <ChevronRight className="h-4 w-4 ml-1" />
           السابق
@@ -67,7 +68,12 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
                 key={p}
                 variant={p === page ? "default" : "ghost"}
                 size="sm"
-                className={cn("min-w-[32px]", p === page && "shadow-sm")}
+                className={cn(
+                  "min-w-[36px] h-9 rounded-lg text-sm font-medium transition-all duration-200",
+                  p === page
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90"
+                    : "hover:bg-accent hover:text-foreground"
+                )}
                 onClick={() => onPageChange(p)}
               >
                 {p}
@@ -81,6 +87,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
+          className="rounded-lg border-border/50 hover:border-primary/30 transition-colors"
         >
           التالي
           <ChevronLeft className="h-4 w-4 mr-1" />
@@ -90,7 +97,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(totalPages)}
           disabled={page >= totalPages}
-          className="hidden sm:flex"
+          className="hidden sm:flex rounded-lg border-border/50 hover:border-primary/30 transition-colors"
           title="الأخيرة"
         >
           <ChevronsLeft className="h-4 w-4" />

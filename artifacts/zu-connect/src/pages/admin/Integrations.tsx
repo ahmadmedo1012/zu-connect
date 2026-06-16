@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ interface Integration {
 }
 
 export default function AdminIntegrations() {
+  const { toast } = useToast();
   const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [loading, setLoading] = useState(true);
   const [editValues, setEditValues] = useState<Record<string, string>>({});
@@ -46,6 +48,8 @@ export default function AdminIntegrations() {
         setIntegrations((prev) =>
           prev.map((i) => (i.key === key ? { ...i, value: data.value } : i))
         );
+      }).catch((e) => {
+        toast({ title: "خطأ", description: "فشل حفظ التكامل", variant: "destructive" });
       });
   };
 

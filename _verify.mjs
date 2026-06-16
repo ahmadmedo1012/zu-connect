@@ -1,0 +1,12 @@
+import pg from "pg";
+const { Pool } = pg;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const tables = await pool.query("SELECT table_name FROM information_schema.tables WHERE table_schema='public' ORDER BY table_name");
+console.log("Tables:", tables.rows.map(r => r.table_name).join(", "));
+const roles = await pool.query("SELECT COUNT(*)::int as cnt FROM admin_roles");
+console.log("Admin roles count:", roles.rows[0].cnt);
+const adminUsers = await pool.query("SELECT COUNT(*)::int as cnt FROM admin_users");
+console.log("Admin user links:", adminUsers.rows[0].cnt);
+const users = await pool.query("SELECT name, identifier, role FROM users WHERE identifier = 'admin@zu.edu.ly'");
+console.log("Admin user:", JSON.stringify(users.rows[0]));
+await pool.end();

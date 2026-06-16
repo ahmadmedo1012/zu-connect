@@ -175,3 +175,23 @@
     scrollbar-gutter: stable;
   }
 }
+
+.admin-theme {
+  --primary: 262 80% 54%;
+  --primary-foreground: 0 0% 100%;
+  --primary-border: 262 80% 44%;
+  --ring: 262 80% 54%;
+  --accent: 262 100% 92%;
+  --accent-foreground: 262 80% 30%;
+  --accent-border: 262 80% 82%;
+}
+
+.dark .admin-theme {
+  --primary: 262 80% 60%;
+  --primary-foreground: 0 0% 100%;
+  --primary-border: 262 80% 50%;
+  --ring: 262 80% 60%;
+  --accent: 262 50% 25%;
+  --accent-foreground: 0 0% 100%;
+  --accent-border: 262 50% 35%;
+}

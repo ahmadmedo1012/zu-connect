@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ interface SystemSetting {
 }
 
 export default function AdminSettings() {
+  const { toast } = useToast();
   const [settings, setSettings] = useState<SystemSetting[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,6 +37,8 @@ export default function AdminSettings() {
       body: JSON.stringify({ value }),
     }).then(() => {
       setSettings((prev) => prev.map((s) => (s.key === key ? { ...s, value } : s)));
+    }).catch((e) => {
+      toast({ title: "خطأ", description: "فشل تحديث الإعداد", variant: "destructive" });
     });
   };
 

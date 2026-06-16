@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { DataTable } from "@/components/admin/DataTable";
 import { Pagination } from "@/components/admin/Pagination";
@@ -16,6 +17,7 @@ interface ModerationItem {
 }
 
 export default function AdminModeration() {
+  const { toast } = useToast();
   const [items, setItems] = useState<ModerationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -40,13 +42,17 @@ export default function AdminModeration() {
   }, [page]);
 
   const deleteItem = (id: number) => {
-    if (!confirm("هل أنت متأكد من حذف هذا العنصر؟")) return;
     fetch(`/api/admin/moderation/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
-      .then(() => fetchItems())
-      .catch(() => {});
+      .then(() => {
+        toast({ title: "تم", description: "تم حذف العنصر بنجاح" });
+        fetchItems();
+      })
+      .catch((e) => {
+        toast({ title: "خطأ", description: "فشل حذف العنصر", variant: "destructive" });
+      });
   };
 
   const typeBadge = (type: string) => {
