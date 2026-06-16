@@ -9,8 +9,8 @@ class TelegramService {
   private queue: Array<{ chatId: string; message: string }> = [];
   private processing = false;
 
-  async initialize() {
-    if (this.initialized) return;
+  async initialize(force = false) {
+    if (this.initialized && !force) return;
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
     if (!token) {

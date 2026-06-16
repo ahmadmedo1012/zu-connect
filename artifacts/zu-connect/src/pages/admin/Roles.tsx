@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { DataTable } from "@/components/admin/DataTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Plus, Shield } from "lucide-react";
+import { Shield } from "lucide-react";
 
 interface AdminRole {
   id: number;

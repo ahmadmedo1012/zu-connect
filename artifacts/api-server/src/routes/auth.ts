@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { db, usersTable } from "@workspace/db";
+import { db, db as adminDb, usersTable, activityLogsTable, telegramEventMappingsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { emitAdminEvent } from "../services/admin-socket";
 import { telegramService } from "../services/telegram";
-import { db as adminDb, activityLogsTable, telegramEventMappingsTable } from "@workspace/db";
 
 const router = Router();
 

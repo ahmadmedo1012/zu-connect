@@ -35,7 +35,7 @@ router.put("/admin/telegram/config", requireRole("admin"), requirePermission("ad
     }
     // Reinitialize telegram service with new token
     process.env.TELEGRAM_BOT_TOKEN = botToken;
-    await telegramService.initialize();
+    await telegramService.initialize(true);
   }
 
   if (defaultChatId !== undefined) {

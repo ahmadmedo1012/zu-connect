@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, suggestionsTable } from "@workspace/db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import { requireRole, requirePermission } from "../../middlewares/auth";
 import { logAudit } from "../../services/audit";
 import { emitAdminEvent } from "../../services/admin-socket";
@@ -14,15 +14,17 @@ router.get("/admin/moderation", requireRole("admin"), requirePermission("admin.m
   const status = req.query.status as string | undefined;
   const type = req.query.type as string | undefined;
 
-  let query = db.select().from(suggestionsTable);
-  let countQuery = db.select({ count: sql<number>`count(*)` }).from(suggestionsTable);
-
+  const filters: any[] = [];
   if (status) {
-    query = (query as any).where(eq(suggestionsTable.type, status === "resolved" ? "شكوى" : status));
+    filters.push(eq(suggestionsTable.type, status === "resolved" ? "شكوى" : status));
   }
   if (type) {
-    query = (query as any).where(eq(suggestionsTable.type, type));
+    filters.push(eq(suggestionsTable.type, type));
   }
+
+  const whereClause = filters.length > 0 ? and(...filters) : undefined;
+  let query = whereClause ? (db.select().from(suggestionsTable).where(whereClause) as any) : (db.select().from(suggestionsTable) as any);
+  let countQuery = whereClause ? (db.select({ count: sql<number>`count(*)` }).from(suggestionsTable).where(whereClause) as any) : db.select({ count: sql<number>`count(*)` }).from(suggestionsTable);
 
   const [total, items] = await Promise.all([
     countQuery,

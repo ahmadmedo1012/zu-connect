@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { ar } from "date-fns/locale";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface LiveFeedEvent {
   id: string;
@@ -39,27 +40,38 @@ export function LiveFeed({ events, isLoading }: LiveFeedProps) {
     );
   }
 
+  const truncate = (s: string, max: number) =>
+    s.length > max ? s.slice(0, s.lastIndexOf(" ", max)) + "…" : s;
+
   return (
-    <ScrollArea className="h-[400px]">
-      <div className="space-y-2">
-        {events.map((event) => {
-          const style = eventStyles[event.type] || { color: "bg-gray-500", label: event.type };
-          const timeAgo = formatDistanceToNow(new Date(event.timestamp), { addSuffix: true, locale: ar });
-          return (
-            <div key={event.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-              <div className={cn("w-2 h-2 rounded-full mt-2 shrink-0", style.color)} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">{style.label}</Badge>
-                  <span className="text-xs text-muted-foreground">{timeAgo}</span>
+    <ScrollArea className="h-[400px] max-h-[60vh]">
+      <div className="space-y-1 p-2">
+        <AnimatePresence initial={false}>
+          {events.map((event, i) => {
+            const style = eventStyles[event.type] || { color: "bg-gray-500", label: event.type };
+            const timeAgo = formatDistanceToNow(new Date(event.timestamp), { addSuffix: true, locale: ar });
+            const displayText = event.payload?.name || event.payload?.userName || event.payload?.action || truncate(JSON.stringify(event.payload), 80);
+            return (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, x: -20, height: 0 }}
+                animate={{ opacity: 1, x: 0, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2, delay: i === 0 ? 0 : 0 }}
+                className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors"
+              >
+                <div className={cn("w-2 h-2 rounded-full mt-2 shrink-0", style.color)} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{style.label}</Badge>
+                    <span className="text-[11px] text-muted-foreground">{timeAgo}</span>
+                  </div>
+                  <p className="text-sm mt-0.5 truncate">{displayText}</p>
                 </div>
-                <p className="text-sm mt-0.5 truncate">
-                  {event.payload?.name || event.payload?.userName || event.payload?.action || JSON.stringify(event.payload).slice(0, 80)}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
         {events.length === 0 && (
           <p className="text-sm text-muted-foreground text-center py-8">لا توجد أحداث حالياً</p>
         )}

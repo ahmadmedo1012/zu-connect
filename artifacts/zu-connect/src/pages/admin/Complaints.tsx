@@ -1,48 +1,50 @@
-import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect, useCallback } from "react";
 import { DataTable } from "@/components/admin/DataTable";
 import { Pagination } from "@/components/admin/Pagination";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Trash2 } from "lucide-react";
+import { MessageSquare, Trash2, AlertCircle, Filter } from "lucide-react";
 
 interface ComplaintItem {
-  id: number;
-  name: string;
-  college: string | null;
-  type: string;
-  message: string;
-  createdAt: string;
+  id: number; name: string; college: string | null;
+  type: string; message: string; createdAt: string;
 }
 
 export default function AdminComplaints() {
+  const { toast } = useToast();
   const [items, setItems] = useState<ComplaintItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchItems = () => {
+  const fetchItems = useCallback(() => {
     setLoading(true);
-    fetch(`/api/admin/moderation?page=${page}&limit=20`, {
+    setError(null);
+    fetch(`/api/admin/moderation?page=${page}&limit=20&type=شكوى`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error("فشل تحميل الشكاوى"); return r.json(); })
       .then((data) => {
         setItems(data.items || []);
         setTotalPages(data.pagination?.totalPages || 1);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-  };
+      .catch((e) => { setError(e.message); setLoading(false); toast({ title: "خطأ", description: e.message, variant: "destructive" }); });
+  }, [page, toast]);
 
-  useEffect(() => { fetchItems(); }, [page]);
+  useEffect(() => { fetchItems(); }, [fetchItems]);
 
   const deleteItem = (id: number) => {
-    if (!confirm("هل أنت متأكد؟")) return;
     fetch(`/api/admin/moderation/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    }).then(() => fetchItems());
+    })
+      .then((r) => { if (!r.ok) throw new Error("فشل الحذف"); return r.json(); })
+      .then(() => { toast({ title: "تم الحذف", description: "تم حذف العنصر بنجاح" }); fetchItems(); })
+      .catch((e) => toast({ title: "خطأ", description: e.message, variant: "destructive" }));
   };
 
   return (
@@ -54,6 +56,12 @@ export default function AdminComplaints() {
         </h1>
         <p className="text-sm text-muted-foreground mt-1">عرض وإدارة جميع الشكاوى والاقتراحات</p>
       </div>
+
+      {error && (
+        <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+          <AlertCircle className="h-4 w-4" /> {error}
+        </div>
+      )}
 
       <DataTable
         columns={[

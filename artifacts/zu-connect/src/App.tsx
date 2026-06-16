@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { AnimatePresence, motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import NotFound from "@/pages/not-found";
+import AdminNotFound from "@/pages/admin/NotFound";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { setupAuthTokenGetter } from "@/lib/auth/setupAuth";
@@ -28,6 +29,7 @@ import Profile from "@/pages/profile";
 
 // Admin imports
 import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminUsers from "@/pages/admin/Users";
@@ -98,6 +100,7 @@ function AdminRouter() {
       <Route path="/admin/telegram">{() => <AdminTelegram />}</Route>
       <Route path="/admin/settings">{() => <AdminSettings />}</Route>
       <Route path="/admin/audit">{() => <AdminAudit />}</Route>
+      <Route>{() => <AdminNotFound />}</Route>
     </Switch>
   );
 }
@@ -109,7 +112,9 @@ function Router() {
   if (location.startsWith("/admin")) {
     return (
       <AdminRoute>
-        <AdminRouter />
+        <AdminErrorBoundary>
+          <AdminRouter />
+        </AdminErrorBoundary>
       </AdminRoute>
     );
   }

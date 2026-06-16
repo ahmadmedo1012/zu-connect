@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, usersTable, newsTable, coursesTable, membersTable, collegesTable, libraryTable, referralsTable, suggestionsTable, announcementsTable, activityLogsTable } from "@workspace/db";
-import { sql, desc, eq, and, gte, lt } from "drizzle-orm";
+import { sql, eq, and, gte } from "drizzle-orm";
 import { requireRole, requirePermission } from "../../middlewares/auth";
 
 const router = Router();

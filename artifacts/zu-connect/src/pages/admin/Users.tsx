@@ -1,73 +1,48 @@
-import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect, useCallback } from "react";
 import { DataTable } from "@/components/admin/DataTable";
 import { Pagination } from "@/components/admin/Pagination";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useLocation } from "wouter";
-import { Search } from "lucide-react";
+import { Search, AlertCircle } from "lucide-react";
 
 interface User {
-  id: number;
-  name: string;
-  identifier: string;
-  role: string;
-  points: number;
-  referralCode: string | null;
+  id: number; name: string; identifier: string;
+  role: string; points: number; referralCode: string | null;
   createdAt: string;
 }
 
 export default function AdminUsers() {
+  const { toast } = useToast();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
-  const [, setLocation] = useLocation();
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = () => {
+  const fetchUsers = useCallback(() => {
     setLoading(true);
+    setError(null);
     const params = new URLSearchParams({ page: String(page), limit: "20" });
     if (search) params.set("search", search);
 
     fetch(`/api/admin/users?${params}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error("فشل تحميل المستخدمين"); return r.json(); })
       .then((data) => {
         setUsers(data.users || []);
         setTotalPages(data.pagination?.totalPages || 1);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-  };
+      .catch((e) => { setError(e.message); setLoading(false); toast({ title: "خطأ", description: e.message, variant: "destructive" }); });
+  }, [page, search, toast]);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [page]);
+  useEffect(() => { fetchUsers(); }, [page]);
 
-  const handleSearch = () => {
-    setPage(1);
-    fetchUsers();
-  };
-
-  const roleBadge = (role: string) => {
-    const styles: Record<string, string> = {
-      admin: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-      teacher: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-      student: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-    };
-    const labels: Record<string, string> = {
-      admin: "إدارة",
-      teacher: "أستاذ",
-      student: "طالب",
-    };
-    return (
-      <Badge variant="secondary" className={styles[role] || ""}>
-        {labels[role] || role}
-      </Badge>
-    );
-  };
+  const handleSearch = () => { setPage(1); fetchUsers(); };
 
   return (
     <div className="space-y-6">
@@ -90,12 +65,21 @@ export default function AdminUsers() {
         <Button variant="secondary" size="sm" onClick={handleSearch}>بحث</Button>
       </div>
 
+      {error && (
+        <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+          <AlertCircle className="h-4 w-4" /> {error}
+        </div>
+      )}
+
       <DataTable
         columns={[
           { key: "id", header: "#", render: (u: User) => u.id },
           { key: "name", header: "الاسم", render: (u: User) => u.name },
           { key: "identifier", header: "المعرف", render: (u: User) => u.identifier },
-          { key: "role", header: "الدور", render: (u: User) => roleBadge(u.role) },
+          { key: "role", header: "الدور", render: (u: User) => {
+            const labels: Record<string, string> = { admin: "إدارة", teacher: "أستاذ", student: "طالب" };
+            return <Badge variant="secondary">{labels[u.role] || u.role}</Badge>;
+          }},
           { key: "points", header: "النقاط", render: (u: User) => u.points },
           { key: "createdAt", header: "تاريخ التسجيل", render: (u: User) => new Date(u.createdAt).toLocaleDateString("ar-EG") },
         ]}

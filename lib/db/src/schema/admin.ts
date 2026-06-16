@@ -1,6 +1,4 @@
 import { pgTable, serial, integer, text, boolean, jsonb, timestamp, index } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod/v4";
 import { usersTable } from "./users";
 
 // ============================================================
@@ -15,9 +13,7 @@ export const adminRolesTable = pgTable("admin_roles", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const insertAdminRoleSchema = createInsertSchema(adminRolesTable).omit({ id: true, createdAt: true });
-export type InsertAdminRole = z.infer<typeof insertAdminRoleSchema>;
-export type AdminRole = typeof adminRolesTable.$inferSelect;
+
 
 // ============================================================
 // ADMIN USERS (links users to admin roles)
@@ -31,8 +27,6 @@ export const adminUsersTable = pgTable("admin_users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const insertAdminUserSchema = createInsertSchema(adminUsersTable).omit({ id: true, createdAt: true });
-export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
 export type AdminUser = typeof adminUsersTable.$inferSelect;
 
 // ============================================================
@@ -67,8 +61,6 @@ export const auditLogsTable = pgTable("audit_logs", {
   index("idx_audit_logs_action").on(table.action),
 ]);
 
-export const insertAuditLogSchema = createInsertSchema(auditLogsTable).omit({ id: true, createdAt: true });
-export type InsertAuditLog = z.infer<typeof insertAuditLogSchema>;
 export type AuditLog = typeof auditLogsTable.$inferSelect;
 
 // ============================================================
@@ -87,8 +79,6 @@ export const announcementsTable = pgTable("announcements", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertAnnouncementSchema = createInsertSchema(announcementsTable).omit({ id: true, createdAt: true, updatedAt: true });
-export type InsertAnnouncement = z.infer<typeof insertAnnouncementSchema>;
 export type Announcement = typeof announcementsTable.$inferSelect;
 
 // ============================================================
@@ -105,8 +95,6 @@ export const integrationSettingsTable = pgTable("integration_settings", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertIntegrationSettingSchema = createInsertSchema(integrationSettingsTable).omit({ id: true, updatedAt: true });
-export type InsertIntegrationSetting = z.infer<typeof insertIntegrationSettingSchema>;
 export type IntegrationSetting = typeof integrationSettingsTable.$inferSelect;
 
 // ============================================================
@@ -122,8 +110,6 @@ export const systemSettingsTable = pgTable("system_settings", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertSystemSettingSchema = createInsertSchema(systemSettingsTable).omit({ id: true, updatedAt: true });
-export type InsertSystemSetting = z.infer<typeof insertSystemSettingSchema>;
 export type SystemSetting = typeof systemSettingsTable.$inferSelect;
 
 // ============================================================
@@ -138,8 +124,6 @@ export const telegramEventMappingsTable = pgTable("telegram_event_mappings", {
   priority: text("priority").notNull().default("normal"),
 });
 
-export const insertTelegramEventMappingSchema = createInsertSchema(telegramEventMappingsTable).omit({ id: true });
-export type InsertTelegramEventMapping = z.infer<typeof insertTelegramEventMappingSchema>;
 export type TelegramEventMapping = typeof telegramEventMappingsTable.$inferSelect;
 
 // ============================================================
@@ -155,8 +139,6 @@ export const telegramLogsTable = pgTable("telegram_logs", {
   sentAt: timestamp("sent_at").defaultNow().notNull(),
 });
 
-export const insertTelegramLogSchema = createInsertSchema(telegramLogsTable).omit({ id: true, sentAt: true });
-export type InsertTelegramLog = z.infer<typeof insertTelegramLogSchema>;
 export type TelegramLog = typeof telegramLogsTable.$inferSelect;
 
 // ============================================================
@@ -175,6 +157,4 @@ export const activityLogsTable = pgTable("activity_logs", {
   index("idx_activity_logs_created").on(table.createdAt.desc()),
 ]);
 
-export const insertActivityLogSchema = createInsertSchema(activityLogsTable).omit({ id: true, createdAt: true });
-export type InsertActivityLog = z.infer<typeof insertActivityLogSchema>;
 export type ActivityLog = typeof activityLogsTable.$inferSelect;

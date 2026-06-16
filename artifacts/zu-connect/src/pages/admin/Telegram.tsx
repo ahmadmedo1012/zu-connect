@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ interface TelegramConfig {
 }
 
 export default function AdminTelegram() {
+  const { toast } = useToast();
   const [config, setConfig] = useState<TelegramConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [chatId, setChatId] = useState("");
@@ -34,7 +36,7 @@ export default function AdminTelegram() {
         setChatId(data.defaultChatId || "");
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => { setLoading(false); toast({ title: "خطأ", description: "فشل تحميل إعدادات تلغرام", variant: "destructive" }); });
   }, []);
 
   const updateConfig = () => {
@@ -44,7 +46,8 @@ export default function AdminTelegram() {
       body: JSON.stringify({ defaultChatId: chatId }),
     })
       .then((r) => r.json())
-      .then(() => alert("تم الحفظ"));
+      .then(() => toast({ title: "تم الحفظ", description: "تم تحديث إعدادات تلغرام" }))
+      .catch(() => toast({ title: "خطأ", description: "فشل حفظ الإعدادات", variant: "destructive" }));
   };
 
   const sendTest = (cid?: string) => {
@@ -54,7 +57,8 @@ export default function AdminTelegram() {
       body: JSON.stringify({ chatId: cid || chatId || undefined }),
     })
       .then((r) => r.json())
-      .then((data) => alert(data.success ? "تم إرسال رسالة اختبار" : "فشل الإرسال"));
+      .then((data) => toast({ title: data.success ? "تم الإرسال" : "فشل الإرسال", description: data.success ? "تم إرسال رسالة اختبار" : "تعذر إرسال رسالة الاختبار", variant: data.success ? "default" : "destructive" }))
+      .catch(() => toast({ title: "خطأ", description: "فشل إرسال رسالة الاختبار", variant: "destructive" }));
   };
 
   const toggleMapping = (eventType: string, enabled: boolean) => {
