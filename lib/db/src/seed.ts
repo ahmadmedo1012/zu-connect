@@ -20,6 +20,11 @@ import {
 async function seed() {
   console.log("Seeding database...");
 
+  // Skip main data if already seeded (idempotent)
+  const [existingNews] = await db.select({ count: sql<number>`COUNT(*)::int` }).from(newsTable);
+  if (existingNews.count > 0) {
+    console.log("Main data already seeded, skipping...");
+  } else {
   await db.insert(newsTable).values([
     { title: "انطلاق أسبوع الطالب الجامعي", body: "تنطلق فعاليات أسبوع الطالب الجامعي لهذا العام تحت شعار 'يد واحدة لمستقبل أفضل'، وتتضمن محاضرات وورش عمل ومسابقات ثقافية.", category: "أخبار", date: "15 يونيو 2026", viewCount: 156 },
     { title: "جدول الامتحانات النهائية للفصل الدراسي الثاني", body: "تم اعتماد جدول الامتحانات النهائية للفصل الدراسي الثاني 2025-2026. يرجى مراجعة كلياتكم لمعرفة الجداول التفصيلية.", category: "عاجل", date: "10 يونيو 2026", viewCount: 423 },
@@ -127,6 +132,7 @@ async function seed() {
     { name: "قاسم عبد السلام النمروش", role: "مكتب شؤون الخريجين" },
     { name: "أبوبكر بكير", role: "مكتب المتابعة والتطوير" },
   ]);
+  }
 
   await db.insert(usersTable).values([
     { identifier: "2021001", password: "student123", name: "أحمد الطالب", role: "student" },
