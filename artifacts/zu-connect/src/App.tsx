@@ -3,65 +3,102 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Suspense } from "framer-motion";
+import { lazy, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import NotFound from "@/pages/not-found";
 import AdminNotFound from "@/pages/admin/NotFound";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { setupAuthTokenGetter } from "@/lib/auth/setupAuth";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import Home from "@/pages/home";
-import About from "@/pages/about";
-import Members from "@/pages/members";
-import Colleges from "@/pages/colleges";
-import News from "@/pages/news";
-import Courses from "@/pages/courses";
-import Planner from "@/pages/planner";
-import Chat from "@/pages/chat";
-import Services from "@/pages/services";
-import Suggestions from "@/pages/suggestions";
-import Volunteer from "@/pages/volunteer";
-import Faq from "@/pages/faq";
-import Library from "@/pages/library";
-import Login from "@/pages/login";
-import Profile from "@/pages/profile";
-import Loyalty from "@/pages/Loyalty";
-import LoyaltyHistory from "@/pages/LoyaltyHistory";
-import Rewards from "@/pages/Rewards";
-import Leaderboard from "@/pages/Leaderboard";
+// Lazy-loaded pages
+const Home = lazy(() => import("@/pages/home"));
+const About = lazy(() => import("@/pages/about"));
+const Members = lazy(() => import("@/pages/members"));
+const Colleges = lazy(() => import("@/pages/colleges"));
+const News = lazy(() => import("@/pages/news"));
+const Courses = lazy(() => import("@/pages/courses"));
+const Planner = lazy(() => import("@/pages/planner"));
+const Chat = lazy(() => import("@/pages/chat"));
+const Services = lazy(() => import("@/pages/services"));
+const Suggestions = lazy(() => import("@/pages/suggestions"));
+const Volunteer = lazy(() => import("@/pages/volunteer"));
+const Faq = lazy(() => import("@/pages/faq"));
+const Library = lazy(() => import("@/pages/library"));
+const Login = lazy(() => import("@/pages/login"));
+const Profile = lazy(() => import("@/pages/profile"));
+const Loyalty = lazy(() => import("@/pages/Loyalty"));
+const LoyaltyHistory = lazy(() => import("@/pages/LoyaltyHistory"));
+const Rewards = lazy(() => import("@/pages/Rewards"));
+const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 
-// Admin imports
-import { AdminGuard } from "@/components/admin/AdminGuard";
-import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary";
-import { AdminLayout } from "@/components/admin/AdminLayout";
-import AdminDashboard from "@/pages/admin/Dashboard";
-import AdminUsers from "@/pages/admin/Users";
-import AdminRoles from "@/pages/admin/Roles";
-import AdminLiveEvents from "@/pages/admin/LiveEvents";
-import AdminModeration from "@/pages/admin/Moderation";
-import AdminComplaints from "@/pages/admin/Complaints";
-import AdminReferrals from "@/pages/admin/Referrals";
-import AdminGamification from "@/pages/admin/Gamification";
-import AdminAnnouncements from "@/pages/admin/Announcements";
-import AdminFiles from "@/pages/admin/Files";
-import AdminActivity from "@/pages/admin/Activity";
-import AdminAnalytics from "@/pages/admin/Analytics";
-import AdminIntegrations from "@/pages/admin/Integrations";
-import AdminTelegram from "@/pages/admin/Telegram";
-import AdminSettings from "@/pages/admin/Settings";
-import AdminAudit from "@/pages/admin/Audit";
-import AdminLoyalty from "@/pages/admin/Loyalty";
+// Admin lazy imports
+const AdminGuard = lazy(() => import("@/components/admin/AdminGuard"));
+const AdminErrorBoundary = lazy(() => import("@/components/admin/AdminErrorBoundary"));
+const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const AdminUsers = lazy(() => import("@/pages/admin/Users"));
+const AdminRoles = lazy(() => import("@/pages/admin/Roles"));
+const AdminLiveEvents = lazy(() => import("@/pages/admin/LiveEvents"));
+const AdminModeration = lazy(() => import("@/pages/admin/Moderation"));
+const AdminComplaints = lazy(() => import("@/pages/admin/Complaints"));
+const AdminReferrals = lazy(() => import("@/pages/admin/Referrals"));
+const AdminGamification = lazy(() => import("@/pages/admin/Gamification"));
+const AdminAnnouncements = lazy(() => import("@/pages/admin/Announcements"));
+const AdminFiles = lazy(() => import("@/pages/admin/Files"));
+const AdminActivity = lazy(() => import("@/pages/admin/Activity"));
+const AdminAnalytics = lazy(() => import("@/pages/admin/Analytics"));
+const AdminIntegrations = lazy(() => import("@/pages/admin/Integrations"));
+const AdminTelegram = lazy(() => import("@/pages/admin/Telegram"));
+const AdminSettings = lazy(() => import("@/pages/admin/Settings"));
+const AdminAudit = lazy(() => import("@/pages/admin/Audit"));
+const AdminLoyalty = lazy(() => import("@/pages/admin/Loyalty"));
 
 const queryClient = new QueryClient();
 
 setupAuthTokenGetter();
 
+// Premium loading fallback
+function PageFallback() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] gap-6 px-4">
+      <div className="w-full max-w-md space-y-4">
+        <Skeleton variant="text" className="h-6 w-3/4" />
+        <Skeleton variant="text" className="h-4 w-full" />
+        <Skeleton variant="text" className="h-4 w-5/6" />
+        <Skeleton variant="card" className="h-40" />
+        <Skeleton variant="card" className="h-40" />
+        <Skeleton variant="card" className="h-40" />
+      </div>
+    </div>
+  );
+}
+
+function AdminFallback() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] gap-6 px-4">
+      <div className="w-full max-w-4xl space-y-4">
+        <Skeleton variant="text" className="h-8 w-1/3" />
+        <Skeleton variant="card" className="h-48" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Skeleton variant="card" className="h-24" />
+          <Skeleton variant="card" className="h-24" />
+          <Skeleton variant="card" className="h-24" />
+          <Skeleton variant="card" className="h-24" />
+        </div>
+        <Skeleton variant="card" className="h-64" />
+      </div>
+    </div>
+  );
+}
+
 function AnimatedPage({ children }: { children: React.ReactNode }) {
-  const prefersReducedMotion = useReducedMotion()
+  const prefersReducedMotion = useReducedMotion();
 
   if (prefersReducedMotion) {
-    return <>{children}</>
+    return <>{children}</>;
   }
 
   return (
@@ -73,8 +110,22 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
     >
       {children}
     </motion.div>
-  )
+  );
 }
+
+// Memoized wrapper to prevent re-renders
+const withSuspense = useCallback((Component: React.ComponentType, fallback: React.ReactElement) => {
+  return () => (
+    <Suspense fallback={fallback}>
+      <AnimatedPage>
+        <Component />
+      </AnimatedPage>
+    </Suspense>
+  );
+}, []);
+
+const PublicPage = withSuspense;
+const AdminPage = withSuspense;
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   return (
