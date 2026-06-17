@@ -700,7 +700,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/AdminLoyaltyStats"
 
-  /admin/loyalty/actions:
+  /admin/loyalty/actions/{key}:
     get:
       operationId: adminListActions
       tags: [admin-loyalty]
