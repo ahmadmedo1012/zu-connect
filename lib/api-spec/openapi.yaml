@@ -33,6 +33,10 @@ tags:
     description: Platform statistics
   - name: referrals
     description: Referral system
+  - name: loyalty
+    description: Loyalty points, rewards, and leaderboard
+  - name: admin-loyalty
+    description: Admin loyalty management
 
 paths:
   /healthz:
@@ -464,6 +468,302 @@ paths:
                 $ref: "#/components/schemas/ReferralStatsResponse"
         "401":
           description: Unauthorized
+
+  /loyalty/stats:
+    get:
+      operationId: getLoyaltyStats
+      tags: [loyalty]
+      summary: Get current user's loyalty dashboard data
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Loyalty stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoyaltyStats"
+
+  /loyalty/transactions:
+    get:
+      operationId: listTransactions
+      tags: [loyalty]
+      summary: Get paginated points history with filters
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: actionType
+          in: query
+          schema:
+            type: string
+          description: Filter by action type
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Paginated transactions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/PointsTransaction"
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      totalPages:
+                        type: integer
+                      total:
+                        type: integer
+
+  /loyalty/actions:
+    get:
+      operationId: listEarningActions
+      tags: [loyalty]
+      summary: List available earning actions with point values
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of earning actions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/EarningAction"
+
+  /loyalty/actions/{key}/claim:
+    post:
+      operationId: claimPoints
+      tags: [loyalty]
+      summary: Award points for completing an action
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotencyKey:
+                  type: string
+      responses:
+        "200":
+          description: Points awarded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  pointsAwarded:
+                    type: integer
+                  newBalance:
+                    type: integer
+        "429":
+          description: Daily limit reached
+
+  /loyalty/rewards:
+    get:
+      operationId: listRewards
+      tags: [loyalty]
+      summary: Browse rewards catalog
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Rewards catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rewards:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Reward"
+
+  /loyalty/rewards/{id}/redeem:
+    post:
+      operationId: redeemReward
+      tags: [loyalty]
+      summary: Redeem points for a reward
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Redemption result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  redemption:
+                    $ref: "#/components/schemas/Redemption"
+        "400":
+          description: Insufficient points or out of stock
+
+  /loyalty/leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [loyalty]
+      summary: Get platform leaderboard
+      parameters:
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [points, referrals, achievements]
+            default: points
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        "200":
+          description: Leaderboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaderboardResponse"
+
+  /loyalty/leaderboard/my-rank:
+    get:
+      operationId: getMyRank
+      tags: [loyalty]
+      summary: Get current user's rank
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User rank
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MyRankResponse"
+
+  /admin/loyalty/stats:
+    get:
+      operationId: getAdminLoyaltyStats
+      tags: [admin-loyalty]
+      summary: Get overall loyalty analytics
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Admin loyalty analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminLoyaltyStats"
+
+  /admin/loyalty/actions:
+    get:
+      operationId: adminListActions
+      tags: [admin-loyalty]
+      summary: List all earning actions
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All earning actions
+    put:
+      operationId: adminUpdateAction
+      tags: [admin-loyalty]
+      summary: Update an earning action
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+
+  /admin/loyalty/users/{userId}/adjust:
+    post:
+      operationId: adminAdjustPoints
+      tags: [admin-loyalty]
+      summary: Manually adjust a user's points
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [points, reason]
+              properties:
+                points:
+                  type: integer
+                reason:
+                  type: string
+      responses:
+        "200":
+          description: Points adjusted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  previousPoints:
+                    type: integer
+                  newPoints:
+                    type: integer
+                  change:
+                    type: integer
 
 components:
   schemas:
@@ -944,6 +1244,288 @@ components:
         - id
         - status
         - pointsAwarded
+
+    LoyaltyStats:
+      type: object
+      properties:
+        points:
+          type: integer
+        tier:
+          type: object
+          properties:
+            key:
+              type: string
+            name_ar:
+              type: string
+            color:
+              type: string
+            benefits_ar:
+              type: array
+              items:
+                type: string
+        nextTier:
+          type: object
+          nullable: true
+          properties:
+            key:
+              type: string
+            name_ar:
+              type: string
+            pointsNeeded:
+              type: integer
+            progressPercent:
+              type: number
+        recentTransactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/PointsTransaction"
+        recentAchievements:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserAchievement"
+        availableRewardsCount:
+          type: integer
+
+    PointsTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        actionType:
+          type: string
+        actionLabel:
+          type: string
+        pointsChange:
+          type: integer
+        balanceAfter:
+          type: integer
+        referenceId:
+          type: integer
+          nullable: true
+        adminNote:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - actionType
+        - pointsChange
+        - balanceAfter
+        - createdAt
+
+    EarningAction:
+      type: object
+      properties:
+        key:
+          type: string
+        nameAr:
+          type: string
+        descriptionAr:
+          type: string
+        pointValue:
+          type: integer
+        dailyLimit:
+          type: integer
+        cooldownMinutes:
+          type: integer
+          nullable: true
+        enabled:
+          type: boolean
+        icon:
+          type: string
+          nullable: true
+      required:
+        - key
+        - nameAr
+        - pointValue
+        - dailyLimit
+        - enabled
+
+    Reward:
+      type: object
+      properties:
+        id:
+          type: integer
+        nameAr:
+          type: string
+        descriptionAr:
+          type: string
+        pointCost:
+          type: integer
+        imageUrl:
+          type: string
+          nullable: true
+        inStock:
+          type: boolean
+        rewardType:
+          type: string
+          enum: [digital, physical]
+      required:
+        - id
+        - nameAr
+        - descriptionAr
+        - pointCost
+        - rewardType
+
+    Redemption:
+      type: object
+      properties:
+        id:
+          type: integer
+        rewardId:
+          type: integer
+        pointsSpent:
+          type: integer
+        status:
+          type: string
+          enum: [pending, fulfilled, cancelled]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - rewardId
+        - pointsSpent
+        - status
+        - createdAt
+
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        nameAr:
+          type: string
+        descriptionAr:
+          type: string
+        icon:
+          type: string
+          nullable: true
+        pointReward:
+          type: integer
+        isHidden:
+          type: boolean
+      required:
+        - id
+        - key
+        - nameAr
+        - descriptionAr
+        - pointReward
+
+    UserAchievement:
+      type: object
+      properties:
+        key:
+          type: string
+        nameAr:
+          type: string
+        icon:
+          type: string
+          nullable: true
+        awardedAt:
+          type: string
+          format: date-time
+      required:
+        - key
+        - nameAr
+        - awardedAt
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        points:
+          type: integer
+        tierKey:
+          type: string
+        achievements:
+          type: integer
+        referrals:
+          type: integer
+      required:
+        - rank
+        - userId
+        - name
+        - points
+
+    LeaderboardResponse:
+      type: object
+      properties:
+        leaderboard:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeaderboardEntry"
+        myRank:
+          type: object
+          nullable: true
+          properties:
+            rank:
+              type: integer
+            points:
+              type: integer
+            outOf:
+              type: integer
+
+    MyRankResponse:
+      type: object
+      properties:
+        rank:
+          type: integer
+        points:
+          type: integer
+        totalUsers:
+          type: integer
+      required:
+        - rank
+        - points
+        - totalUsers
+
+    AdminLoyaltyStats:
+      type: object
+      properties:
+        totalUsers:
+          type: integer
+        usersWithPoints:
+          type: integer
+        totalPoints:
+          type: integer
+        averagePoints:
+          type: number
+        tierDistribution:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              count:
+                type: integer
+              percentage:
+                type: number
+        recentRedemptions:
+          type: integer
+        totalAchievementsAwarded:
+          type: integer
+        pointsByAction:
+          type: array
+          items:
+            type: object
+            properties:
+              actionType:
+                type: string
+              totalPoints:
+                type: integer
+              count:
+                type: integer
 
     ReferralStatsResponse:
       type: object
