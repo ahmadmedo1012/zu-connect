@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Bell, Search, User, LogOut, UserPlus, Info, Award, AlertTriangle, CheckCircle } from "lucide-react";
+import { Bell, Search, User, LogOut, UserPlus, Info, Award, AlertTriangle, CheckCircle, ArrowLeft } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { LottieAnimation } from "@/components/ui/lottie";
 import { useAuth } from "@/lib/auth/AuthContext";
@@ -53,6 +53,17 @@ export function Topbar() {
   const isMobile = useIsMobile();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   const [notifPanelOpen, setNotifPanelOpen] = useState(false);
   const [notifications] = useState<Notification[]>(SAMPLE_NOTIFICATIONS);
   const [hasUnread, setHasUnread] = useState(true);
@@ -102,7 +113,7 @@ export function Topbar() {
       >
         <div className="flex items-center gap-2 sm:gap-4">
           <Link href="/" className="flex items-center gap-2 sm:gap-3">
-            <LottieAnimation src="/animations/illustration/logo-animation.json" className="w-9 h-9 sm:w-10 sm:h-10" />
+            <LottieAnimation src="/animations/illustration/logo-animation.json" className="hidden min-[360px]:block w-9 h-9 sm:w-10 sm:h-10" />
             <img
               src="/images/union-logo.jpg"
               alt="شعار الاتحاد"
@@ -123,10 +134,15 @@ export function Topbar() {
         <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
           <button
             onClick={() => setSearchOpen(true)}
-            className="flex items-center justify-center min-w-[44px] min-h-[44px] text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-accent/50"
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-accent/50 relative group"
             aria-label="بحث"
           >
             <Search className="w-5 h-5" />
+            {!isMobile && (
+              <kbd className="hidden sm:inline-flex absolute -bottom-0.5 -end-0.5 px-1 py-[1px] text-[9px] font-medium text-muted-foreground/50 bg-muted rounded border border-border leading-none group-hover:text-muted-foreground/70 transition-colors">
+                Ctrl+K
+              </kbd>
+            )}
           </button>
           <button
             onClick={handleNotifToggle}
@@ -145,6 +161,7 @@ export function Topbar() {
                 onClick={() => setMenuOpen(!menuOpen)}
                 className={cn(
                   "flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all rounded-full",
+                  "min-h-[44px]",
                   isMobile ? "px-3 py-2.5 text-xs" : "px-4 py-2 text-sm"
                 )}
               >
@@ -190,6 +207,7 @@ export function Topbar() {
               onClick={() => setLocation('/login')}
               className={cn(
                 "flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all rounded-full",
+                "min-w-[44px] min-h-[44px]",
                 isMobile ? "px-3 py-2.5 text-xs" : "px-4 py-2 text-sm"
               )}
             >
@@ -204,40 +222,78 @@ export function Topbar() {
       <AnimatePresence>
         {notifPanelOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
               onClick={() => setNotifPanelOpen(false)}
             />
-            <div
+
+            {/* Panel */}
+            <motion.div
               ref={notifPanelRef}
               dir="rtl"
+              key="notif-panel"
               className={cn(
                 "fixed z-50 bg-card border border-border shadow-2xl overflow-hidden",
                 isMobile
-                  ? "inset-x-0 bottom-0 rounded-t-2xl max-h-[70vh]"
+                  ? "inset-x-0 bottom-0 rounded-t-2xl max-h-[75vh] flex flex-col"
                   : "top-[calc(4rem+8px)] left-1/2 -translate-x-1/2 w-[400px] max-h-[500px] rounded-2xl"
               )}
+              {...(isMobile
+                ? {
+                    initial: { y: "100%" },
+                    animate: { y: 0 },
+                    exit: { y: "100%" },
+                    transition: { type: "spring", stiffness: 260, damping: 28, mass: 0.8 },
+                  }
+                : {
+                    initial: { opacity: 0, y: -8, scale: 0.96 },
+                    animate: { opacity: 1, y: 0, scale: 1 },
+                    exit: { opacity: 0, y: -4, scale: 0.96 },
+                    transition: { duration: 0.2 },
+                  }
+              )}
             >
+              {/* Drag Handle */}
               {isMobile && (
-                <div className="flex justify-center pt-3 pb-1">
-                  <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
+                <div className="flex justify-center pt-3 pb-1 shrink-0">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-12 h-1.5 rounded-full bg-muted-foreground/50" />
+                    <span className="text-[10px] text-muted-foreground/40 select-none">اسحب للأسفل</span>
+                  </div>
                 </div>
               )}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-                <h2 className="text-base font-bold text-foreground">الإشعارات</h2>
+
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-border shrink-0">
+                <div className="flex items-center gap-2">
+                  {isMobile && (
+                    <button
+                      onClick={() => setNotifPanelOpen(false)}
+                      className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full hover:bg-accent transition-colors -mr-1"
+                      aria-label="إغلاق"
+                    >
+                      <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+                    </button>
+                  )}
+                  <h2 className="text-base font-bold text-foreground">الإشعارات</h2>
+                </div>
                 {hasUnread && (
                   <button
                     onClick={() => setHasUnread(false)}
-                    className="text-xs text-primary hover:underline font-medium"
+                    className="text-xs text-primary hover:underline font-medium min-h-[44px] flex items-center"
                   >
                     تحديد الكل كمقروء
                   </button>
                 )}
               </div>
-              <div className="overflow-y-auto" style={{ maxHeight: isMobile ? "calc(70vh - 64px)" : "calc(500px - 64px)" }}>
+
+              {/* List */}
+              <div className="overflow-y-auto flex-1" style={{ maxHeight: isMobile ? undefined : "calc(500px - 112px)" }}>
                 {notifications.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                     <Bell className="w-10 h-10 text-muted-foreground/40 mb-4" />
@@ -273,7 +329,20 @@ export function Topbar() {
                   </AnimatePresence>
                 )}
               </div>
-            </div>
+
+              {/* Footer — Notification History Link */}
+              {isMobile && (
+                <div className="shrink-0 border-t border-border px-5 py-3">
+                  <button
+                    onClick={() => { setNotifPanelOpen(false); /* navigate to history */ }}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 text-sm text-primary font-medium hover:bg-accent/40 transition-colors rounded-lg"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    سجل الإشعارات
+                  </button>
+                </div>
+              )}
+            </motion.div>
           </>
         )}
       </AnimatePresence>

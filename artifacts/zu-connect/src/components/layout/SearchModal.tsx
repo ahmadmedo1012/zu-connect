@@ -87,7 +87,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="ابحث في Zu Connect..."
-                className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground/60 outline-none text-base leading-relaxed"
+                className="flex-1 bg-transparent text-foreground placeholder:text-muted-foreground/60 outline-none text-base leading-relaxed focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-inset rounded-md px-1"
               />
               {/* close button */}
               <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-muted-foreground bg-muted rounded-md border border-border">
@@ -116,13 +116,15 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                         key={cat.label}
                         onClick={() => navigate(cat.href)}
                         className={cn(
-                          "flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium",
-                          "bg-muted hover:bg-primary/10 hover:text-primary border border-border",
-                          "transition-colors min-h-[40px]"
+                          "flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium group",
+                          "bg-muted hover:shadow-sm border border-border",
+                          "transition-all min-h-[40px]"
                         )}
                       >
-                        <cat.icon className="w-4 h-4 shrink-0" />
-                        {cat.label}
+                        <span className="w-7 h-7 rounded-full flex items-center justify-center bg-transparent group-hover:bg-primary/15 transition-colors">
+                          <cat.icon className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </span>
+                        <span className="text-muted-foreground group-hover:text-primary transition-colors">{cat.label}</span>
                       </button>
                     ))}
                   </div>

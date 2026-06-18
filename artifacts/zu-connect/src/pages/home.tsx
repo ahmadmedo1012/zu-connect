@@ -66,7 +66,7 @@ function StatCard({ label, value, icon: Icon, large }: { label: string; value: s
   const { count, ref } = useCountUp(n);
   const display = value.includes("+") ? `${count.toLocaleString()}+` : count.toLocaleString();
   return (
-    <motion.div variants={itemVariants} className={`bg-card border border-border rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-2 hover:-translate-y-1 transition-transform ${large ? "p-6 md:p-8" : "p-4 md:p-6"}`}>
+    <motion.div variants={itemVariants} className={`bg-card border border-border rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-2 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 ${large ? "p-6 md:p-8" : "p-4 md:p-6"}`}>
       <div className={`${large ? "w-14 h-14 md:w-16 md:h-16" : "w-10 h-10 md:w-12 md:h-12"} rounded-xl bg-background flex items-center justify-center text-primary`}>
         <Icon className={`${large ? "w-7 h-7 md:w-8 md:h-8" : "w-5 h-5 md:w-6 md:h-6"}`} />
       </div>
@@ -122,7 +122,7 @@ export default function Home() {
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="text-sm font-bold text-primary tracking-widest">ZU Connect</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-foreground leading-tight max-w-3xl">مرحباً بك في<br />جامعتك الرقمية</h1>
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-foreground leading-tight max-w-3xl">مرحباً بك في<br />جامعتك الرقمية</h1>
             <div className="h-14">
               <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium max-w-xl">
                 {prefersReducedMotion ? HERO_PHRASES[0] : typedText}
@@ -130,8 +130,8 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-              <Link href="/services"><Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold shadow-lg shadow-primary/20">تصفح الخدمات</Button></Link>
-              <Link href="/about"><Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold">من نحن</Button></Link>
+              <Link href="/services"><Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-full font-bold shadow-lg shadow-primary/20">تصفح الخدمات</Button></Link>
+              <Link href="/about"><Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 min-h-[44px] rounded-full font-bold">من نحن</Button></Link>
             </div>
           </div>
           {/* RTL: left side visually — feature highlight card */}
@@ -166,12 +166,12 @@ export default function Home() {
 
       {/* ── 2. STATS — bento grid (2 large + 2 small, irregular spans) ── */}
       <motion.section variants={containerVariants} initial={prefersReducedMotion ? undefined : "hidden"} whileInView={prefersReducedMotion ? undefined : "visible"} viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6"
       >
-        <div className="col-span-2 md:col-span-2 md:row-span-2"><StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} large /></div>
+        <div className="sm:col-span-2 lg:col-span-2 lg:row-span-2"><StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} large /></div>
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
         <StatCard label="نشاط" value={user ? String(stats?.totalActivities ?? "48") : "•••"} icon={Calendar} />
-        <div className="col-span-2"><StatCard label="ملف" value={user ? String(stats?.totalLibraryFiles ?? "320") : "•••"} icon={FileText} /></div>
+        <div className="sm:col-span-2"><StatCard label="ملف" value={user ? String(stats?.totalLibraryFiles ?? "320") : "•••"} icon={FileText} /></div>
       </motion.section>
 
       {/* ── 3. SERVICES — asymmetric grid ── */}
@@ -184,10 +184,10 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {SERVICE_CARDS.map((card, i) => (
             <motion.div key={card.title} initial={prefersReducedMotion ? undefined : { opacity: 0, y: 20 }} whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+              viewport={{ once: true }} transition={{ delay: i * 0.03, type: "spring", stiffness: 300, damping: 24 }}
               onClick={() => { if (card.title === "دعوة صديق") setLocation(user ? "/profile" : "/login"); }}
               whileHover={prefersReducedMotion ? undefined : { y: -4, scale: 1.01 }}
-              className={`bg-card border border-border p-5 md:p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer touch-manipulation ${i === 0 ? "lg:col-span-2 lg:min-h-[260px]" : ""} ${i === 3 ? "lg:col-span-2 lg:min-h-[240px]" : ""} ${i === 1 || i === 2 ? "lg:min-h-[220px]" : ""}`}
+              className={`bg-card border border-border p-5 md:p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer touch-manipulation min-h-[44px] ${i === 0 ? "lg:col-span-2 lg:min-h-[260px]" : ""} ${i === 3 ? "lg:col-span-2 lg:min-h-[240px]" : ""} ${i === 1 || i === 2 ? "lg:min-h-[220px]" : ""}`}
             >
               <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                 <card.icon className="w-5 h-5 md:w-6 md:h-6" />
@@ -235,7 +235,7 @@ export default function Home() {
             {leadership?.map((member, i) => (
               <motion.div key={member.id} variants={itemVariants}
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.05, zIndex: 50 }}
-                className={`bg-card border border-border p-4 md:p-5 rounded-2xl flex flex-col gap-2 hover:bg-accent hover:border-primary/30 transition-all min-w-[200px] md:min-w-0 snap-start ${i > 0 ? "md:-mr-8 md:relative" : ""}`}
+                className={`bg-card border border-border p-4 md:p-5 rounded-2xl flex flex-col gap-2 hover:bg-accent hover:border-primary/30 transition-all min-w-[200px] md:min-w-0 snap-start ${i > 0 ? "md:-ms-8 md:relative" : ""}`}
                 style={{ zIndex: leadership.length - i }}
               >
                 <h4 className="font-bold text-sm md:text-base text-foreground">{member.name}</h4>
@@ -252,7 +252,7 @@ export default function Home() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl sm:text-2xl font-bold text-foreground border-r-4 border-primary pr-4">أحدث الأخبار</h2>
-              <Link href="/news" className="text-xs sm:text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
+              <Link href="/news" className="min-h-[44px] flex items-center text-xs sm:text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
             </div>
             <motion.div variants={containerVariants} initial={prefersReducedMotion ? undefined : "hidden"} whileInView={prefersReducedMotion ? undefined : "visible"} viewport={{ once: true, amount: 0.1 }} className="flex flex-col gap-4">
               {news?.slice(0, 3).map(item => (
@@ -292,7 +292,7 @@ export default function Home() {
                   </motion.div>
                 ))}
               </motion.div>
-              <Link href="/planner"><Button variant="outline" className="w-full mt-2 rounded-xl font-semibold">جدول الأنشطة كامل</Button></Link>
+              <Link href="/planner"><Button variant="outline" className="w-full mt-2 rounded-xl font-semibold min-h-[44px]">جدول الأنشطة كامل</Button></Link>
             </div>
 
             <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-[300px] md:h-[400px] sticky bottom-0 md:static z-10 shadow-2xl md:shadow-none">
@@ -310,10 +310,12 @@ export default function Home() {
               <form onSubmit={handleChat} className="p-3 border-t border-border flex gap-2 bg-background">
                 <input type="text" value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="اكتب سؤالك هنا..."
                   className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground" />
-                <button type="submit" aria-label="إرسال"
+                <motion.button type="submit" aria-label="إرسال"
+                  animate={prefersReducedMotion ? undefined : { scale: [1, 1.06, 1] }}
+                  transition={{ duration: 2.5, ease: "easeInOut", repeat: Infinity }}
                   className="bg-primary text-primary-foreground p-3 rounded-xl hover:bg-primary/90 flex-shrink-0 font-bold transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
                   <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
+                </motion.button>
               </form>
             </div>
           </div>

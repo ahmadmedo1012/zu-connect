@@ -152,25 +152,25 @@
 
   --card: 220 10% 12%;
   --card-foreground: 0 0% 100%;
-  --card-border: 220 15% 22%;
+  --card-border: 220 8% 16%;
 
   --popover: 220 10% 12%;
   --popover-foreground: 0 0% 100%;
-  --popover-border: 220 15% 22%;
+  --popover-border: 220 8% 16%;
 
-  --primary: 210 100% 53%;
+  --primary: 210 100% 65%;
   --primary-foreground: 0 0% 100%;
-  --primary-border: 210 100% 45%;
+  --primary-border: 210 100% 50%;
 
   --secondary: 220 8% 16%;
   --secondary-foreground: 0 0% 100%;
-  --secondary-border: 220 8% 22%;
+  --secondary-border: 220 8% 18%;
 
-  --muted: 220 10% 16%;
+  --muted: 220 10% 14%;
   --muted-foreground: 220 10% 70%;
-  --muted-border: 220 10% 20%;
+  --muted-border: 220 8% 16%;
 
-  --accent: 225 51% 25%;
+  --accent: 225 51% 28%;
   --accent-foreground: 0 0% 100%;
   --accent-border: 225 51% 35%;
 
@@ -178,9 +178,9 @@
   --destructive-foreground: 0 0% 100%;
   --destructive-border: 0 84% 50%;
 
-  --border: 220 17% 27%;
+  --border: 220 8% 18%;
   --input: 220 10% 12%;
-  --ring: 210 100% 53%;
+  --ring: 210 100% 65%;
 
   /* override shadows for dark — deeper, cooler */
   --shadow-card: 0 2px 16px hsla(225, 15%, 0%, 0.35);
@@ -188,10 +188,10 @@
   --shadow-modal: 0 16px 48px hsla(225, 15%, 0%, 0.55);
   --shadow-glass: 0 8px 32px hsla(225, 15%, 0%, 0.35);
 
-  /* glass tokens dark */
-  --color-glass-bg: hsla(225, 15%, 10%, 0.75);
-  --color-glass-border: hsla(220, 10%, 25%, 0.3);
-  --color-glass-shadow: hsla(225, 15%, 0%, 0.35);
+  /* glass tokens dark - frosted */
+  --color-glass-bg: hsla(225, 15%, 8%, 0.65);
+  --color-glass-border: hsla(220, 10%, 25%, 0.2);
+  --color-glass-shadow: hsla(225, 15%, 0%, 0.4);
 
   --app-font-sans: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
   --radius: 0.5rem;
@@ -251,6 +251,22 @@
 .theme-transitioning,
 .theme-transitioning * {
   transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* smooth transitions for theme-aware elements */
+body,
+[class*="bg-card"],
+[class*="bg-background"],
+[class*="text-foreground"],
+[class*="border-"],
+[class*="shadow-"],
+.card,
+.glass-card,
+.glass-panel,
+.glass-nav,
+.clay-card,
+.clay-button {
+  transition: background-color 0.2s ease, color 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* ========= ANIMATION KEYFRAMES ========= */
@@ -362,6 +378,24 @@
   box-shadow: var(--shadow-glass);
 }
 
+.glass-card:hover {
+  background: color-mix(in srgb, var(--color-glass-bg), hsl(var(--foreground) / 0.02));
+  border-color: color-mix(in srgb, var(--color-glass-border), hsl(var(--foreground) / 0.06));
+}
+
+.glass-card-strong {
+  background: hsla(210, 20%, 98%, 0.85);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid hsla(210, 20%, 92%, 0.6);
+  box-shadow: var(--shadow-glass);
+}
+
+.dark .glass-card-strong {
+  background: hsla(225, 15%, 12%, 0.78);
+  border: 1px solid hsla(220, 10%, 25%, 0.25);
+}
+
 .glass-panel {
   background: var(--color-glass-bg);
   -webkit-backdrop-filter: blur(12px);
@@ -375,6 +409,14 @@
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--color-glass-border);
+}
+
+/* backdrop-blur fallback — solid alternative when backdrop-filter fails */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-card { background: hsl(var(--card)); border-color: hsl(var(--card-border)); }
+  .glass-card-strong { background: hsl(var(--card)); }
+  .glass-panel { background: hsl(var(--background)); }
+  .glass-nav { background: hsl(var(--background)); }
 }
 
 /* ========= GRADIENT TEXT ========= */
@@ -441,6 +483,91 @@
     0 1px 2px hsl(var(--foreground) / 0.08),
     inset 0 1px 0 hsl(var(--foreground) / 0.04);
   transform: translateY(0);
+}
+
+/* ========= TEXT GRADIENT STANDALONE UTILITY ========= */
+
+.text-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(262 80% 54%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .text-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(262 80% 70%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* semantic gradient presets */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #f5d78e 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-cool {
+  background: linear-gradient(135deg, hsl(210 100% 60%) 0%, hsl(262 80% 60%) 50%, hsl(320 70% 55%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========= NOISE TEXTURE UTILITY ========= */
+
+.noise-bg {
+  position: relative;
+}
+.noise-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 200%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.65%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix type=%27saturate%27 values=%270%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+.dark .noise-bg::before {
+  opacity: 0.05;
+  mix-blend-mode: screen;
+}
+
+/* ========= ANIMATION UTILITY ENHANCEMENTS ========= */
+
+.animate-float-delayed {
+  animation: float 3s ease-in-out 1.5s infinite;
+}
+
+.animate-float-slow {
+  animation: float 5s ease-in-out infinite;
+}
+
+.animate-shimmer-fast {
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.animate-shimmer-subtle {
+  animation: shimmer-sweep 3s ease-in-out infinite;
+}
+
+/* ========= RTL-AWARE UTILITIES ========= */
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .rtl-text-start {
+  text-align: right;
+}
+
+[dir="rtl"] .rtl-text-end {
+  text-align: left;
 }
 
 /* ========= REDUCED MOTION ========= */

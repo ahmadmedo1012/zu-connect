@@ -76,7 +76,7 @@ export function Navbar() {
                     key={link.href}
                     href={locked ? "/login" : link.href}
                     className={cn(
-                      "flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all select-none",
+                      "flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all select-none relative",
                       "whitespace-nowrap min-h-[44px]",
                       isActive
                         ? "text-foreground bg-primary/15 border border-primary/30"
@@ -87,6 +87,14 @@ export function Navbar() {
                   >
                     {locked ? <Lock className="w-4 h-4 shrink-0" /> : <Icon className="w-4 h-4 shrink-0" />}
                     <span>{link.label}</span>
+                    {isActive && (
+                      <motion.div
+                        layoutId="nav-active-indicator"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-primary"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
                   </Link>
                 );
               })}
@@ -150,10 +158,23 @@ function MobileNav({
           aria-label={panelOpen ? "إغلاق القائمة" : "فتح القائمة"}
         >
           <motion.div
-            animate={{ rotate: panelOpen ? 90 : 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="relative w-5 h-5 flex items-center justify-center"
           >
-            {panelOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <motion.span
+              className="absolute w-5 h-0.5 rounded-full bg-current"
+              animate={panelOpen ? { rotate: 45, y: 0, width: 18 } : { rotate: 0, y: -5, width: 20 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+            />
+            <motion.span
+              className="absolute w-5 h-0.5 rounded-full bg-current"
+              animate={panelOpen ? { opacity: 0, x: 8 } : { opacity: 1, x: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.span
+              className="absolute w-5 h-0.5 rounded-full bg-current"
+              animate={panelOpen ? { rotate: -45, y: 0, width: 18 } : { rotate: 0, y: 5, width: 20 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+            />
           </motion.div>
         </button>
       </div>
@@ -180,7 +201,7 @@ function MobileNav({
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="absolute top-full left-0 right-0 z-50 bg-card border-b border-border shadow-2xl overflow-y-auto max-h-[70vh]"
+              className="absolute top-full left-0 right-0 z-50 bg-card border-b border-border shadow-2xl overflow-y-auto max-h-screen"
               dir="rtl"
             >
               <div className="flex items-center justify-between p-4 border-b border-border">
