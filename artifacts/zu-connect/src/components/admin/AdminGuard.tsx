@@ -1,15 +1,13 @@
 import { useAuth } from "@/lib/auth/AuthContext";
-import { Redirect, useLocation } from "wouter";
+import { Redirect } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface AdminGuardProps {
   children: React.ReactNode;
-  requiredPermission?: string;
 }
 
 export function AdminGuard({ children }: AdminGuardProps) {
   const { user, isLoading } = useAuth();
-  const [, setLocation] = useLocation();
 
   if (isLoading) {
     return (

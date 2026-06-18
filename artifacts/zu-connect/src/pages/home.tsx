@@ -1,7 +1,7 @@
 import { useGetStats, useListNews, useListPlanner } from "@workspace/api-client-react";
 
 import { Link, useLocation } from "wouter";
-import { GraduationCap, Book, Atom, Building2, Calendar, FileText, Send, Globe, AlertTriangle, CheckCircle, Lock, ChevronDown, BookOpen, Headphones, HeartPulse, Users, Library, Star, UserPlus } from "lucide-react";
+import { GraduationCap, Building2, Calendar, FileText, Send, Globe, BookOpen, Headphones, HeartPulse, Library, Star, UserPlus, ChevronDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -9,77 +9,10 @@ import { getNewsCategoryIcon, getNewsCategoryColor } from "@/lib/icons/icon-maps
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { LottieAnimation } from "@/components/ui/lottie";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { containerVariants, itemVariants } from "@/lib/animations/variants";
-
-interface LeadershipMember {
-  id: number;
-  name: string;
-  role: string;
-}
-
-function useCountUp(target: number, duration = 2000) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          const start = performance.now();
-          const animate = (now: number) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            setCount(Math.floor(progress * target));
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return { count, ref };
-}
-
-function StatCard({ label, value, icon: Icon }: { label: string; value: string; icon: React.ElementType }) {
-  const prefersReducedMotion = useReducedMotion();
-  const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
-  const { count, ref } = useCountUp(numericValue);
-  const displayValue = value.includes("+") ? `${count.toLocaleString()}+` : count.toLocaleString();
-
-  return (
-    <motion.div
-      variants={itemVariants}
-      whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-      className="bg-card border border-border p-6 rounded-2xl flex flex-col items-center justify-center gap-2 hover:-translate-y-1 transition-transform"
-    >
-      <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center text-primary">
-        <Icon className="w-6 h-6" />
-      </div>
-      <span ref={ref} className="text-4xl font-black text-foreground">{prefersReducedMotion ? value : displayValue}</span>
-      <span className="text-muted-foreground font-semibold">{label}</span>
-    </motion.div>
-  );
-}
 
 const HERO_PHRASES = [
   "تواصل، تعلم، وشارك في بناء مجتمع طلابي أقوى",
@@ -105,6 +38,73 @@ const SERVICE_CARDS = [
   { icon: UserPlus, title: "دعوة صديق", desc: "ادعُ أصدقاءك للانضمام للمنصة واحصل على المكافآت" },
 ];
 
+const AI_REPLIES: Record<string, string> = {
+  امتحانات: "تبدأ الامتحانات النهائية عادة في نهاية الفصل الدراسي. يرجى مراجعة كليتك لمعرفة الجدول المحدد.",
+  تسجيل: "يمكنك التسجيل في الدورات عبر صفحة الدورات التدريبية في القائمة.",
+  مكتبة: "المكتبة الرقمية متاحة عبر صفحة المكتبة في القائمة العلوية.",
+  منح: "سيتم الإعلان عن المنح والفرص الجديدة عبر قسم الأخبار.",
+  محادثات: "غرف النقاش متاحة في صفحة 'غرف النقاش' للتواصل مع زملائك.",
+  تاريخ: "تأسس الاتحاد العام لطلبة جامعة الزاوية لخدمة آلاف الطلاب وتسهيل مسيرتهم.",
+};
+
+interface LeadershipMember {
+  id: number;
+  name: string;
+  role: string;
+}
+
+function useCountUp(target: number, duration = 2000) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const start = performance.now();
+          const animate = (now: number) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            setCount(Math.floor(progress * target));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
+
+  return { count, ref };
+}
+
+function StatCard({ label, value, icon: Icon }: { label: string; value: string; icon: React.ElementType }) {
+  const prefersReducedMotion = useReducedMotion();
+  const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
+  const { count, ref } = useCountUp(numericValue);
+  const displayValue = value.includes("+") ? `${count.toLocaleString()}+` : count.toLocaleString();
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
+      className="bg-card border border-border p-4 md:p-6 rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-2 hover:-translate-y-1 transition-transform"
+    >
+      <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-background flex items-center justify-center text-primary">
+        <Icon className="w-5 h-5 md:w-6 md:h-6" />
+      </div>
+      <span ref={ref} className="text-2xl md:text-4xl font-black text-foreground">{prefersReducedMotion ? value : displayValue}</span>
+      <span className="text-xs md:text-base text-muted-foreground font-semibold">{label}</span>
+    </motion.div>
+  );
+}
+
 export default function Home() {
   const prefersReducedMotion = useReducedMotion();
   const { user } = useAuth();
@@ -119,64 +119,37 @@ export default function Home() {
     queryKey: ["leadership"],
     queryFn: () => fetch("/api/leadership").then(r => r.json()),
   });
+
   const [chatInput, setChatInput] = useState("");
-  const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([
-    { role: 'ai', text: 'مرحباً، أنا المساعد الذكي الخاص بالاتحاد. كيف يمكنني مساعدتك؟ (جرب: امتحانات، تسجيل، مكتبة)' }
+  const [messages, setMessages] = useState<{ role: "user" | "ai"; text: string }[]>([
+    { role: "ai", text: "مرحباً، أنا المساعد الذكي الخاص بالاتحاد. كيف يمكنني مساعدتك؟ (جرب: امتحانات، تسجيل، مكتبة)" },
   ]);
 
   const handleChat = (e: React.FormEvent) => {
     e.preventDefault();
-    const input = chatInput;
-    if (!input.trim()) return;
-    
-    setMessages(prev => [...prev, { role: 'user', text: input }]);
-    
-    let aiResponded = false;
-
+    const input = chatInput.trim();
+    if (!input) return;
+    setMessages(prev => [...prev, { role: "user", text: input }]);
     setTimeout(() => {
-      let reply = "عذراً، لم أفهم طلبك. يمكنك سؤالنا عبر صفحة اقترح/تواصل.";
-      if (input.includes('امتحانات')) reply = "تبدأ الامتحانات النهائية عادة في نهاية الفصل الدراسي. يرجى مراجعة كليتك لمعرفة الجدول المحدد.";
-      if (input.includes('تسجيل')) reply = "يمكنك التسجيل في الدورات عبر صفحة الدورات التدريبية في القائمة.";
-      if (input.includes('مكتبة')) reply = "المكتبة الرقمية متاحة عبر صفحة المكتبة في القائمة العلوية.";
-      if (input.includes('منح')) reply = "سيتم الإعلان عن المنح والفرص الجديدة عبر قسم الأخبار.";
-      if (input.includes('محادثات')) reply = "غرف النقاش متاحة في صفحة 'غرف النقاش' للتواصل مع زملائك.";
-      if (input.includes('تاريخ')) reply = "تأسس الاتحاد العام لطلبة جامعة الزاوية لخدمة آلاف الطلاب وتسهيل مسيرتهم.";
-
-      setMessages(prev => [...prev, { role: 'ai', text: reply }]);
-      aiResponded = true;
+      const reply = Object.entries(AI_REPLIES).find(([key]) => input.includes(key))?.[1]
+        || "عذراً، لم أفهم طلبك. يمكنك سؤالنا عبر صفحة اقترح/تواصل.";
+      setMessages(prev => [...prev, { role: "ai", text: reply }]);
     }, 500);
-
-    setTimeout(() => {
-      if (!aiResponded) {
-        setMessages(prev => [...prev, { role: 'ai', text: "عذراً، لم أتمكن من معالجة طلبك في الوقت المحدد. يرجى المحاولة مرة أخرى أو التواصل عبر صفحة اقترح/تواصل." }]);
-      }
-    }, 3000);
-    
     setChatInput("");
   };
 
-  // Typewriter state
   const [typedText, setTypedText] = useState("");
   const [phraseIdx, setPhraseIdx] = useState(0);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setTypedText(HERO_PHRASES[0]);
-      return;
-    }
+    if (prefersReducedMotion) { setTypedText(HERO_PHRASES[0]); return; }
     const full = HERO_PHRASES[phraseIdx];
     if (typedText.length < full.length) {
-      const t = setTimeout(() => {
-        setTypedText(full.slice(0, typedText.length + 1));
-      }, 40);
-      return () => clearTimeout(t);
-    } else {
-      const t = setTimeout(() => {
-        setPhraseIdx((p) => (p + 1) % HERO_PHRASES.length);
-        setTypedText("");
-      }, 3000);
+      const t = setTimeout(() => setTypedText(full.slice(0, typedText.length + 1)), 40);
       return () => clearTimeout(t);
     }
+    const t = setTimeout(() => { setPhraseIdx(p => (p + 1) % HERO_PHRASES.length); setTypedText(""); }, 3000);
+    return () => clearTimeout(t);
   }, [typedText, phraseIdx, prefersReducedMotion]);
 
   return (
@@ -186,9 +159,9 @@ export default function Home() {
           <motion.div
             className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03] gpu-accelerated"
             style={{
-              backgroundImage: `url(/images/university-photo.jpg)`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              backgroundImage: "url(/images/university-photo.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
               y: prefersReducedMotion ? 0 : bgY,
             }}
           />
@@ -210,27 +183,27 @@ export default function Home() {
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             <span className="text-sm font-bold text-primary tracking-widest">ZU Connect</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-foreground leading-tight max-w-3xl">
-            مرحباً بك في <br/> جامعتك الرقمية
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-foreground leading-tight max-w-3xl">
+            مرحباً بك في <br /> جامعتك الرقمية
           </h1>
           <div className="h-14">
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-xl">
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium max-w-xl">
               {prefersReducedMotion ? HERO_PHRASES[0] : typedText}
               {!prefersReducedMotion && (
                 <motion.span
                   animate={{ opacity: [1, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
-                  className="inline-block w-0.5 h-6 bg-primary mr-1 -mb-0.5"
+                  className="inline-block w-0.5 h-5 md:h-6 bg-primary mr-1 -mb-0.5"
                 />
               )}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-4 mt-4">
-            <Link href="/services">
-              <Button size="lg" className="text-lg px-8 py-6 rounded-full font-bold shadow-lg shadow-primary/20">تصفح الخدمات</Button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-2 sm:mt-4">
+            <Link href="/services" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold shadow-lg shadow-primary/20">تصفح الخدمات</Button>
             </Link>
-            <Link href="/about">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full font-bold bg-transparent border-border hover:bg-accent hover:text-foreground">من نحن</Button>
+            <Link href="/about" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold bg-transparent border-border hover:bg-accent hover:text-foreground">من نحن</Button>
             </Link>
           </div>
         </div>
@@ -250,7 +223,7 @@ export default function Home() {
         initial={prefersReducedMotion ? undefined : "hidden"}
         whileInView={prefersReducedMotion ? undefined : "visible"}
         viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 -mt-12 md:-mt-16 relative z-20"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 -mt-12 md:-mt-16 relative z-20"
       >
         <StatCard label="طالب" value={stats?.totalStudents?.toLocaleString() || "5,240"} icon={GraduationCap} />
         <StatCard label="كلية" value={String(stats?.totalColleges ?? "14")} icon={Building2} />
@@ -261,10 +234,10 @@ export default function Home() {
       <section className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-bold text-primary tracking-widest">خدمات سريعة</span>
-          <h2 className="text-3xl font-black text-foreground border-r-4 border-primary pr-4">كل ما تحتاجه في مكان واحد</h2>
-          <p className="text-muted-foreground max-w-xl">خدمات طلابية متكاملة صممت لتسهيل حياتك الجامعية</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-foreground border-r-4 border-primary pr-4">كل ما تحتاجه في مكان واحد</h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-xl">خدمات طلابية متكاملة صممت لتسهيل حياتك الجامعية</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {SERVICE_CARDS.map((card, i) => (
             <motion.div
               key={card.title}
@@ -272,60 +245,49 @@ export default function Home() {
               whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              onClick={() => {
-                if (card.title === "دعوة صديق") {
-                  setLocation(user ? "/profile" : "/login");
-                }
-              }}
+              onClick={() => { if (card.title === "دعوة صديق") setLocation(user ? "/profile" : "/login"); }}
               whileHover={prefersReducedMotion ? undefined : { y: -4, scale: 1.01 }}
-              className="bg-card border border-border p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer"
+              className="bg-card border border-border p-5 md:p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer touch-manipulation"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                <card.icon className="w-6 h-6" />
+              <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                <card.icon className="w-5 h-5 md:w-6 md:h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-lg text-foreground">{card.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{card.desc}</p>
+                <h3 className="font-bold text-base md:text-lg text-foreground">{card.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">{card.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      <section className="flex flex-col gap-8 rounded-3xl border border-primary/20 relative overflow-hidden bg-gradient-to-br from-background via-muted/30 to-background p-8">
+      <section className="flex flex-col gap-8 rounded-3xl border border-primary/20 relative overflow-hidden bg-gradient-to-br from-background via-muted/30 to-background p-6 md:p-8">
         <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
         <div className="flex flex-col items-start gap-3 relative z-10">
-          <div className="w-20 h-20 rounded-full border-2 border-primary/30 p-1 shadow-lg shadow-primary/10">
-            <img
-              src="/images/union-logo.jpg"
-              alt="شعار الاتحاد"
-              loading="lazy"
-              width={80}
-              height={80}
-              className="w-full h-full rounded-full object-cover"
-            />
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-primary/30 p-1 shadow-lg shadow-primary/10">
+            <img src="/images/union-logo.jpg" alt="شعار الاتحاد" loading="lazy" width={80} height={80} className="w-full h-full rounded-full object-cover" />
           </div>
           <div className="flex flex-col gap-2">
-            <h2 className="text-3xl font-black text-foreground border-r-4 border-primary pr-4">الهيكل الإداري للاتحاد العام</h2>
-            <p className="text-primary">قيادة طلابية تعمل من أجلكم</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground border-r-4 border-primary pr-4">الهيكل الإداري للاتحاد العام</h2>
+            <p className="text-xs sm:text-base text-primary">قيادة طلابية تعمل من أجلكم</p>
           </div>
         </div>
-        
+
         <div className="flex flex-col items-center gap-8 relative z-10">
-          <div className="bg-card border-2 border-primary p-8 rounded-2xl text-center flex flex-col items-center w-full max-w-sm">
-            <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center text-2xl font-bold mb-4">م</div>
-            <h3 className="text-2xl font-bold text-foreground mb-1">محمد وسام الفراح</h3>
-            <p className="text-primary font-semibold">رئيس الاتحاد العام</p>
+          <div className="bg-card border-2 border-primary p-6 md:p-8 rounded-2xl text-center flex flex-col items-center w-full max-w-sm">
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xl md:text-2xl font-bold mb-4">م</div>
+            <h3 className="text-xl md:text-2xl font-bold text-foreground mb-1">محمد وسام الفراح</h3>
+            <p className="text-xs sm:text-base text-primary font-semibold">رئيس الاتحاد العام</p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-            <div className="bg-card border border-primary/30 p-6 rounded-2xl text-center flex flex-col items-center">
-              <h3 className="text-xl font-bold text-foreground mb-1">مالك علي كشلاف</h3>
-              <p className="text-primary font-semibold">النائب الأول</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
+            <div className="bg-card border border-primary/30 p-5 md:p-6 rounded-2xl text-center flex flex-col items-center">
+              <h3 className="text-base md:text-xl font-bold text-foreground mb-1">مالك علي كشلاف</h3>
+              <p className="text-xs sm:text-base text-primary font-semibold">النائب الأول</p>
             </div>
-            <div className="bg-card border border-primary/30 p-6 rounded-2xl text-center flex flex-col items-center">
-              <h3 className="text-xl font-bold text-foreground mb-1">عبد المجيد محمد الحمري</h3>
-              <p className="text-primary font-semibold">النائب الثاني</p>
+            <div className="bg-card border border-primary/30 p-5 md:p-6 rounded-2xl text-center flex flex-col items-center">
+              <h3 className="text-base md:text-xl font-bold text-foreground mb-1">عبد المجيد محمد الحمري</h3>
+              <p className="text-xs sm:text-base text-primary font-semibold">النائب الثاني</p>
             </div>
           </div>
 
@@ -334,30 +296,30 @@ export default function Home() {
             initial={prefersReducedMotion ? undefined : "hidden"}
             whileInView={prefersReducedMotion ? undefined : "visible"}
             viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full"
+            className="flex gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 scrollbar-thin touch-pan-x"
           >
             {leadership?.map(member => (
               <motion.div
                 key={member.id}
                 variants={itemVariants}
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-                className="bg-card border border-border p-5 rounded-2xl flex flex-col gap-2 hover:bg-accent hover:border-primary/30 transition-colors"
+                className="bg-card border border-border p-4 md:p-5 rounded-2xl flex flex-col gap-2 hover:bg-accent hover:border-primary/30 transition-colors min-w-[200px] md:min-w-0 snap-start"
               >
-                <h4 className="font-bold text-foreground">{member.name}</h4>
-                <p className="text-sm text-primary">{member.role}</p>
+                <h4 className="font-bold text-sm md:text-base text-foreground">{member.name}</h4>
+                <p className="text-xs sm:text-sm text-primary">{member.role}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2 flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-foreground border-r-4 border-primary pr-4">أحدث الأخبار</h2>
-            <Link href="/news" className="text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground border-r-4 border-primary pr-4">أحدث الأخبار</h2>
+            <Link href="/news" className="text-xs sm:text-sm text-primary font-semibold hover:underline">عرض الكل</Link>
           </div>
-          
+
           <motion.div
             variants={containerVariants}
             initial={prefersReducedMotion ? undefined : "hidden"}
@@ -365,16 +327,12 @@ export default function Home() {
             viewport={{ once: true, amount: 0.1 }}
             className="flex flex-col gap-4"
           >
-            {news?.slice(0, 3).map((item) => (
-              <motion.div
-                key={item.id}
-                variants={itemVariants}
-                whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}
-              >
-                <div className="bg-card border border-border p-6 rounded-2xl transition-colors flex flex-col gap-3 group">
+            {news?.slice(0, 3).map(item => (
+              <motion.div key={item.id} variants={itemVariants} whileHover={prefersReducedMotion ? undefined : { scale: 1.02 }}>
+                <div className="bg-card border border-border p-5 md:p-6 rounded-2xl transition-colors flex flex-col gap-3 group">
                   <div className="flex justify-between items-start gap-4">
                     <span
-                      className="text-xs font-bold px-2 py-1 rounded flex items-center gap-1"
+                      className="text-[10px] sm:text-xs font-bold px-2 py-1 rounded flex items-center gap-1"
                       style={(() => {
                         const color = getNewsCategoryColor(item.category);
                         return color ? { backgroundColor: `${color}20`, color } : {};
@@ -383,23 +341,21 @@ export default function Home() {
                       {(() => { const CatIcon = getNewsCategoryIcon(item.category); return <CatIcon className="w-3 h-3" />; })()}
                       {item.category}
                     </span>
-                    <span className="text-xs text-muted-foreground">{item.date}</span>
+                    <span className="text-[10px] sm:text-xs text-muted-foreground">{item.date}</span>
                   </div>
-                  <h3 className="text-xl font-bold text-foreground leading-snug break-words">{item.title}</h3>
-                  {user && <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>}
+                  <h3 className="text-base sm:text-xl font-bold text-foreground leading-snug break-words">{item.title}</h3>
+                  {user && <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed">{item.body}</p>}
                 </div>
               </motion.div>
             ))}
-            {!news && (
-              <Skeleton variant="card" className="h-40" icon={Globe} />
-            )}
+            {!news && <Skeleton variant="card" className="h-28 md:h-40" icon={Globe} />}
           </motion.div>
         </div>
-        
-        <div className="flex flex-col gap-8">
-          <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-4">
-            <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+
+        <div className="flex flex-col gap-6 md:gap-8">
+          <div className="bg-card border border-border rounded-2xl p-5 md:p-6 flex flex-col gap-4">
+            <h3 className="font-bold text-base sm:text-lg text-foreground flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               الأنشطة القادمة
             </h3>
             <motion.div
@@ -417,25 +373,25 @@ export default function Home() {
                   className="flex gap-4 items-start pb-4 border-b border-border/50 last:border-0 last:pb-0"
                 >
                   <div className="flex flex-col items-center justify-center bg-background rounded-lg p-2 min-w-14">
-                    <span className="text-xs text-muted-foreground">{event.month}</span>
-                    <span className="text-lg font-bold text-foreground">{user ? event.date.split(' ')[0] : '--'}</span>
+                    <span className="text-[10px] sm:text-xs text-muted-foreground">{event.month}</span>
+                    <span className="text-base sm:text-lg font-bold text-foreground">{user ? event.date.split(" ")[0] : "--"}</span>
                   </div>
-                  <div className="flex flex-col pt-1">
-                    <h4 className="font-bold text-sm text-foreground line-clamp-1">{event.title}</h4>
-                    {user && <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>}
+                  <div className="flex flex-col pt-1 min-w-0">
+                    <h4 className="font-bold text-xs sm:text-sm text-foreground line-clamp-1">{event.title}</h4>
+                    {user && <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-1">{event.description}</p>}
                   </div>
                 </motion.div>
               ))}
             </motion.div>
             <Link href="/planner">
-              <Button variant="outline" className="w-full mt-2 rounded-xl">جدول الأنشطة كامل</Button>
+              <Button variant="outline" className="w-full mt-2 rounded-xl font-semibold">جدول الأنشطة كامل</Button>
             </Link>
           </div>
 
-          <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-80 md:h-[400px]">
-            <div className="bg-gradient-to-l from-navy-card to-navy-deep border-b border-accent-gold/20 p-4">
-              <h3 className="font-bold text-white">المرشد الأكاديمي (AI)</h3>
-              <p className="text-xs text-accent-gold mt-1">اسأل عن أي شيء يخص الجامعة</p>
+          <div className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col h-[300px] md:h-[400px] sticky bottom-0 md:static z-10 shadow-2xl md:shadow-none">
+            <div className="bg-gradient-to-l from-card to-muted border-b border-border p-4">
+              <h3 className="font-bold text-foreground text-sm md:text-base">المرشد الأكاديمي (AI)</h3>
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">اسأل عن أي شيء يخص الجامعة</p>
             </div>
             <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-3" role="log" aria-live="polite">
               {messages.map((msg, i) => (
@@ -443,70 +399,71 @@ export default function Home() {
                   key={i}
                   initial={false}
                   animate={{ scale: 1 }}
-                  className={`max-w-[85%] p-3 rounded-2xl text-sm ${msg.role === 'user' ? 'bg-navy-card text-white self-end rounded-tl-sm border border-accent-gold/20' : 'bg-background text-foreground border border-border self-start rounded-tr-sm'}`}
+                  className={`max-w-[85%] p-3 rounded-2xl text-xs sm:text-sm ${
+                    msg.role === "user"
+                      ? "bg-primary text-primary-foreground self-end rounded-tl-sm"
+                      : "bg-background text-foreground border border-border self-start rounded-tr-sm"
+                  }`}
                 >
                   {msg.text}
                 </motion.div>
               ))}
             </div>
             <form onSubmit={handleChat} className="p-3 border-t border-border flex gap-2 bg-background">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={chatInput}
                 onChange={e => setChatInput(e.target.value)}
-                placeholder="اكتب سؤالك هنا..." 
-                className="flex-1 bg-card border border-border rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-accent-gold"
+                placeholder="اكتب سؤالك هنا..."
+                className="flex-1 bg-card border border-border rounded-xl px-4 py-3 text-xs sm:text-sm focus:outline-none focus:border-primary text-foreground placeholder:text-muted-foreground"
               />
-              <motion.button
+              <button
                 type="submit"
                 aria-label="إرسال"
-                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
-                animate={prefersReducedMotion ? undefined : { boxShadow: ["0 0 0 0 rgba(212, 175, 55, 0.4)", "0 0 0 8px rgba(212, 175, 55, 0)", "0 0 0 0 rgba(212, 175, 55, 0)"] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="bg-accent-gold text-black p-2 rounded-xl hover:bg-accent-gold/90 flex-shrink-0 font-bold"
+                className="bg-primary text-primary-foreground p-3 rounded-xl hover:bg-primary/90 flex-shrink-0 font-bold transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               >
-                <Send className="w-5 h-5" />
-              </motion.button>
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
             </form>
           </div>
         </div>
       </div>
 
-      <section className="flex flex-col gap-8">
+      <section className="flex flex-col gap-6 sm:gap-8">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-bold text-primary tracking-widest">طلابنا</span>
-          <h2 className="text-3xl font-black text-foreground border-r-4 border-primary pr-4">ماذا يقول عنا الطلاب</h2>
-          <p className="text-muted-foreground max-w-xl">آراء طلاب جامعة الزاوية حول تجربتهم مع المنصة</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-foreground border-r-4 border-primary pr-4">ماذا يقول عنا الطلاب</h2>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-xl">آراء طلاب جامعة الزاوية حول تجربتهم مع المنصة</p>
         </div>
         <div className="w-full">
           <Carousel opts={{ loop: true, align: "start" }}>
             <CarouselContent className="items-stretch">
               {TESTIMONIALS.map((t, i) => (
-                <CarouselItem key={i} className="sm:basis-1/2 lg:basis-1/3 h-full">
-                  <div className="bg-card border border-border p-6 rounded-2xl h-full flex flex-col gap-4">
+                <CarouselItem key={i} className="basis-full sm:basis-1/2 lg:basis-1/3 h-full">
+                  <div className="bg-card border border-border p-5 md:p-6 rounded-2xl h-full flex flex-col gap-4">
                     <div className="flex gap-1">
                       {Array.from({ length: t.rating }).map((_, j) => (
-                        <Star key={j} className="w-4 h-4 fill-primary text-primary" />
+                        <Star key={j} className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-primary text-primary" />
                       ))}
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
                     <div className="flex items-center gap-3 pt-2 border-t border-border">
-                      <Avatar>
-                        <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+                      <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
+                        <AvatarFallback className="bg-primary/10 text-primary text-[10px] sm:text-sm font-bold">
                           {t.name.slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <p className="font-bold text-sm text-foreground">{t.name}</p>
-                        <p className="text-xs text-muted-foreground">{t.role}</p>
+                      <div className="min-w-0">
+                        <p className="font-bold text-xs sm:text-sm text-foreground truncate">{t.name}</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground truncate">{t.role}</p>
                       </div>
                     </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
         </div>
       </section>

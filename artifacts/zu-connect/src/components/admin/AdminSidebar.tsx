@@ -96,22 +96,27 @@ export function AdminSidebar() {
           onClick={toggleSidebar}
           className="p-1.5 rounded-lg hover:bg-accent transition-colors hidden md:flex"
           title={sidebarCollapsed ? "توسيع" : "طي"}
+          aria-label={sidebarCollapsed ? "توسيع القائمة الجانبية" : "طي القائمة الجانبية"}
         >
           {sidebarCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </button>
         <button
           onClick={() => setMobileMenuOpen(false)}
           className="p-1.5 rounded-lg hover:bg-accent transition-colors md:hidden"
+          aria-label="إغلاق القائمة الجانبية"
         >
           <X className="h-4 w-4" />
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-4 scrollbar-thin">
-        {navSections.map((section) => (
+      <nav className="flex-1 overflow-y-auto py-3 px-3 scrollbar-thin">
+        {navSections.map((section, sectionIdx) => (
           <div key={section.label}>
+            {sectionIdx > 0 && (
+              <div className="my-2 h-px bg-gradient-to-r from-border/60 via-border/30 to-transparent" />
+            )}
             {!sidebarCollapsed && (
-              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-1.5">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-1.5 mt-3 first:mt-0">
                 {section.label}
               </p>
             )}
@@ -123,16 +128,24 @@ export function AdminSidebar() {
                   <Link
                     key={item.path}
                     href={item.path}
+                    title={sidebarCollapsed ? item.label : undefined}
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200 group",
                       isActive
-                        ? "bg-primary/10 text-primary font-medium shadow-sm border border-primary/10"
-                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                        ? cn(
+                            "bg-primary/10 text-primary font-medium shadow-sm border border-primary/10",
+                            "border-r-2 border-primary",
+                            "shadow-[0_0_15px_-3px] shadow-primary/20"
+                          )
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                      sidebarCollapsed && "justify-center px-0"
                     )}
                   >
                     <Icon className={cn(
-                      "h-4 w-4 shrink-0 transition-transform duration-200",
-                      isActive ? "text-primary" : "group-hover:scale-110"
+                      "h-4 w-4 shrink-0 transition-all duration-200",
+                      isActive
+                        ? "text-primary"
+                        : cn("group-hover:scale-110", sidebarCollapsed && "group-hover:text-primary group-hover:drop-shadow-[0_0_4px_rgba(139,92,246,0.4)]")
                     )} />
                     {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
                     {isActive && !sidebarCollapsed && (
@@ -177,7 +190,7 @@ export function AdminSidebar() {
 
       <aside
         className={cn(
-          "border-l border-border/50 bg-gradient-to-b from-background to-muted/10 flex-col transition-all duration-300 ease-in-out h-full hidden md:flex",
+          "border-l border-border/50 bg-gradient-to-b from-background to-muted/10 backdrop-blur-xl bg-background/80 flex-col transition-all duration-300 ease-in-out h-full hidden md:flex",
           sidebarCollapsed ? "w-[68px]" : "w-64"
         )}
       >

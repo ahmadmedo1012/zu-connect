@@ -29,6 +29,8 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } }
 } satisfies Variants;
 
+const chartHeights = [35, 55, 45, 70, 60, 85, 75, 90, 65, 80, 50, 40];
+
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -92,18 +94,21 @@ export default function AdminDashboard() {
   ] : [];
 
   return (
-    <motion.div className="space-y-6" variants={containerVariants} initial="hidden" animate="visible">
+    <motion.div className="space-y-4 md:space-y-6" variants={containerVariants} initial="hidden" animate="visible">
+      {/* Gold accent line */}
+      <div className="h-0.5 w-12 rounded-full" style={{ backgroundColor: "#d4af37" }} />
+
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">لوحة التحكم</h1>
-          <p className="text-sm text-muted-foreground mt-1">نظرة عامة على المنصة</p>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">لوحة التحكم</h1>
+          <p className="hidden sm:block text-sm text-muted-foreground mt-1">نظرة عامة على المنصة</p>
         </div>
         <button
           onClick={fetchStats}
-          className="text-sm text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+          className="text-sm text-primary hover:text-primary/80 transition-colors flex items-center gap-1 min-h-[44px] min-w-[44px] justify-center"
         >
-          تحديث
-          <ArrowUpRight className="h-3 w-3" />
+          <span className="hidden sm:inline">تحديث</span>
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </button>
       </motion.div>
 
@@ -118,29 +123,36 @@ export default function AdminDashboard() {
         </motion.div>
       )}
 
-      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+      {/* Bento metric grid */}
+      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
               <Card key={i} className="overflow-hidden border-border/50">
-                <CardContent className="p-5">
+                <CardContent className="p-4 md:p-5">
                   <div className="flex items-center justify-between">
-                    <div className="space-y-2.5">
+                    <div className="space-y-2">
                       <div className="h-3 w-20 bg-muted rounded animate-pulse" />
-                      <div className="h-8 w-16 bg-muted rounded animate-pulse" />
+                      <div className="h-7 md:h-8 w-16 bg-muted rounded animate-pulse" />
                     </div>
-                    <div className="h-10 w-10 rounded-xl bg-muted animate-pulse" />
+                    <div className="h-9 md:h-10 w-9 md:w-10 rounded-xl bg-muted animate-pulse" />
                   </div>
                 </CardContent>
               </Card>
             ))
           : metrics.map((metric, i) => (
-              <motion.div key={metric.title} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+              <motion.div
+                key={metric.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08, type: "spring", damping: 18, stiffness: 100 }}
+                className={cn(i === 0 && "lg:col-span-1")}
+              >
                 <MetricCard {...metric} />
               </motion.div>
             ))}
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <motion.div variants={itemVariants} className="lg:col-span-2">
           <Card className="overflow-hidden border-border/50 shadow-sm hover:shadow-md transition-shadow duration-300">
             <CardHeader className="bg-gradient-to-r from-muted/50 to-transparent border-b border-border/50">
@@ -151,6 +163,24 @@ export default function AdminDashboard() {
                 النشاط الأخير
               </CardTitle>
             </CardHeader>
+
+            {/* Sparkline chart */}
+            <div className="h-24 px-3 sm:px-4 flex items-end gap-1 sm:gap-1.5 py-3 border-b border-border/30 bg-muted/20">
+              {chartHeights.map((h, i) => (
+                <div key={i} className="flex-1 bg-primary/10 rounded-t-md relative overflow-hidden">
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 rounded-t-md"
+                    style={{
+                      background: `linear-gradient(to top, hsl(var(--primary) / 0.4), hsl(var(--primary) / 0.15))`,
+                    }}
+                    initial={{ height: "0%" }}
+                    animate={{ height: `${h}%` }}
+                    transition={{ delay: i * 0.04, duration: 0.6, ease: "easeOut" }}
+                  />
+                </div>
+              ))}
+            </div>
+
             <CardContent className="p-0">
               <LiveFeed events={liveEvents} />
             </CardContent>
@@ -167,16 +197,16 @@ export default function AdminDashboard() {
                 نظرة سريعة
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-5">
+            <CardContent className="p-4 md:p-5">
               {stats ? (
                 <motion.div className="space-y-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
                   {summaryItems.map((item) => (
-                    <div key={item.label} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-muted/50 transition-colors group cursor-pointer">
-                      <div className="flex items-center gap-2.5">
+                    <div key={item.label} className="flex items-center justify-between py-2 md:py-2.5 px-2 md:px-3 rounded-xl hover:bg-muted/50 transition-colors group cursor-pointer min-h-[44px]">
+                      <div className="flex items-center gap-2 md:gap-2.5">
                         <div className="p-1.5 rounded-lg bg-muted group-hover:bg-background transition-colors">
                           <item.icon className={cn("h-3.5 w-3.5", item.color)} />
                         </div>
-                        <span className="text-sm text-muted-foreground">{item.label}</span>
+                        <span className="text-xs sm:text-sm text-muted-foreground">{item.label}</span>
                       </div>
                       <span className="text-sm font-bold tabular-nums">{item.value}</span>
                     </div>
@@ -193,6 +223,15 @@ export default function AdminDashboard() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Subtle dot pattern overlay on the bottom section */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.03]"
+        style={{
+          backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)",
+          backgroundSize: "24px 24px",
+        }}
+      />
     </motion.div>
   );
 }

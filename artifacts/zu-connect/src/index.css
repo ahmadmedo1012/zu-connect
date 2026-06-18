@@ -78,6 +78,23 @@
   --color-navy-deep: #0b1f3f;
   --color-navy-card: #152a4f;
 
+  /* glassmorphism tokens */
+  --color-glass-bg: hsla(210, 20%, 98%, 0.75);
+  --color-glass-border: hsla(210, 20%, 92%, 0.5);
+  --color-glass-shadow: hsla(210, 20%, 0%, 0.08);
+
+  /* admin glow */
+  --color-admin-glow: hsl(var(--admin-glow, 262 80% 54%));
+
+  /* premium shadows — overridden per theme */
+  --shadow-card: 0 2px 16px hsla(210, 20%, 0%, 0.08);
+  --shadow-dropdown: 0 8px 32px hsla(210, 20%, 0%, 0.12);
+  --shadow-modal: 0 16px 48px hsla(210, 20%, 0%, 0.18);
+  --shadow-glass: 0 8px 32px hsla(210, 20%, 0%, 0.08);
+
+  /* spring easing */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
   --font-sans: var(--app-font-sans);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -85,8 +102,10 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ========= BASE TOKENS — LIGHT ========= */
+
 :root {
-  --background: 0 0% 97%;
+  --background: 210 20% 98%;
   --foreground: 240 10% 4%;
 
   --card: 0 0% 100%;
@@ -125,29 +144,31 @@
   --radius: 0.5rem;
 }
 
+/* ========= BASE TOKENS — DARK ========= */
+
 .dark {
-  --background: 0 0% 0%;
+  --background: 225 15% 8%;
   --foreground: 0 0% 100%;
 
-  --card: 220 5% 14%;
+  --card: 220 10% 12%;
   --card-foreground: 0 0% 100%;
-  --card-border: 220 17% 27%;
+  --card-border: 220 15% 22%;
 
-  --popover: 220 5% 14%;
+  --popover: 220 10% 12%;
   --popover-foreground: 0 0% 100%;
-  --popover-border: 220 17% 27%;
+  --popover-border: 220 15% 22%;
 
   --primary: 210 100% 53%;
   --primary-foreground: 0 0% 100%;
   --primary-border: 210 100% 45%;
 
-  --secondary: 220 5% 18%;
+  --secondary: 220 8% 16%;
   --secondary-foreground: 0 0% 100%;
-  --secondary-border: 220 5% 25%;
+  --secondary-border: 220 8% 22%;
 
-  --muted: 220 5% 14%;
-  --muted-foreground: 220 5% 75%;
-  --muted-border: 220 5% 20%;
+  --muted: 220 10% 16%;
+  --muted-foreground: 220 10% 70%;
+  --muted-border: 220 10% 20%;
 
   --accent: 225 51% 25%;
   --accent-foreground: 0 0% 100%;
@@ -158,12 +179,25 @@
   --destructive-border: 0 84% 50%;
 
   --border: 220 17% 27%;
-  --input: 220 5% 14%;
+  --input: 220 10% 12%;
   --ring: 210 100% 53%;
+
+  /* override shadows for dark — deeper, cooler */
+  --shadow-card: 0 2px 16px hsla(225, 15%, 0%, 0.35);
+  --shadow-dropdown: 0 8px 32px hsla(225, 15%, 0%, 0.45);
+  --shadow-modal: 0 16px 48px hsla(225, 15%, 0%, 0.55);
+  --shadow-glass: 0 8px 32px hsla(225, 15%, 0%, 0.35);
+
+  /* glass tokens dark */
+  --color-glass-bg: hsla(225, 15%, 10%, 0.75);
+  --color-glass-border: hsla(220, 10%, 25%, 0.3);
+  --color-glass-shadow: hsla(225, 15%, 0%, 0.35);
 
   --app-font-sans: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
   --radius: 0.5rem;
 }
+
+/* ========= BASE LAYER ========= */
 
 @layer base {
   * {
@@ -171,10 +205,24 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased text-foreground;
     scrollbar-gutter: stable;
+    background-color: hsl(var(--background));
+    background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 200%27 opacity=%270.02%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.65%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix type=%27saturate%27 values=%270%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E");
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+    color: hsl(var(--foreground));
   }
 }
+
+/* ========= ADMIN THEME — RICH PURPLE ========= */
 
 .admin-theme {
   --primary: 262 80% 54%;
@@ -184,6 +232,7 @@
   --accent: 262 100% 92%;
   --accent-foreground: 262 80% 30%;
   --accent-border: 262 80% 82%;
+  --admin-glow: 262 80% 54%;
 }
 
 .dark .admin-theme {
@@ -194,4 +243,12 @@
   --accent: 262 50% 25%;
   --accent-foreground: 0 0% 100%;
   --accent-border: 262 50% 35%;
+  --admin-glow: 262 80% 70%;
+}
+
+/* ========= THEME TRANSITION ========= */
+
+.theme-transitioning,
+.theme-transitioning * {
+  transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
