@@ -7,7 +7,7 @@ interface AdminGuardProps {
   requiredPermission?: string;
 }
 
-export function AdminGuard({ children }: AdminGuardProps) {
+export default function AdminGuard({ children }: AdminGuardProps) {
   const { user, isLoading } = useAuth();
   const [, setLocation] = useLocation();
 

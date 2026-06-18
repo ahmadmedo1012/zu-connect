@@ -27,6 +27,8 @@ export function Topbar() {
               src="/images/union-logo.jpg"
               alt="شعار الاتحاد"
               loading="lazy"
+              width={36}
+              height={36}
               className="w-9 h-9 rounded-full object-cover border-2 border-primary/30 ring-2 ring-background"
             />
             <div className="flex flex-col">

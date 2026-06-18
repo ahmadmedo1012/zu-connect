@@ -1,2 +1,3 @@
 export * from "./generated/api";
-export * from "./generated/types";
+// Types are re-exported from api.ts to avoid duplicate exports
+// export * from "./generated/types";

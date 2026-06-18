@@ -66,7 +66,7 @@ function AdminTopbar() {
   );
 }
 
-export function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <AdminProvider>
       <div dir="rtl" className="admin-theme h-screen flex flex-col bg-gradient-to-br from-background via-background to-muted/30 text-foreground overflow-hidden">

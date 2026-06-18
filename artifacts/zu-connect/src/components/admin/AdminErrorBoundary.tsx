@@ -5,7 +5,7 @@ import { AlertTriangle, RefreshCw } from "lucide-react";
 interface Props { children: ReactNode; fallback?: ReactNode; }
 interface State { hasError: boolean; error?: Error; }
 
-export class AdminErrorBoundary extends Component<Props, State> {
+export default class AdminErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false };
 
   static getDerivedStateFromError(error: Error): State {

@@ -184,13 +184,22 @@ export default function Home() {
       <section className="relative w-full min-h-[50vh] md:min-h-[60vh] rounded-3xl overflow-hidden flex items-center bg-gradient-to-br from-background via-background to-muted/30 border border-border">
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
-            className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03]"
+            className="absolute inset-0 opacity-[0.04] dark:opacity-[0.03] gpu-accelerated"
             style={{
               backgroundImage: `url(/images/university-photo.jpg)`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               y: prefersReducedMotion ? 0 : bgY,
             }}
+          />
+          <img
+            src="/images/university-photo.jpg"
+            alt=""
+            loading="lazy"
+            width={1200}
+            height={800}
+            className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
+            aria-hidden="true"
           />
           <div className="absolute -top-1/2 -right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[200px]" />
           <div className="absolute -bottom-1/2 -left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[200px]" />
@@ -290,6 +299,9 @@ export default function Home() {
             <img
               src="/images/union-logo.jpg"
               alt="شعار الاتحاد"
+              loading="lazy"
+              width={80}
+              height={80}
               className="w-full h-full rounded-full object-cover"
             />
           </div>

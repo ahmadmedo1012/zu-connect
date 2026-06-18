@@ -131,7 +131,7 @@ export default function Login() {
         
         <div className="flex flex-col items-center text-center gap-3">
           <div className="w-16 h-16 rounded-xl bg-white flex items-center justify-center p-1 border border-border">
-            <img src={logoPath} alt="Logo" className="w-full h-full object-contain" />
+            <img src={logoPath} alt="Logo" loading="lazy" width={64} height={64} className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-black text-foreground tracking-tight mt-2">تسجيل الدخول</h1>
           <p className="text-sm text-muted-foreground">أدخل بياناتك للوصول إلى خدمات المنصة</p>

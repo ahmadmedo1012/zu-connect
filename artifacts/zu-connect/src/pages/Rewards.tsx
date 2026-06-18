@@ -113,7 +113,7 @@ export default function Rewards() {
                 >
                   {reward.imageUrl && (
                     <div className="h-32 bg-muted flex items-center justify-center">
-                      <img src={reward.imageUrl} alt={reward.nameAr} className="w-full h-full object-cover" />
+                      <img src={reward.imageUrl} alt={reward.nameAr} loading="lazy" width={128} height={128} className="w-full h-full object-cover" />
                     </div>
                   )}
                   <div className="p-4 flex flex-col gap-3 flex-1">

@@ -176,6 +176,79 @@
   }
 }
 
+/* GPU Acceleration & Performance Optimizations */
+@layer utilities {
+  /* Force GPU acceleration for animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  /* will-change for elements that animate */
+  .animate-transform {
+    will-change: transform;
+  }
+
+  .animate-opacity {
+    will-change: opacity;
+  }
+
+  .animate-transform-opacity {
+    will-change: transform, opacity;
+  }
+
+  /* Remove will-change after animation completes */
+  .animate-complete {
+    will-change: auto;
+  }
+
+  /* Reduce animation complexity on mobile */
+  @media (max-width: 768px) {
+    .motion-reduce-mobile {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Prevent layout shift for images */
+  img[loading="lazy"] {
+    block-size: auto;
+    inline-size: 100%;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reduce motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Content visibility for off-screen content */
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 1000px;
+  }
+
+  /* Font optimization */
+  .font-sans {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
 .admin-theme {
   --primary: 262 80% 54%;
   --primary-foreground: 0 0% 100%;

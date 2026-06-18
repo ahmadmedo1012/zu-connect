@@ -69,3 +69,12 @@ attached_assets/
 *.pdf
 photo_*.jpg
 photo_*.jpeg
+
+# Large artifact JSON files (Lottie animations, exported data - not used in codebase)
+*.json
+!package.json
+!pnpm-lock.yaml
+!tsconfig.json
+!tsconfig.base.json
+!STUDENT.json
+!pnpm-workspace.yaml

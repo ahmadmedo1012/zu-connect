@@ -14,6 +14,8 @@ export default function About() {
           src="/images/university-photo.jpg"
           alt="جامعة الزاوية"
           loading="lazy"
+          width={1200}
+          height={800}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
