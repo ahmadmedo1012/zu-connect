@@ -1,10 +1,11 @@
+import * as React from "react";
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { AnimatePresence, motion } from "framer-motion";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useReducedMotion, ReducedMotionProvider } from "@/hooks/use-reduced-motion";
 import NotFound from "@/pages/not-found";
 import AdminNotFound from "@/pages/admin/NotFound";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
@@ -76,6 +77,35 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
   )
 }
 
+function LoadingBar() {
+  const [location] = useLocation()
+  const prefersReducedMotion = useReducedMotion()
+  const [show, setShow] = React.useState(false)
+  const prevRef = React.useRef(location)
+
+  React.useEffect(() => {
+    if (prevRef.current !== location) {
+      setShow(true)
+      prevRef.current = location
+      const timer = setTimeout(() => setShow(false), 600)
+      return () => clearTimeout(timer)
+    }
+    return
+  }, [location])
+
+  if (prefersReducedMotion || !show) return null
+
+  return (
+    <motion.div
+      initial={{ scaleX: 0, opacity: 1 }}
+      animate={{ scaleX: 1, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-[9999] h-[3px] bg-gradient-to-l from-primary via-primary/50 to-primary/20 origin-left pointer-events-none"
+      style={{ transformOrigin: "left" }}
+    />
+  )
+}
+
 function AdminRoute({ children }: { children: React.ReactNode }) {
   return (
     <AdminGuard>
@@ -128,6 +158,7 @@ function Router() {
   // Public routes use AppLayout with Topbar + Navbar + Footer
   return (
     <AppLayout>
+      <LoadingBar />
       <AnimatePresence mode="wait">
         <Switch key={location}>
           <Route path="/"><AnimatedPage><Home /></AnimatedPage></Route>
@@ -159,6 +190,7 @@ function Router() {
 function App() {
   return (
     <ThemeProvider>
+      <ReducedMotionProvider>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
@@ -169,6 +201,7 @@ function App() {
           </TooltipProvider>
         </QueryClientProvider>
       </AuthProvider>
+      </ReducedMotionProvider>
     </ThemeProvider>
   );
 }

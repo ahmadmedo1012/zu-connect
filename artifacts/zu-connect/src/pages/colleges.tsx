@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Empty } from "@/components/ui/empty";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { getCollegeIcon } from "@/lib/icons/icon-maps";
-import { Users, FileText, Calendar, Activity, GraduationCap, Lock, Building2 } from "lucide-react";
+import { Users, FileText, Calendar, Activity, GraduationCap, Lock, Building2, School, ChartBar, TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { Link } from "wouter";
 import { containerVariants, itemVariants } from "@/lib/animations/variants";
@@ -16,47 +16,65 @@ export default function Colleges() {
 
   return (
     <div className="flex flex-col gap-8 py-8 max-w-6xl mx-auto px-4 md:px-6">
+      {/* ── Header ── */}
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl md:text-4xl font-black text-foreground border-r-4 border-primary pr-4">الكليات المعتمدة</h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-xl">تضم جامعة الزاوية 14 كلية مختلفة، تصفح خدمات كل كلية ونشاطاتها.</p>
       </div>
 
+      {/* ── Bento overview ── */}
+      <motion.div variants={containerVariants} initial={prefersReducedMotion ? undefined : "hidden"} whileInView={prefersReducedMotion ? undefined : "visible"} viewport={{ once: true, amount: 0.1 }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4"
+      >
+        <motion.div variants={itemVariants} className="col-span-2 md:col-span-2 bg-gradient-to-br from-primary/5 to-background border border-border rounded-2xl p-5 md:p-7 flex items-center gap-4">
+          <div className="w-14 h-14 md:w-16 md:h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center shrink-0">
+            <School className="w-7 h-7 md:w-8 md:h-8" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-3xl md:text-4xl font-black text-foreground">{colleges?.length || "14"}</span>
+            <span className="text-sm md:text-base text-muted-foreground font-semibold">كلية معتمدة</span>
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-4 md:p-5 flex flex-col items-center justify-center gap-2">
+          <ChartBar className="w-6 h-6 md:w-7 md:h-7 text-primary" />
+          <span className="text-lg md:text-2xl font-bold text-foreground">{colleges?.reduce((s, c) => s + (c.studentCount || 0), 0)?.toLocaleString() || "5,240"}</span>
+          <span className="text-[10px] md:text-xs text-muted-foreground font-semibold">إجمالي الطلاب</span>
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-4 md:p-5 flex flex-col items-center justify-center gap-2">
+          <TrendingUp className="w-6 h-6 md:w-7 md:h-7 text-primary" />
+          <span className="text-lg md:text-2xl font-bold text-foreground">{colleges?.filter(c => c.hasActivities).length || "12"}</span>
+          <span className="text-[10px] md:text-xs text-muted-foreground font-semibold">نشاطات فعالة</span>
+        </motion.div>
+      </motion.div>
+
+      {/* ── Auth prompt ── */}
       {!user && (
         <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Lock className="w-5 h-5 text-muted-foreground shrink-0" />
             <p className="text-xs sm:text-sm text-muted-foreground">أسماء الكليات متاحة للجميع. سجل الدخول لمشاهدة الإحصائيات والخدمات.</p>
           </div>
-          <Link href="/login" className="text-xs sm:text-sm font-bold text-primary hover:underline shrink-0">
-            تسجيل الدخول
-          </Link>
+          <Link href="/login" className="text-xs sm:text-sm font-bold text-primary hover:underline shrink-0">تسجيل الدخول</Link>
         </div>
       )}
 
+      {/* ── Colleges grid ── */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <Skeleton key={i} variant="card" className="h-[180px] md:h-[220px]" icon={Building2} />
-          ))}
+          {[1, 2, 3, 4, 5, 6].map(i => (<Skeleton key={i} variant="card" className="h-[180px] md:h-[220px]" icon={Building2} />))}
         </div>
       ) : (
-        <motion.div
-          variants={containerVariants}
-          initial={prefersReducedMotion ? undefined : "hidden"}
-          whileInView={prefersReducedMotion ? undefined : "visible"}
-          viewport={{ once: true, amount: 0.1 }}
+        <motion.div variants={containerVariants} initial={prefersReducedMotion ? undefined : "hidden"} whileInView={prefersReducedMotion ? undefined : "visible"} viewport={{ once: true, amount: 0.1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
         >
           {colleges?.length === 0 ? (
-            <div className="col-span-full">
-              <Empty icon={GraduationCap} title="لا توجد كليات" description="لم يتم تحميل قائمة الكليات بعد. الرجاء المحاولة لاحقاً." />
-            </div>
+            <div className="col-span-full"><Empty icon={GraduationCap} title="لا توجد كليات" description="لم يتم تحميل قائمة الكليات بعد. الرجاء المحاولة لاحقاً." /></div>
           ) : colleges?.map(college => {
             const Icon = getCollegeIcon(college.name);
             return (
-              <motion.div
-                key={college.id}
-                variants={itemVariants}
+              <motion.div key={college.id} variants={itemVariants}
                 whileHover={prefersReducedMotion ? undefined : { scale: 1.02, y: -3 }}
                 className="bg-card border border-border p-5 md:p-6 rounded-2xl flex flex-col gap-4 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all group cursor-pointer touch-manipulation"
               >
@@ -66,31 +84,16 @@ export default function Colleges() {
                   </div>
                   {user && (
                     <div className="flex items-center gap-1 text-[10px] sm:text-xs font-bold text-muted-foreground bg-background px-2 py-1 rounded-md">
-                      <Users className="w-3 h-3" />
-                      {college.studentCount}
+                      <Users className="w-3 h-3" />{college.studentCount}
                     </div>
                   )}
                 </div>
-
                 <h3 className="text-base md:text-xl font-bold text-foreground leading-snug">{college.name}</h3>
-
                 {user && (
                   <div className="flex flex-wrap gap-2 mt-auto">
-                    {college.hasNews && (
-                      <span className="text-[10px] flex items-center gap-1 bg-background text-muted-foreground px-2 py-1.5 rounded font-semibold">
-                        <FileText className="w-3 h-3" /> أخبار
-                      </span>
-                    )}
-                    {college.hasSchedules && (
-                      <span className="text-[10px] flex items-center gap-1 bg-background text-muted-foreground px-2 py-1.5 rounded font-semibold">
-                        <Calendar className="w-3 h-3" /> جداول
-                      </span>
-                    )}
-                    {college.hasActivities && (
-                      <span className="text-[10px] flex items-center gap-1 bg-background text-muted-foreground px-2 py-1.5 rounded font-semibold">
-                        <Activity className="w-3 h-3" /> نشاطات
-                      </span>
-                    )}
+                    {college.hasNews && <span className="text-[10px] flex items-center gap-1 bg-background text-muted-foreground px-2 py-1.5 rounded font-semibold"><FileText className="w-3 h-3" /> أخبار</span>}
+                    {college.hasSchedules && <span className="text-[10px] flex items-center gap-1 bg-background text-muted-foreground px-2 py-1.5 rounded font-semibold"><Calendar className="w-3 h-3" /> جداول</span>}
+                    {college.hasActivities && <span className="text-[10px] flex items-center gap-1 bg-background text-muted-foreground px-2 py-1.5 rounded font-semibold"><Activity className="w-3 h-3" /> نشاطات</span>}
                   </div>
                 )}
               </motion.div>

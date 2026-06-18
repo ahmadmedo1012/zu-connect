@@ -14,8 +14,8 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-[100dvh] flex flex-col font-sans" dir="rtl">
       <div className="relative flex flex-col min-h-[100dvh]">
-        {/* gentle animated gradient orbs */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        {/* gentle animated gradient orbs + dot grid */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-dot-grid">
           <div
             className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full opacity-[0.07] dark:opacity-[0.04]"
             style={{
@@ -37,6 +37,13 @@ export function AppLayout({ children }: AppLayoutProps) {
               animation: "drift-orb 30s ease-in-out infinite alternate",
             }}
           />
+          <div
+            className="absolute top-[60%] right-[-8%] w-[600px] h-[600px] rounded-full opacity-[0.04] dark:opacity-[0.02]"
+            style={{
+              background: "radial-gradient(circle, hsl(262 80% 54%) 0%, transparent 70%)",
+              animation: "drift-orb 22s ease-in-out infinite reverse",
+            }}
+          />
         </div>
         <Topbar />
         <Navbar />
@@ -53,15 +60,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Footer />
       </div>
 
-      {/* keyframes injected once via style element */}
-      <style>{`
-        @keyframes drift-orb {
-          0%   { transform: translate(0, 0) scale(1); }
-          33%  { transform: translate(2%, 1%) scale(1.05); }
-          66%  { transform: translate(-1%, 2%) scale(0.95); }
-          100% { transform: translate(1%, -1%) scale(1.02); }
-        }
-      `}</style>
+      {/* keyframes defined in index.css — drift-orb, orbit, etc. */}
     </div>
   );
 }
