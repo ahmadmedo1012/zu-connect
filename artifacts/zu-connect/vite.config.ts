@@ -60,6 +60,33 @@ export default defineConfig({
     target: "es2020",
     sourcemap: false,
     reportCompressedSize: false,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      onwarn(warning, warn) {
+        // Suppress lottie-web eval() warning (unavoidable with this lib)
+        if (warning.code === "EVAL" && warning.id && /lottie/.test(warning.id)) return;
+        // Suppress sourcemap warnings for shadcn/ui .js stub files
+        if (warning.code === "SOURCEMAP_ERROR" && warning.id && /node_modules\/@radix-ui/.test(warning.id)) return;
+        warn(warning);
+      },
+      output: {
+        manualChunks(id) {
+          // Workspace packages — keep them as separate entries
+          if (id.includes("@workspace/")) return "workspace";
+
+          // Node_modules chunking
+          if (id.includes("node_modules")) {
+            if (id.includes("react") && !id.includes("lottie")) return "vendor-react";
+            if (id.includes("framer-motion")) return "vendor-animation";
+            if (id.includes("lucide-react")) return "vendor-icons";
+            if (id.includes("@tanstack/react-query")) return "vendor-query";
+            if (id.includes("@radix-ui/")) return "vendor-ui";
+            if (id.includes("lottie-react") || id.includes("lottie-web")) return "vendor-lottie";
+            return "vendor-other";
+          }
+        },
+      },
+    },
   },
   server: {
     port,
@@ -81,9 +108,11 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: [
-      '@workspace/api-client-react',
       'react',
       'react-dom',
+    ],
+    exclude: [
+      '@workspace/api-client-react',
     ],
   },
 });
