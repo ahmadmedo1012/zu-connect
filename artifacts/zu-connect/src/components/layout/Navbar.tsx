@@ -50,7 +50,7 @@ export function Navbar() {
   const [location] = useLocation();
   const { user } = useAuth();
   const isMobile = useIsMobile();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
 
   return (
     <div className="sticky top-16 z-40 w-full border-b border-border bg-card">
@@ -59,9 +59,9 @@ export function Navbar() {
           <MobileNav
             location={location}
             user={user}
-            drawerOpen={drawerOpen}
-            onToggle={() => setDrawerOpen(!drawerOpen)}
-            onClose={() => setDrawerOpen(false)}
+            panelOpen={panelOpen}
+            onToggle={() => setPanelOpen(!panelOpen)}
+            onClose={() => setPanelOpen(false)}
           />
         ) : (
           <ScrollArea className="w-full whitespace-nowrap" dir="rtl">
@@ -102,23 +102,23 @@ export function Navbar() {
 function MobileNav({
   location,
   user,
-  drawerOpen,
+  panelOpen,
   onToggle,
   onClose,
 }: {
   location: string;
   user: unknown;
-  drawerOpen: boolean;
+  panelOpen: boolean;
   onToggle: () => void;
   onClose: () => void;
 }) {
-  const drawerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
-    if (drawerOpen) {
+    if (panelOpen) {
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
     }
@@ -126,25 +126,44 @@ function MobileNav({
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [drawerOpen, onClose]);
+  }, [panelOpen, onClose]);
+
+  const linkVariants = {
+    hidden: { opacity: 0, y: -8 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.03, duration: 0.2 },
+    }),
+  };
 
   return (
     <>
+      {/* Hamburger / X toggle button */}
       <div className="flex items-center justify-center px-2 py-1.5">
         <button
           onClick={onToggle}
-          className="flex items-center justify-center w-11 h-11 rounded-full bg-accent/50 hover:bg-accent transition-colors"
-          aria-label={drawerOpen ? "إغلاق القائمة" : "فتح القائمة"}
+          className={cn(
+            "flex items-center justify-center w-11 h-11 rounded-full transition-colors",
+            panelOpen ? "bg-accent" : "bg-accent/50 hover:bg-accent"
+          )}
+          aria-label={panelOpen ? "إغلاق القائمة" : "فتح القائمة"}
         >
-          {drawerOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          <motion.div
+            animate={{ rotate: panelOpen ? 90 : 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            {panelOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </motion.div>
         </button>
       </div>
 
       <AnimatePresence>
-        {drawerOpen && (
+        {panelOpen && (
           <>
-            {/* Overlay */}
+            {/* Backdrop overlay */}
             <motion.div
+              key="navbar-overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -153,14 +172,15 @@ function MobileNav({
               onClick={onClose}
             />
 
-            {/* Drawer — slides in from right (RTL-aware) */}
+            {/* Slide-down panel from top */}
             <motion.div
-              ref={drawerRef}
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              key="navbar-panel"
+              ref={panelRef}
+              initial={{ y: "-100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="fixed top-0 left-0 h-full w-[300px] max-w-[85vw] z-50 bg-card border-l border-border shadow-2xl overflow-y-auto"
+              className="absolute top-full left-0 right-0 z-50 bg-card border-b border-border shadow-2xl overflow-y-auto max-h-[70vh]"
               dir="rtl"
             >
               <div className="flex items-center justify-between p-4 border-b border-border">
@@ -174,27 +194,34 @@ function MobileNav({
                 </button>
               </div>
               <nav className="flex flex-col p-3 gap-1">
-                {NAV_LINKS.map((link) => {
+                {NAV_LINKS.map((link, i) => {
                   const Icon = link.icon;
                   const isActive = location === link.href;
                   const locked = link.requiresAuth && !user;
                   return (
-                    <Link
+                    <motion.div
                       key={link.href}
-                      href={locked ? "/login" : link.href}
-                      onClick={onClose}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all min-h-[48px]",
-                        isActive
-                          ? "text-foreground bg-primary/15 border border-primary/30"
-                          : locked
-                            ? "text-muted-foreground/50 cursor-not-allowed"
-                            : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                      )}
+                      custom={i}
+                      variants={linkVariants}
+                      initial="hidden"
+                      animate="visible"
                     >
-                      {locked ? <Lock className="w-5 h-5 shrink-0" /> : <Icon className="w-5 h-5 shrink-0" />}
-                      <span>{link.label}</span>
-                    </Link>
+                      <Link
+                        href={locked ? "/login" : link.href}
+                        onClick={onClose}
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all min-h-[48px]",
+                          isActive
+                            ? "text-foreground bg-primary/15 border border-primary/30"
+                            : locked
+                              ? "text-muted-foreground/50 cursor-not-allowed"
+                              : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                        )}
+                      >
+                        {locked ? <Lock className="w-5 h-5 shrink-0" /> : <Icon className="w-5 h-5 shrink-0" />}
+                        <span>{link.label}</span>
+                      </Link>
+                    </motion.div>
                   );
                 })}
               </nav>
