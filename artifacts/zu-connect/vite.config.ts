@@ -69,6 +69,8 @@ export default defineConfig({
           if (id.includes("node_modules/wouter")) return "vendor-router";
           if (id.includes("node_modules/recharts")) return "vendor-charts";
           if (id.includes("node_modules/@radix-ui")) return "vendor-ui";
+          if (id.includes("node_modules/lottie-react") || id.includes("node_modules/lottie-web")) return "vendor-lottie";
+          if (id.includes("node_modules/socket.io")) return "vendor-socket";
           if (id.includes("node_modules")) return "vendor-other";
         },
       },
@@ -93,5 +95,16 @@ export default defineConfig({
     port,
     host: "0.0.0.0",
     allowedHosts: true,
+  },
+  optimizeDeps: {
+    include: [
+      '@workspace/api-client-react',
+      'react',
+      'react-dom',
+      'framer-motion',
+      'lucide-react',
+      '@tanstack/react-query',
+      'wouter',
+    ],
   },
 });
