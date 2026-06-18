@@ -58,23 +58,6 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     target: "es2020",
-    minify: "esbuild",
-    rollupOptions: {
-      output: {
-        manualChunks(id: string) {
-          if (id.includes("node_modules/react-dom") || id.includes("node_modules/react/")) return "vendor-react";
-          if (id.includes("node_modules/framer-motion")) return "vendor-animation";
-          if (id.includes("node_modules/lucide-react")) return "vendor-icons";
-          if (id.includes("node_modules/@tanstack/react-query")) return "vendor-query";
-          if (id.includes("node_modules/wouter")) return "vendor-router";
-          if (id.includes("node_modules/recharts")) return "vendor-charts";
-          if (id.includes("node_modules/@radix-ui")) return "vendor-ui";
-          if (id.includes("node_modules/lottie-react") || id.includes("node_modules/lottie-web")) return "vendor-lottie";
-          if (id.includes("node_modules/socket.io")) return "vendor-socket";
-          if (id.includes("node_modules")) return "vendor-other";
-        },
-      },
-    },
     sourcemap: false,
     reportCompressedSize: false,
   },
@@ -101,10 +84,6 @@ export default defineConfig({
       '@workspace/api-client-react',
       'react',
       'react-dom',
-      'framer-motion',
-      'lucide-react',
-      '@tanstack/react-query',
-      'wouter',
     ],
   },
 });

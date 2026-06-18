@@ -4,101 +4,64 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { AnimatePresence, motion } from "framer-motion";
-import { lazy, Suspense, useCallback } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import NotFound from "@/pages/not-found";
 import AdminNotFound from "@/pages/admin/NotFound";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import { setupAuthTokenGetter } from "@/lib/auth/setupAuth";
-import { Skeleton } from "@/components/ui/skeleton";
 
-// Lazy-loaded pages
-const Home = lazy(() => import("@/pages/home"));
-const About = lazy(() => import("@/pages/about"));
-const Members = lazy(() => import("@/pages/members"));
-const Colleges = lazy(() => import("@/pages/colleges"));
-const News = lazy(() => import("@/pages/news"));
-const Courses = lazy(() => import("@/pages/courses"));
-const Planner = lazy(() => import("@/pages/planner"));
-const Chat = lazy(() => import("@/pages/chat"));
-const Services = lazy(() => import("@/pages/services"));
-const Suggestions = lazy(() => import("@/pages/suggestions"));
-const Volunteer = lazy(() => import("@/pages/volunteer"));
-const Faq = lazy(() => import("@/pages/faq"));
-const Library = lazy(() => import("@/pages/library"));
-const Login = lazy(() => import("@/pages/login"));
-const Profile = lazy(() => import("@/pages/profile"));
-const Loyalty = lazy(() => import("@/pages/Loyalty"));
-const LoyaltyHistory = lazy(() => import("@/pages/LoyaltyHistory"));
-const Rewards = lazy(() => import("@/pages/Rewards"));
-const Leaderboard = lazy(() => import("@/pages/Leaderboard"));
+import Home from "@/pages/home";
+import About from "@/pages/about";
+import Members from "@/pages/members";
+import Colleges from "@/pages/colleges";
+import News from "@/pages/news";
+import Courses from "@/pages/courses";
+import Planner from "@/pages/planner";
+import Chat from "@/pages/chat";
+import Services from "@/pages/services";
+import Suggestions from "@/pages/suggestions";
+import Volunteer from "@/pages/volunteer";
+import Faq from "@/pages/faq";
+import Library from "@/pages/library";
+import Login from "@/pages/login";
+import Profile from "@/pages/profile";
+import Loyalty from "@/pages/Loyalty";
+import LoyaltyHistory from "@/pages/LoyaltyHistory";
+import Rewards from "@/pages/Rewards";
+import Leaderboard from "@/pages/Leaderboard";
 
-// Admin lazy imports
-const AdminGuard = lazy(() => import("@/components/admin/AdminGuard"));
-const AdminErrorBoundary = lazy(() => import("@/components/admin/AdminErrorBoundary"));
-const AdminLayout = lazy(() => import("@/components/admin/AdminLayout"));
-const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
-const AdminUsers = lazy(() => import("@/pages/admin/Users"));
-const AdminRoles = lazy(() => import("@/pages/admin/Roles"));
-const AdminLiveEvents = lazy(() => import("@/pages/admin/LiveEvents"));
-const AdminModeration = lazy(() => import("@/pages/admin/Moderation"));
-const AdminComplaints = lazy(() => import("@/pages/admin/Complaints"));
-const AdminReferrals = lazy(() => import("@/pages/admin/Referrals"));
-const AdminGamification = lazy(() => import("@/pages/admin/Gamification"));
-const AdminAnnouncements = lazy(() => import("@/pages/admin/Announcements"));
-const AdminFiles = lazy(() => import("@/pages/admin/Files"));
-const AdminActivity = lazy(() => import("@/pages/admin/Activity"));
-const AdminAnalytics = lazy(() => import("@/pages/admin/Analytics"));
-const AdminIntegrations = lazy(() => import("@/pages/admin/Integrations"));
-const AdminTelegram = lazy(() => import("@/pages/admin/Telegram"));
-const AdminSettings = lazy(() => import("@/pages/admin/Settings"));
-const AdminAudit = lazy(() => import("@/pages/admin/Audit"));
-const AdminLoyalty = lazy(() => import("@/pages/admin/Loyalty"));
+// Admin imports
+import { AdminGuard } from "@/components/admin/AdminGuard";
+import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminUsers from "@/pages/admin/Users";
+import AdminRoles from "@/pages/admin/Roles";
+import AdminLiveEvents from "@/pages/admin/LiveEvents";
+import AdminModeration from "@/pages/admin/Moderation";
+import AdminComplaints from "@/pages/admin/Complaints";
+import AdminReferrals from "@/pages/admin/Referrals";
+import AdminGamification from "@/pages/admin/Gamification";
+import AdminAnnouncements from "@/pages/admin/Announcements";
+import AdminFiles from "@/pages/admin/Files";
+import AdminActivity from "@/pages/admin/Activity";
+import AdminAnalytics from "@/pages/admin/Analytics";
+import AdminIntegrations from "@/pages/admin/Integrations";
+import AdminTelegram from "@/pages/admin/Telegram";
+import AdminSettings from "@/pages/admin/Settings";
+import AdminAudit from "@/pages/admin/Audit";
+import AdminLoyalty from "@/pages/admin/Loyalty";
 
 const queryClient = new QueryClient();
 
 setupAuthTokenGetter();
 
-// Premium loading fallback
-function PageFallback() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-6 px-4">
-      <div className="w-full max-w-md space-y-4">
-        <Skeleton variant="text" className="h-6 w-3/4" />
-        <Skeleton variant="text" className="h-4 w-full" />
-        <Skeleton variant="text" className="h-4 w-5/6" />
-        <Skeleton variant="card" className="h-40" />
-        <Skeleton variant="card" className="h-40" />
-        <Skeleton variant="card" className="h-40" />
-      </div>
-    </div>
-  );
-}
-
-function AdminFallback() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-6 px-4">
-      <div className="w-full max-w-4xl space-y-4">
-        <Skeleton variant="text" className="h-8 w-1/3" />
-        <Skeleton variant="card" className="h-48" />
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Skeleton variant="card" className="h-24" />
-          <Skeleton variant="card" className="h-24" />
-          <Skeleton variant="card" className="h-24" />
-          <Skeleton variant="card" className="h-24" />
-        </div>
-        <Skeleton variant="card" className="h-64" />
-      </div>
-    </div>
-  );
-}
-
 function AnimatedPage({ children }: { children: React.ReactNode }) {
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion()
 
   if (prefersReducedMotion) {
-    return <>{children}</>;
+    return <>{children}</>
   }
 
   return (
@@ -110,9 +73,8 @@ function AnimatedPage({ children }: { children: React.ReactNode }) {
     >
       {children}
     </motion.div>
-  );
+  )
 }
-
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   return (
@@ -127,24 +89,24 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 function AdminRouter() {
   return (
     <Switch>
-      <Route path="/admin"><Suspense fallback={<AdminFallback />}><AdminDashboard /></Suspense></Route>
-      <Route path="/admin/users"><Suspense fallback={<AdminFallback />}><AdminUsers /></Suspense></Route>
-      <Route path="/admin/roles"><Suspense fallback={<AdminFallback />}><AdminRoles /></Suspense></Route>
-      <Route path="/admin/live"><Suspense fallback={<AdminFallback />}><AdminLiveEvents /></Suspense></Route>
-      <Route path="/admin/moderation"><Suspense fallback={<AdminFallback />}><AdminModeration /></Suspense></Route>
-      <Route path="/admin/complaints"><Suspense fallback={<AdminFallback />}><AdminComplaints /></Suspense></Route>
-      <Route path="/admin/referrals"><Suspense fallback={<AdminFallback />}><AdminReferrals /></Suspense></Route>
-      <Route path="/admin/gamification"><Suspense fallback={<AdminFallback />}><AdminGamification /></Suspense></Route>
-      <Route path="/admin/announcements"><Suspense fallback={<AdminFallback />}><AdminAnnouncements /></Suspense></Route>
-      <Route path="/admin/files"><Suspense fallback={<AdminFallback />}><AdminFiles /></Suspense></Route>
-      <Route path="/admin/activity"><Suspense fallback={<AdminFallback />}><AdminActivity /></Suspense></Route>
-      <Route path="/admin/analytics"><Suspense fallback={<AdminFallback />}><AdminAnalytics /></Suspense></Route>
-      <Route path="/admin/integrations"><Suspense fallback={<AdminFallback />}><AdminIntegrations /></Suspense></Route>
-      <Route path="/admin/telegram"><Suspense fallback={<AdminFallback />}><AdminTelegram /></Suspense></Route>
-      <Route path="/admin/settings"><Suspense fallback={<AdminFallback />}><AdminSettings /></Suspense></Route>
-      <Route path="/admin/audit"><Suspense fallback={<AdminFallback />}><AdminAudit /></Suspense></Route>
-      <Route path="/admin/loyalty"><Suspense fallback={<AdminFallback />}><AdminLoyalty /></Suspense></Route>
-      <Route><Suspense fallback={<AdminFallback />}><AdminNotFound /></Suspense></Route>
+      <Route path="/admin">{() => <AdminDashboard />}</Route>
+      <Route path="/admin/users">{() => <AdminUsers />}</Route>
+      <Route path="/admin/roles">{() => <AdminRoles />}</Route>
+      <Route path="/admin/live">{() => <AdminLiveEvents />}</Route>
+      <Route path="/admin/moderation">{() => <AdminModeration />}</Route>
+      <Route path="/admin/complaints">{() => <AdminComplaints />}</Route>
+      <Route path="/admin/referrals">{() => <AdminReferrals />}</Route>
+      <Route path="/admin/gamification">{() => <AdminGamification />}</Route>
+      <Route path="/admin/announcements">{() => <AdminAnnouncements />}</Route>
+      <Route path="/admin/files">{() => <AdminFiles />}</Route>
+      <Route path="/admin/activity">{() => <AdminActivity />}</Route>
+      <Route path="/admin/analytics">{() => <AdminAnalytics />}</Route>
+      <Route path="/admin/integrations">{() => <AdminIntegrations />}</Route>
+      <Route path="/admin/telegram">{() => <AdminTelegram />}</Route>
+      <Route path="/admin/settings">{() => <AdminSettings />}</Route>
+      <Route path="/admin/audit">{() => <AdminAudit />}</Route>
+      <Route path="/admin/loyalty">{() => <AdminLoyalty />}</Route>
+      <Route>{() => <AdminNotFound />}</Route>
     </Switch>
   );
 }
@@ -168,26 +130,26 @@ function Router() {
     <AppLayout>
       <AnimatePresence mode="wait">
         <Switch key={location}>
-          <Route path="/"><Suspense fallback={<PageFallback />}><AnimatedPage><Home /></AnimatedPage></Suspense></Route>
-          <Route path="/about"><Suspense fallback={<PageFallback />}><AnimatedPage><About /></AnimatedPage></Suspense></Route>
-          <Route path="/members"><Suspense fallback={<PageFallback />}><AnimatedPage><Members /></AnimatedPage></Suspense></Route>
-          <Route path="/colleges"><Suspense fallback={<PageFallback />}><AnimatedPage><Colleges /></AnimatedPage></Suspense></Route>
-          <Route path="/news"><Suspense fallback={<PageFallback />}><AnimatedPage><News /></AnimatedPage></Suspense></Route>
-          <Route path="/courses"><Suspense fallback={<PageFallback />}><AnimatedPage><Courses /></AnimatedPage></Suspense></Route>
-          <Route path="/planner"><Suspense fallback={<PageFallback />}><AnimatedPage><Planner /></AnimatedPage></Suspense></Route>
-          <Route path="/chat"><Suspense fallback={<PageFallback />}><AnimatedPage><Chat /></AnimatedPage></Suspense></Route>
-          <Route path="/services"><Suspense fallback={<PageFallback />}><AnimatedPage><Services /></AnimatedPage></Suspense></Route>
-          <Route path="/suggestions"><Suspense fallback={<PageFallback />}><AnimatedPage><Suggestions /></AnimatedPage></Suspense></Route>
-          <Route path="/volunteer"><Suspense fallback={<PageFallback />}><AnimatedPage><Volunteer /></AnimatedPage></Suspense></Route>
-          <Route path="/faq"><Suspense fallback={<PageFallback />}><AnimatedPage><Faq /></AnimatedPage></Suspense></Route>
-          <Route path="/library"><Suspense fallback={<PageFallback />}><AnimatedPage><Library /></AnimatedPage></Suspense></Route>
-          <Route path="/login"><Suspense fallback={<PageFallback />}><AnimatedPage><Login /></AnimatedPage></Suspense></Route>
-          <Route path="/profile"><Suspense fallback={<PageFallback />}><AnimatedPage><Profile /></AnimatedPage></Suspense></Route>
-          <Route path="/loyalty"><Suspense fallback={<PageFallback />}><AnimatedPage><Loyalty /></AnimatedPage></Suspense></Route>
-          <Route path="/loyalty/history"><Suspense fallback={<PageFallback />}><AnimatedPage><LoyaltyHistory /></AnimatedPage></Suspense></Route>
-          <Route path="/loyalty/rewards"><Suspense fallback={<PageFallback />}><AnimatedPage><Rewards /></AnimatedPage></Suspense></Route>
-          <Route path="/leaderboard"><Suspense fallback={<PageFallback />}><AnimatedPage><Leaderboard /></AnimatedPage></Suspense></Route>
-          <Route><Suspense fallback={<PageFallback />}><AnimatedPage><NotFound /></AnimatedPage></Suspense></Route>
+          <Route path="/"><AnimatedPage><Home /></AnimatedPage></Route>
+          <Route path="/about"><AnimatedPage><About /></AnimatedPage></Route>
+          <Route path="/members"><AnimatedPage><Members /></AnimatedPage></Route>
+          <Route path="/colleges"><AnimatedPage><Colleges /></AnimatedPage></Route>
+          <Route path="/news"><AnimatedPage><News /></AnimatedPage></Route>
+          <Route path="/courses"><AnimatedPage><Courses /></AnimatedPage></Route>
+          <Route path="/planner"><AnimatedPage><Planner /></AnimatedPage></Route>
+          <Route path="/chat"><AnimatedPage><Chat /></AnimatedPage></Route>
+          <Route path="/services"><AnimatedPage><Services /></AnimatedPage></Route>
+          <Route path="/suggestions"><AnimatedPage><Suggestions /></AnimatedPage></Route>
+          <Route path="/volunteer"><AnimatedPage><Volunteer /></AnimatedPage></Route>
+          <Route path="/faq"><AnimatedPage><Faq /></AnimatedPage></Route>
+          <Route path="/library"><AnimatedPage><Library /></AnimatedPage></Route>
+          <Route path="/login"><AnimatedPage><Login /></AnimatedPage></Route>
+          <Route path="/profile"><AnimatedPage><Profile /></AnimatedPage></Route>
+          <Route path="/loyalty"><AnimatedPage><Loyalty /></AnimatedPage></Route>
+          <Route path="/loyalty/history"><AnimatedPage><LoyaltyHistory /></AnimatedPage></Route>
+          <Route path="/loyalty/rewards"><AnimatedPage><Rewards /></AnimatedPage></Route>
+          <Route path="/leaderboard"><AnimatedPage><Leaderboard /></AnimatedPage></Route>
+          <Route><AnimatedPage><NotFound /></AnimatedPage></Route>
         </Switch>
       </AnimatePresence>
     </AppLayout>
